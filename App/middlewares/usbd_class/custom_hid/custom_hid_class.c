@@ -79,11 +79,17 @@ static usb_sts_type class_init_handler(void *udev)
   /* open custom hid in endpoint */
   usbd_ept_open(pudev, USBD_CUSTOM_HID_IN_EPT, EPT_INT_TYPE, USBD_CUSTOM_IN_MAXPACKET_SIZE);
 
-  /* open custom hid out endpoint */
-  usbd_ept_open(pudev, USBD_CUSTOM_HID_OUT_EPT, EPT_INT_TYPE, USBD_CUSTOM_OUT_MAXPACKET_SIZE);
+  /* open custom hid in endpoint */
+  usbd_ept_open(pudev, USBD_CUSTOM_HID_IN_EPT2, EPT_INT_TYPE, USBD_CUSTOM2_IN_MAXPACKET_SIZE);
 
-  /* set out endpoint to receive status */
-  usbd_ept_recv(pudev, USBD_CUSTOM_HID_OUT_EPT, pcshid->g_rxhid_buff, USBD_CUSTOM_OUT_MAXPACKET_SIZE);
+  /* open custom hid in endpoint */
+  usbd_ept_open(pudev, USBD_CUSTOM_HID_IN_EPT3, EPT_INT_TYPE, USBD_CUSTOM3_IN_MAXPACKET_SIZE);
+
+  // /* open custom hid out endpoint */
+  // usbd_ept_open(pudev, USBD_CUSTOM_HID_OUT_EPT, EPT_INT_TYPE, USBD_CUSTOM_OUT_MAXPACKET_SIZE);
+
+  // /* set out endpoint to receive status */
+  // usbd_ept_recv(pudev, USBD_CUSTOM_HID_OUT_EPT, pcshid->g_rxhid_buff, USBD_CUSTOM_OUT_MAXPACKET_SIZE);
 
   pcshid->send_state = 0;
   
@@ -103,8 +109,14 @@ static usb_sts_type class_clear_handler(void *udev)
   /* close custom hid in endpoint */
   usbd_ept_close(pudev, USBD_CUSTOM_HID_IN_EPT);
 
-  /* close custom hid out endpoint */
-  usbd_ept_close(pudev, USBD_CUSTOM_HID_OUT_EPT);
+  /* close custom hid in endpoint */
+  usbd_ept_close(pudev, USBD_CUSTOM_HID_IN_EPT2);
+
+  /* close custom hid in endpoint */
+  usbd_ept_close(pudev, USBD_CUSTOM_HID_IN_EPT3);
+
+  // /* close custom hid out endpoint */
+  // usbd_ept_close(pudev, USBD_CUSTOM_HID_OUT_EPT);
 
   return status;
 }
@@ -160,8 +172,22 @@ static usb_sts_type class_setup_handler(void *udev, usb_setup_type *setup)
         case USB_STD_REQ_GET_DESCRIPTOR:
           if(setup->wValue >> 8 == HID_REPORT_DESC)
           {
-            len = MIN(USBD_CUSHID_SIZ_REPORT_DESC, setup->wLength);
-            buf = (uint8_t *)g_usbd_custom_hid_report;
+            if (setup->wIndex == 0)
+            {
+              len = MIN(USBD_CUSHID_SIZ_REPORT_DESC, setup->wLength);
+              buf = (uint8_t *)g_usbd_custom_hid_report;
+            }
+            else if (setup->wIndex == 1)
+            {
+              len = MIN(USBD_CUSHID2_SIZ_REPORT_DESC, setup->wLength);
+              buf = (uint8_t *)g_usbd_custom_hid2_report;
+
+            }
+            else if (setup->wIndex == 2)
+            {
+              len = MIN(USBD_CUSHID3_SIZ_REPORT_DESC, setup->wLength);
+              buf = (uint8_t *)g_usbd_custom_hid3_report;
+            }
             usbd_ctrl_send(pudev, (uint8_t *)buf, len);
           }
           else if(setup->wValue >> 8 == HID_DESCRIPTOR_TYPE)
@@ -272,8 +298,8 @@ static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   /* hid buffer process */
   usb_hid_buf_process(udev, pcshid->g_rxhid_buff, recv_len);
 
-  /* start receive next packet */
-  usbd_ept_recv(pudev, USBD_CUSTOM_HID_OUT_EPT, pcshid->g_rxhid_buff, recv_len);
+  // /* start receive next packet */
+  // usbd_ept_recv(pudev, USBD_CUSTOM_HID_OUT_EPT, pcshid->g_rxhid_buff, recv_len);
 
   return status;
 }

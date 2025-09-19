@@ -48,14 +48,18 @@ extern "C" {
 /**
   * @brief usb custom hid use endpoint define
   */
-#define USBD_CUSTOM_HID_IN_EPT                  0x81
-#define USBD_CUSTOM_HID_OUT_EPT                 0x01
+#define USBD_CUSTOM_HID_IN_EPT                    0x81
+#define USBD_CUSTOM_HID_IN_EPT2                   0x82
+#define USBD_CUSTOM_HID_IN_EPT3                   0x83
+// #define USBD_CUSTOM_HID_OUT_EPT                   0x01
 
 /**
   * @brief usb custom hid in and out max packet size define
   */
-#define USBD_CUSTOM_IN_MAXPACKET_SIZE           0x40
-#define USBD_CUSTOM_OUT_MAXPACKET_SIZE          0x40
+#define USBD_CUSTOM_IN_MAXPACKET_SIZE             0x40
+#define USBD_CUSTOM2_IN_MAXPACKET_SIZE            0x02
+#define USBD_CUSTOM3_IN_MAXPACKET_SIZE            0x40
+#define USBD_CUSTOM_OUT_MAXPACKET_SIZE            0x40
 
 /**
   * @}

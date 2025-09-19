@@ -49,31 +49,34 @@ extern "C" {
 /**
   * @brief usb bcd number define
   */
-#define CUSHID_BCD_NUM                   0x0110
+#define CUSHID_BCD_NUM                   0x0111
 
 /**
   * @brief usb vendor id and product id define
   */
-#define USBD_CUSHID_VENDOR_ID            0x2E3C
-#define USBD_CUSHID_PRODUCT_ID           0x5745
+#define USBD_CUSHID_VENDOR_ID            0x1038
+#define USBD_CUSHID_PRODUCT_ID           0x230C
 
 /**
   * @brief usb descriptor size define
   */
-#define USBD_CUSHID_CONFIG_DESC_SIZE     41
-#define USBD_CUSHID_SIZ_REPORT_DESC      126
+#define USBD_CUSHID_CONFIG_DESC_SIZE      0x0054U
+#define USBD_CUSHID_SIZ_REPORT_DESC       0x0025U // 37 byte 
+#define USBD_CUSHID2_SIZ_REPORT_DESC      0x0019U // 25 byte 
+#define USBD_CUSHID3_SIZ_REPORT_DESC      0x001EU // 30 byte 
+
 #define USBD_CUSHID_SIZ_STRING_LANGID    4
 #define USBD_CUSHID_SIZ_STRING_SERIAL    0x1A
 
 /**
   * @brief usb string define(vendor, product configuration, interface)
   */
-#define USBD_CUSHID_DESC_MANUFACTURER_STRING    "Artery"
-#define USBD_CUSHID_DESC_PRODUCT_STRING         "Custom HID"
+#define USBD_CUSHID_DESC_MANUFACTURER_STRING    "SteelSeries"
+#define USBD_CUSHID_DESC_PRODUCT_STRING         "Torrio Case"
 #define USBD_CUSHID_DESC_CONFIGURATION_STRING   "Custom HID Config"
 #define USBD_CUSHID_DESC_INTERFACE_STRING       "Custom HID Interface"
 
-#define CUSHID_BINTERVAL_TIME            0x0A
+#define CUSHID_BINTERVAL_TIME            0x01U
 
 /**
   * @brief usb hid report id define
@@ -99,6 +102,8 @@ extern "C" {
   * @}
   */
 extern uint8_t g_usbd_custom_hid_report[USBD_CUSHID_SIZ_REPORT_DESC];
+extern uint8_t g_usbd_custom_hid2_report[USBD_CUSHID2_SIZ_REPORT_DESC];
+extern uint8_t g_usbd_custom_hid3_report[USBD_CUSHID3_SIZ_REPORT_DESC];
 extern uint8_t g_custom_hid_usb_desc[9];
 extern usbd_desc_handler custom_hid_desc_handler;
 

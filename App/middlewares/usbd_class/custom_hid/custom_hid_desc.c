@@ -114,18 +114,19 @@ ALIGNED_HEAD static uint8_t g_usbd_configuration[USBD_CUSHID_CONFIG_DESC_SIZE] A
   USB_DESCIPTOR_TYPE_CONFIGURATION,      /* bDescriptorType: configuration */
   LBYTE(USBD_CUSHID_CONFIG_DESC_SIZE),          /* wTotalLength: bytes returned */
   HBYTE(USBD_CUSHID_CONFIG_DESC_SIZE),          /* wTotalLength: bytes returned */
-  0x01,                                  /* bNumInterfaces: 1 interface */
+  0x03,                                  /* bNumInterfaces: 1 interface */
   0x01,                                  /* bConfigurationValue: configuration value */
   0x00,                                  /* iConfiguration: index of string descriptor describing
                                             the configuration */
-  0xE0,                                  /* bmAttributes: self powered and support remote wakeup */
-  0x32,                                  /* MaxPower 100 mA: this current is used for detecting vbus */
+  0x80,                                  /* bmAttributes: self powered and support remote wakeup */
+  0xFA,                                  /* MaxPower 100 mA: this current is used for detecting vbus */
 
+  // =======================================interface 0=====================
   USB_DEVICE_IF_DESC_LEN,                /* bLength: interface descriptor size */
   USB_DESCIPTOR_TYPE_INTERFACE,          /* bDescriptorType: interface descriptor type */
   0x00,                                  /* bInterfaceNumber: number of interface */
   0x00,                                  /* bAlternateSetting: alternate set */
-  0x02,                                  /* bNumEndpoints: number of endpoints */
+  0x01,                                  /* bNumEndpoints: number of endpoints */
   USB_CLASS_CODE_HID,                    /* bInterfaceClass: class code hid */
   0x00,                                  /* bInterfaceSubClass: subclass code */
   0x00,                                  /* bInterfaceProtocol: protocol code */
@@ -149,13 +150,73 @@ ALIGNED_HEAD static uint8_t g_usbd_configuration[USBD_CUSHID_CONFIG_DESC_SIZE] A
   HBYTE(USBD_CUSTOM_IN_MAXPACKET_SIZE),  /* wMaxPacketSize: maximum packe size this endpoint */
   CUSHID_BINTERVAL_TIME,                                  /* bInterval: interval for polling endpoint for data transfers */
 
+  // =======================================interface 1=====================
+  USB_DEVICE_IF_DESC_LEN,                /* bLength: interface descriptor size */
+  USB_DESCIPTOR_TYPE_INTERFACE,          /* bDescriptorType: interface descriptor type */
+  0x01,                                  /* bInterfaceNumber: number of interface */
+  0x00,                                  /* bAlternateSetting: alternate set */
+  0x01,                                  /* bNumEndpoints: number of endpoints */
+  USB_CLASS_CODE_HID,                    /* bInterfaceClass: class code hid */
+  0x00,                                  /* bInterfaceSubClass: subclass code */
+  0x00,                                  /* bInterfaceProtocol: protocol code */
+  0x00,                                  /* iInterface: index of string descriptor */
+
+  0x09,                                  /* bLength: size of HID descriptor in bytes */
+  HID_CLASS_DESC_HID,                    /* bDescriptorType: HID descriptor type */
+  LBYTE(CUSHID_BCD_NUM),
+  HBYTE(CUSHID_BCD_NUM),                 /* bcdHID: HID class specification release number */
+  0x00,                                  /* bCountryCode: hardware target conutry */
+  0x01,                                  /* bNumDescriptors: number of HID class descriptor to follow */
+  HID_CLASS_DESC_REPORT,                 /* bDescriptorType: report descriptor type */
+  LBYTE(sizeof(g_usbd_custom_hid2_report)),
+  HBYTE(sizeof(g_usbd_custom_hid2_report)), /* wDescriptorLength: total length of reprot descriptor */
+
   USB_DEVICE_EPT_LEN,                    /* bLength: size of endpoint descriptor in bytes */
   USB_DESCIPTOR_TYPE_ENDPOINT,           /* bDescriptorType: endpoint descriptor type */
-  USBD_CUSTOM_HID_OUT_EPT,               /* bEndpointAddress: the address of endpoint on usb device described by this descriptor */
+  USBD_CUSTOM_HID_IN_EPT2,                /* bEndpointAddress: the address of endpoint on usb device described by this descriptor */
   USB_EPT_DESC_INTERRUPT,                /* bmAttributes: endpoint attributes */
-  LBYTE(USBD_CUSTOM_OUT_MAXPACKET_SIZE),
-  HBYTE(USBD_CUSTOM_OUT_MAXPACKET_SIZE),  /* wMaxPacketSize: maximum packe size this endpoint */
-  CUSHID_BINTERVAL_TIME,                    /* bInterval: interval for polling endpoint for data transfers */
+  LBYTE(USBD_CUSTOM2_IN_MAXPACKET_SIZE),
+  HBYTE(USBD_CUSTOM2_IN_MAXPACKET_SIZE),  /* wMaxPacketSize: maximum packe size this endpoint */
+  CUSHID_BINTERVAL_TIME,                                  /* bInterval: interval for polling endpoint for data transfers */
+
+  // =======================================interface 2=====================
+  USB_DEVICE_IF_DESC_LEN,                /* bLength: interface descriptor size */
+  USB_DESCIPTOR_TYPE_INTERFACE,          /* bDescriptorType: interface descriptor type */
+  0x02,                                  /* bInterfaceNumber: number of interface */
+  0x00,                                  /* bAlternateSetting: alternate set */
+  0x01,                                  /* bNumEndpoints: number of endpoints */
+  USB_CLASS_CODE_HID,                    /* bInterfaceClass: class code hid */
+  0x00,                                  /* bInterfaceSubClass: subclass code */
+  0x00,                                  /* bInterfaceProtocol: protocol code */
+  0x00,                                  /* iInterface: index of string descriptor */
+
+  0x09,                                  /* bLength: size of HID descriptor in bytes */
+  HID_CLASS_DESC_HID,                    /* bDescriptorType: HID descriptor type */
+  LBYTE(CUSHID_BCD_NUM),
+  HBYTE(CUSHID_BCD_NUM),                 /* bcdHID: HID class specification release number */
+  0x00,                                  /* bCountryCode: hardware target conutry */
+  0x01,                                  /* bNumDescriptors: number of HID class descriptor to follow */
+  HID_CLASS_DESC_REPORT,                 /* bDescriptorType: report descriptor type */
+  LBYTE(sizeof(g_usbd_custom_hid3_report)),
+  HBYTE(sizeof(g_usbd_custom_hid3_report)), /* wDescriptorLength: total length of reprot descriptor */
+
+  USB_DEVICE_EPT_LEN,                    /* bLength: size of endpoint descriptor in bytes */
+  USB_DESCIPTOR_TYPE_ENDPOINT,           /* bDescriptorType: endpoint descriptor type */
+  USBD_CUSTOM_HID_IN_EPT3,                /* bEndpointAddress: the address of endpoint on usb device described by this descriptor */
+  USB_EPT_DESC_INTERRUPT,                /* bmAttributes: endpoint attributes */
+  LBYTE(USBD_CUSTOM3_IN_MAXPACKET_SIZE),
+  HBYTE(USBD_CUSTOM3_IN_MAXPACKET_SIZE),  /* wMaxPacketSize: maximum packe size this endpoint */
+  CUSHID_BINTERVAL_TIME,                                  /* bInterval: interval for polling endpoint for data transfers */
+
+
+
+  // USB_DEVICE_EPT_LEN,                    /* bLength: size of endpoint descriptor in bytes */
+  // USB_DESCIPTOR_TYPE_ENDPOINT,           /* bDescriptorType: endpoint descriptor type */
+  // USBD_CUSTOM_HID_OUT_EPT,               /* bEndpointAddress: the address of endpoint on usb device described by this descriptor */
+  // USB_EPT_DESC_INTERRUPT,                /* bmAttributes: endpoint attributes */
+  // LBYTE(USBD_CUSTOM_OUT_MAXPACKET_SIZE),
+  // HBYTE(USBD_CUSTOM_OUT_MAXPACKET_SIZE),  /* wMaxPacketSize: maximum packe size this endpoint */
+  // CUSHID_BINTERVAL_TIME,                    /* bInterval: interval for polling endpoint for data transfers */
 };
 
 /**
@@ -166,95 +227,58 @@ ALIGNED_HEAD static uint8_t g_usbd_configuration[USBD_CUSHID_CONFIG_DESC_SIZE] A
 #endif
 ALIGNED_HEAD uint8_t g_usbd_custom_hid_report[USBD_CUSHID_SIZ_REPORT_DESC] ALIGNED_TAIL =
 {
-  0x06, 0xFF, 0x00,                      /* USAGE_PAGE(Vendor Page:0xFF00) */
-  0x09, 0x01,                            /* USAGE (Demo Kit)               */
-  0xa1, 0x01,                            /* COLLECTION (Application)       */
-  /* 7 */
+        0x06, 0xC0, 0xFF, // Usage Page (Vendor-Defined 193)
+        0x09, 0x01,       // Usage (Vendor-Defined 1)
+        0xa1, 0x01,       // Collection (Application)
+        0x06, 0xC1, 0xFF, // Usage Page (Vendor-Defined 194)
+        0x15, 0x00,       // Logical Minimum (0)
+        0x26, 0xFF, 0x00, // Logical Maximum (255)
+        0x75, 0x08,       // Report Size (8)
+        0x09, 0xF0,       // Usage (Vendor-Defined 240)
+        0x95, 0x40,       // Report Count (64)
+        0x81, 0x02,       // Input (Data,Var,Abs,NWrp,Lin,Pref,NNul,Bit)
+        0x09, 0xF1,       // Usage (Vendor-Defined 241)
+        0x95, 0x40,       // Report Count (64)
+        0x91, 0x02,       // Output (Data,Var,Abs,NWrp,Lin,Pref,NNul,NVol,Bit)
+        0x09, 0xF2,       // Usage (Vendor-Defined 242)
+        0x96, 0x00, 0x04, // Report Count (514)
+        0xB1, 0x02,       // Feature (Data,Var,Abs,NWrp,Lin,Pref,NNul,NVol,Bit)
+        0xC0              // End Collection
+}; /* CustomHID_ReportDescriptor */
 
-  /* Led 2 */
-  0x85, HID_REPORT_ID_2,                 /*     REPORT_ID 2                */
-  0x09, 0x02,                            /*     USAGE (LED 2)              */
-  0x15, 0x00,                            /*     LOGICAL_MINIMUM (0)        */
-  0x25, 0x01,                            /*     LOGICAL_MAXIMUM (1)        */
-  0x75, 0x08,                            /*     REPORT_SIZE (8)            */
-  0x95, 0x3F,                            /*     REPORT_COUNT (1)           */
-  0xB1, 0x82,                            /*    FEATURE (Data,Var,Abs,Vol)  */
-
-  0x85, 0x02,                            /*     REPORT_ID (2)              */
-  0x09, 0x02,                            /*     USAGE (LED 2)              */
-  0x91, 0x82,                            /*     OUTPUT (Data,Var,Abs,Vol)  */
-  /* 27 */
-
-  /* Led 3 */
-  0x85, HID_REPORT_ID_3,                 /*     REPORT_ID (3)              */
-  0x09, 0x03,                            /*     USAGE (LED 3)              */
-  0x15, 0x00,                            /*     LOGICAL_MINIMUM (0)        */
-  0x25, 0x01,                            /*     LOGICAL_MAXIMUM (1)        */
-  0x75, 0x08,                            /*     REPORT_SIZE (8)            */
-  0x95, 0x3F,                            /*     REPORT_COUNT (1)           */
-  0xB1, 0x82,                            /*     FEATURE (Data,Var,Abs,Vol) */
-
-  0x85, 0x03,                            /*     REPORT_ID (3)              */
-  0x09, 0x03,                            /*     USAGE (LED 3)              */
-  0x91, 0x82,                            /*     OUTPUT (Data,Var,Abs,Vol)  */
-  /* 47 */
-
-  /* Led 4 */
-  0x85, HID_REPORT_ID_4,                 /*     REPORT_ID 4)               */
-  0x09, 0x04,                            /*     USAGE (LED 4)              */
-  0x15, 0x00,                            /*     LOGICAL_MINIMUM (0)        */
-  0x25, 0x01,                            /*     LOGICAL_MAXIMUM (1)        */
-  0x75, 0x08,                            /*     REPORT_SIZE (8)            */
-  0x95, 0x3F,                            /*     REPORT_COUNT (1)           */
-  0xB1, 0x82,                            /*     FEATURE (Data,Var,Abs,Vol) */
-
-  0x85, 0x04,                            /*     REPORT_ID (4)              */
-  0x09, 0x04,                            /*     USAGE (LED 4)              */
-  0x91, 0x82,                            /*     OUTPUT (Data,Var,Abs,Vol)  */
-  /* 67 */
-
-  /* key Push Button */
-  0x85, HID_REPORT_ID_5,                 /*     REPORT_ID (5)              */
-  0x09, 0x05,                            /*     USAGE (Push Button)        */
-  0x15, 0x00,                            /*     LOGICAL_MINIMUM (0)        */
-  0x25, 0x01,                            /*     LOGICAL_MAXIMUM (1)        */
-  0x75, 0x01,                            /*     REPORT_SIZE (1)            */
-  0x81, 0x82,                            /*     INPUT (Data,Var,Abs,Vol)   */
-
-  0x09, 0x05,                            /*     USAGE (Push Button)        */
-  0x75, 0x01,                            /*     REPORT_SIZE (1)            */
-  0xb1, 0x82,                            /*     FEATURE (Data,Var,Abs,Vol) */
-
-  0x75, 0x07,                            /*     REPORT_SIZE (7)            */
-  0x81, 0x83,                            /*     INPUT (Cnst,Var,Abs,Vol)   */
-  0x85, 0x05,                            /*     REPORT_ID (5)              */
-
-  0x75, 0x07,                            /*     REPORT_SIZE (7)            */
-  0xb1, 0x83,                            /*     FEATURE (Cnst,Var,Abs,Vol) */
-  /* 95 */
-
-  /* Data OUT */
-  0x85, HID_REPORT_ID_6,                 /*     REPORT_ID (0xF0)           */
-  0x09, 0x06,                            /*     USAGE                      */
-  0x15, 0x00,                            /*     LOGICAL_MINIMUM (0)        */
-  0x26, 0xFF,0x00,                       /*     LOGICAL_MAXIMUM (255)      */
-  0x75, 0x08,                            /*     REPORT_SIZE (8)            */
-  0x95, 0x3F,                            /*     REPORT_COUNT (64)          */
-  0x91, 0x02,                            /*     OUTPUT(Data,Var,Abs,Vol)   */
-  /* 110 */
-
-  /* Data IN */
-  0x85, HID_REPORT_ID_6,                 /*     REPORT_ID (0xF0)           */
-  0x09, 0x07,                            /*     USAGE                      */
-  0x15, 0x00,                            /*     LOGICAL_MINIMUM (0)        */
-  0x26, 0xFF,0x00,                       /*     LOGICAL_MAXIMUM (255)      */
-  0x75, 0x08,                            /*     REPORT_SIZE (8)            */
-  0x95, 0x3F,                            /*     REPORT_COUNT (64)          */
-  0x81, 0x82,                            /*     INPUT(Data,Var,Abs,Vol)    */
-
-  /* 125 */
-  0xc0                                   /*     END_COLLECTION             */
+ALIGNED_HEAD uint8_t g_usbd_custom_hid2_report[USBD_CUSHID2_SIZ_REPORT_DESC] ALIGNED_TAIL =
+    {
+        0x05, 0x0C,       // Usage Page (Consumer Devices)
+        0x09, 0x01,       // Usage (Consumer Control)
+        0xA1, 0x01,       // Collection (Application)
+        0x05, 0x0C,       // Usage Page (Consumer Devices)
+        0x19, 0x00,       // Usage Minimum (Undefined)
+        0x2A, 0xFF, 0x0F, // Usage Maximum
+        0x15, 0x00,       // Logical Minimum (0)
+        0x26, 0xFF, 0x0F, // Logical Maximum (4095)
+        0x75, 0x10,       // Report Size (16)
+        0x95, 0x02,       // Report Count (2)
+        0x81, 0x00,       // Input (Data,Ary,Abs)
+        0xC0              // End Collection
 };
+
+ALIGNED_HEAD uint8_t g_usbd_custom_hid3_report[USBD_CUSHID3_SIZ_REPORT_DESC] ALIGNED_TAIL =
+    {
+        0x06, 0xC1, 0xFF, // Usage Page (Vendor-Defined 194)
+        0x09, 0x01,       // Usage (Vendor-Defined 1)
+        0xa1, 0x01,       // Collection (Application)
+        0x06, 0xC1, 0xFF, // Usage Page (Vendor-Defined 194)
+        0x15, 0x00,       // Logical Minimum (0)
+        0x26, 0xFF, 0x00, // Logical Maximum (255)
+        0x75, 0x08,       // Report Size (8)
+        0x09, 0xF0,       // Usage (Vendor-Defined 240)
+        0x95, 0x40,       // Report Count (64)
+        0x81, 0x02,       // Input (Data,Var,Abs,NWrp,Lin,Pref,NNul,Bit)
+        0x09, 0xF1,       // Usage (Vendor-Defined 241)
+        0x95, 0x40,       // Report Count (64)
+        0x91, 0x02,       // Output (Data,Var,Abs,NWrp,Lin,Pref,NNul,NVol,Bit)
+        0xC0              // End Collection
+}; /* SyncHID_ReportDescriptor */
 
 /**
   * @brief usb hid descriptor
