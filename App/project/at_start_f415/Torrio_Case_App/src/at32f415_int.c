@@ -24,6 +24,8 @@
 
 /* includes ------------------------------------------------------------------*/
 #include "at32f415_int.h"
+#include "usbd_int.h"
+#include "usb.h"
 
 /** @addtogroup AT32F415_periph_examples
   * @{
@@ -128,6 +130,16 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
+}
+
+/**
+  * @brief  this function handles otgfs interrupt.
+  * @param  none
+  * @retval none
+  */
+void OTG_IRQ_HANDLER(void)
+{
+  usbd_irq_handler(&otg_core_struct);
 }
 /**
   * @}

@@ -8,7 +8,7 @@
 
 --device_macro="C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\config\debugger\ArteryTek\AT32F415xx.dmac" 
 
---flash_loader="C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\config\flashloader\ArteryTek\AT32F415\AT32F415RCT7\FlashAT32F415RCT7.board" 
+--flash_loader="C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\config\flashloader\ArteryTek\AT32F415\AT32F415RBT7-7\FlashAT32F415RBT7-7.board" 
 
 
 

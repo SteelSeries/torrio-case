@@ -74,7 +74,7 @@
                 </option>
                 <option>
                     <name>OGChipSelectEditMenu</name>
-                    <state>AT32F415RCT7_v2	ArteryTek -AT32F415RCT7</state>
+                    <state>AT32F415RBT7-7_v2	ArteryTek -AT32F415RBT7-7</state>
                 </option>
                 <option>
                     <name>GenLowLevelInterface</name>
@@ -120,7 +120,7 @@
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>AT32F415RCT7_v2	ArteryTek -AT32F415RCT7</state>
+                    <state>AT32F415RBT7-7_v2	ArteryTek -AT32F415RBT7-7</state>
                 </option>
                 <option>
                     <name>FPU2</name>
@@ -663,7 +663,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>16</hasPrio>
+                <hasPrio>1</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -756,7 +756,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\config\linker\ArteryTek\AT32F415xC.icf</state>
+                    <state>$TOOLKIT_DIR$\config\linker\ArteryTek\AT32F415xB.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1184,6 +1184,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\main.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\usb.c</name>
         </file>
     </group>
 </project>
