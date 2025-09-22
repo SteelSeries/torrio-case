@@ -51,7 +51,7 @@ extern "C" {
 #define USBD_CUSTOM_HID_IN_EPT                    0x81
 #define USBD_CUSTOM_HID_IN_EPT2                   0x82
 #define USBD_CUSTOM_HID_IN_EPT3                   0x83
-// #define USBD_CUSTOM_HID_OUT_EPT                   0x01
+#define USBD_CUSTOM_HID_OUT_EPT                   0x01
 
 /**
   * @brief usb custom hid in and out max packet size define

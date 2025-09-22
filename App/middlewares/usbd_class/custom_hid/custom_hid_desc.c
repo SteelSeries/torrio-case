@@ -202,21 +202,11 @@ ALIGNED_HEAD static uint8_t g_usbd_configuration[USBD_CUSHID_CONFIG_DESC_SIZE] A
 
   USB_DEVICE_EPT_LEN,                    /* bLength: size of endpoint descriptor in bytes */
   USB_DESCIPTOR_TYPE_ENDPOINT,           /* bDescriptorType: endpoint descriptor type */
-  USBD_CUSTOM_HID_IN_EPT3,                /* bEndpointAddress: the address of endpoint on usb device described by this descriptor */
+  USBD_CUSTOM_HID_IN_EPT3,               /* bEndpointAddress: the address of endpoint on usb device described by this descriptor */
   USB_EPT_DESC_INTERRUPT,                /* bmAttributes: endpoint attributes */
   LBYTE(USBD_CUSTOM3_IN_MAXPACKET_SIZE),
   HBYTE(USBD_CUSTOM3_IN_MAXPACKET_SIZE),  /* wMaxPacketSize: maximum packe size this endpoint */
-  CUSHID_BINTERVAL_TIME,                                  /* bInterval: interval for polling endpoint for data transfers */
-
-
-
-  // USB_DEVICE_EPT_LEN,                    /* bLength: size of endpoint descriptor in bytes */
-  // USB_DESCIPTOR_TYPE_ENDPOINT,           /* bDescriptorType: endpoint descriptor type */
-  // USBD_CUSTOM_HID_OUT_EPT,               /* bEndpointAddress: the address of endpoint on usb device described by this descriptor */
-  // USB_EPT_DESC_INTERRUPT,                /* bmAttributes: endpoint attributes */
-  // LBYTE(USBD_CUSTOM_OUT_MAXPACKET_SIZE),
-  // HBYTE(USBD_CUSTOM_OUT_MAXPACKET_SIZE),  /* wMaxPacketSize: maximum packe size this endpoint */
-  // CUSHID_BINTERVAL_TIME,                    /* bInterval: interval for polling endpoint for data transfers */
+  CUSHID_BINTERVAL_TIME,                  /* bInterval: interval for polling endpoint for data transfers */
 };
 
 /**

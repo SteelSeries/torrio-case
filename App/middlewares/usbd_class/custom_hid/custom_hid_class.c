@@ -24,6 +24,8 @@
 #include "usbd_core.h"
 #include "custom_hid_class.h"
 #include "custom_hid_desc.h"
+#include "Commands.h"
+#include <string.h>
 
 /** @addtogroup AT32F415_middlewares_usbd_class
   * @{
@@ -298,8 +300,8 @@ static usb_sts_type class_out_handler(void *udev, uint8_t ept_num)
   /* hid buffer process */
   usb_hid_buf_process(udev, pcshid->g_rxhid_buff, recv_len);
 
-  // /* start receive next packet */
-  // usbd_ept_recv(pudev, USBD_CUSTOM_HID_OUT_EPT, pcshid->g_rxhid_buff, recv_len);
+  /* start receive next packet */
+  usbd_ept_recv(pudev, USBD_CUSTOM_HID_OUT_EPT, pcshid->g_rxhid_buff, recv_len);
 
   return status;
 }
@@ -365,7 +367,9 @@ usb_sts_type custom_hid_class_send_report(void *udev, uint8_t *report, uint16_t 
   if(usbd_connect_state_get(pudev) == USB_CONN_STATE_CONFIGURED && pcshid->send_state == 0)
   {
     pcshid->send_state = 1;
-    usbd_ept_send(pudev, USBD_CUSTOM_HID_IN_EPT, report, len);
+    memset(pcshid->g_txhid_buff, 0x00, USBD_CUSTOM_IN_MAXPACKET_SIZE);
+    memcpy(pcshid->g_txhid_buff, report, len);
+    usbd_ept_send(pudev, USBD_CUSTOM_HID_IN_EPT, pcshid->g_txhid_buff, USBD_CUSTOM_IN_MAXPACKET_SIZE);
     status = USB_OK;
   }
   return status;
@@ -380,53 +384,7 @@ usb_sts_type custom_hid_class_send_report(void *udev, uint8_t *report, uint16_t 
   */
 static void usb_hid_buf_process(void *udev, uint8_t *report, uint16_t len)
 {
-  uint32_t i_index;
-  usbd_core_type *pudev = (usbd_core_type *)udev;
-  custom_hid_type *pcshid = (custom_hid_type *)pudev->class_handler->pdata;
-
-  switch(report[0])
-  {
-    case HID_REPORT_ID_2:
-      if(pcshid->g_rxhid_buff[1] == 0)
-      {
-        at32_led_off(LED2);
-      }
-      else
-      {
-        at32_led_on(LED2);
-      }
-      break;
-    case HID_REPORT_ID_3:
-      if(pcshid->g_rxhid_buff[1] == 0)
-      {
-        at32_led_off(LED3);
-      }
-      else
-      {
-        at32_led_on(LED3);
-      }
-      break;
-    case HID_REPORT_ID_4:
-      if(pcshid->g_rxhid_buff[1] == 0)
-      {
-        at32_led_off(LED4);
-      }
-      else
-      {
-        at32_led_on(LED4);
-      }
-      break;
-    case HID_REPORT_ID_6:
-      for(i_index = 0; i_index < len; i_index ++)
-      {
-        pcshid->g_txhid_buff[i_index] = report[i_index];
-      }
-      custom_hid_class_send_report(pudev, pcshid->g_txhid_buff, len);
-      break;
-    default:
-      break;
-  }
-
+  Commands_HandleUsbCommand(report, len);
 }
 
 /**

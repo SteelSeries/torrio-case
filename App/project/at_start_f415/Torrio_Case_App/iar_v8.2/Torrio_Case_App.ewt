@@ -1540,6 +1540,9 @@
             <name>$PROJ_DIR$\..\src\at32f415_int.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\Commands.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\main.c</name>
         </file>
         <file>
