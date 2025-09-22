@@ -119,8 +119,7 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
             }
             else if (command[2] == FILE_ID_PERIPHERAL)
             {
-                // uint8_t buff[] = {command[0], command[1], command[2]};
-                // SpiProtocol_SendBuffer(buff, sizeof(buff));
+                //Todo: switch to buds or dongle
             }
         }
         else if (command[1] == RECOVERY_MODE_APPLICATION)
@@ -132,8 +131,7 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
             }
             else if (command[2] == FILE_ID_PERIPHERAL)
             {
-                // uint8_t buff[] = {command[0], command[1], command[2]};
-                // SpiProtocol_SendBuffer(buff, sizeof(buff));
+                //Todo: switch to buds or dongle
             }
         }
     }

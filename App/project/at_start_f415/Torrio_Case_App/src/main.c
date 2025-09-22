@@ -27,6 +27,7 @@
 #include "custom_hid_class.h"
 #include "custom_hid_desc.h"
 #include "usb.h"
+#include "Commands.h"
 
 /** @addtogroup AT32F415_periph_examples
   * @{
@@ -54,6 +55,7 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
+  printf("APP Start!!!\n");
 
   /* usb gpio config */
   Usb_GpioConfig();
@@ -80,12 +82,15 @@ int main(void)
 
   while(1)
   {
-    if(at32_button_press() == USER_BUTTON)
+    if (SS_RESET_FLAG)
     {
-      report_buf[0] = HID_REPORT_ID_5;
-      report_buf[1] = (~report_buf[1]) & 0x1;
-      custom_hid_class_send_report(&otg_core_struct.dev, report_buf, USBD_CUSTOM_IN_MAXPACKET_SIZE);
+      SS_RESET_FLAG = false;
+      delay_ms(500);
+      usbd_disconnect(&otg_core_struct.dev);
+      delay_ms(500);
+      nvic_system_reset();
     }
+
   }
 }
 

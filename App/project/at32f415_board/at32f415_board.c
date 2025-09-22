@@ -174,6 +174,8 @@ void at32_board_init()
 
   /* configure button in at_start board */
   at32_button_init();
+
+  uart_print_init(921600);
 }
 
 /**

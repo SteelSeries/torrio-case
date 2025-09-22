@@ -277,7 +277,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>00000000</state>
+                    <state>11111110</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -359,7 +359,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -368,7 +368,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -663,7 +663,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>1</hasPrio>
+                <hasPrio>176</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -672,7 +672,7 @@
             <archiveVersion>1</archiveVersion>
             <data>
                 <prebuild></prebuild>
-                <postbuild></postbuild>
+                <postbuild>_CRC32_Generate.bat</postbuild>
             </data>
         </settings>
         <settings>
@@ -752,11 +752,11 @@
                 </option>
                 <option>
                     <name>IlinkIcfOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\config\linker\ArteryTek\AT32F415xB.icf</state>
+                    <state>C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\Torrio_Case_App.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -820,7 +820,7 @@
                 </option>
                 <option>
                     <name>DoFill</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>FillerByte</name>
@@ -828,11 +828,11 @@
                 </option>
                 <option>
                     <name>FillerStart</name>
-                    <state>0x0</state>
+                    <state>0x08004000</state>
                 </option>
                 <option>
                     <name>FillerEnd</name>
-                    <state>0x0</state>
+                    <state>0x0801FFFF</state>
                 </option>
                 <option>
                     <name>CrcSize</name>
