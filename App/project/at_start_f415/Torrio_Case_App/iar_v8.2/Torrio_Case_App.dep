@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>5</fileVersion>
-    <fileChecksum>1579233027</fileChecksum>
+    <fileChecksum>1843988944</fileChecksum>
     <configuration>
         <name>Torrio_Case_App</name>
         <outputs>
@@ -108,7 +108,6 @@
             <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\at32f415_int.o</file>
             <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_gpio.o</file>
             <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_sdio.h</file>
-            <file>$PROJ_DIR$\..\readme.txt</file>
             <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</file>
             <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</file>
             <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.c</file>
@@ -135,10 +134,14 @@
             <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
             <file>$PROJ_DIR$\..\src\usb.c</file>
             <file>$PROJ_DIR$\..\src\Commands.c</file>
+            <file>$PROJ_DIR$\..\src\version.c</file>
             <file>$PROJ_DIR$\Torrio_Case_App.icf</file>
             <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\Commands.o</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
             <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.out_nochecksum</file>
+            <file>$PROJ_DIR$\..\inc\version.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\version.o</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</name>
@@ -151,7 +154,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 59 8</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 59 8</file>
                 </tool>
             </inputs>
         </file>
@@ -241,7 +244,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 59 8 35</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 59 8 35</file>
                 </tool>
             </inputs>
         </file>
@@ -280,7 +283,7 @@
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 26 31 24 38 130 52 68 32 30 56 44 73 60 84 28 51 27 82 101 25 48 21 71 43 50 53 85 55 93 69 75 63 88 58 99 131 47 100 23 126</file>
+                    <file> 26 31 24 38 130 52 68 32 30 56 44 73 60 84 28 51 27 82 101 25 48 21 71 43 50 53 85 55 93 69 75 63 88 58 99 131 47 100 23 125 136</file>
                 </tool>
             </inputs>
         </file>
@@ -295,7 +298,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 36 59 8 35</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 36 59 8 35</file>
                 </tool>
             </inputs>
         </file>
@@ -310,7 +313,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 80 59 8 35</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 80 59 8 35</file>
                 </tool>
             </inputs>
         </file>
@@ -325,7 +328,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 80 59 8 35</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 80 59 8 35</file>
                 </tool>
             </inputs>
         </file>
@@ -340,7 +343,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 36 59 8 57 125 35</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 36 59 8 57 124 35</file>
                 </tool>
             </inputs>
         </file>
@@ -355,7 +358,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 54 40 59 124 97 8 125 35</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 54 40 59 123 97 8 124 35</file>
                 </tool>
             </inputs>
         </file>
@@ -385,7 +388,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 132 22 127 19 86 133 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 81 29 54 40 59 124 8 35</file>
+                    <file> 13 20 14 132 22 126 19 86 133 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 81 29 54 40 59 123 8 35</file>
                 </tool>
             </inputs>
         </file>
@@ -400,7 +403,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 80 54 40 59 8 35</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 80 54 40 59 8 35</file>
                 </tool>
             </inputs>
         </file>
@@ -673,13 +676,13 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 126</file>
+                    <file> 125</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 22 127 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 59 8 125 35</file>
+                    <file> 13 20 14 22 126 19 86 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 59 8 124 35</file>
                 </tool>
             </inputs>
         </file>
@@ -694,10 +697,38 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 13 20 14 132 22 127 19 86 133 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 54 59 124 8 125 35</file>
+                    <file> 13 20 14 132 22 126 19 86 133 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 41 81 29 54 59 123 8 124 35 135</file>
                 </tool>
             </inputs>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\version.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 136</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 13 20 14 132 22 126 19 86 133 46 96 11 10 33 7 34 18 49 15 16 42 45 37 98 78 66 94 74 89 17 65 62 72 61 102 79 91 95 83 39 9 59 8 135</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.out_nochecksum</name>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 26 31 24 38 130 52 68 32 30 56 44 73 60 84 28 51 27 82 101 25 48 21 71 43 50 53 85 55 93 69 75 63 88 58 99 131 47 100 23 125</file>
+                </tool>
+            </inputs>
+        </file>
+        <forcedrebuild>
+            <name>[MULTI_TOOL]</name>
+            <tool>ILINK</tool>
+        </forcedrebuild>
         <forcedrebuild>
             <name>[REBUILD_ALL]</name>
         </forcedrebuild>

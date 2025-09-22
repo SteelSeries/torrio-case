@@ -4,6 +4,7 @@
 #include "Commands.h"
 #include "custom_hid_class.h"
 #include "usb.h"
+#include "version.h"
 #include <stdio.h>
 #include <string.h>
 /*************************************************************************************************
@@ -101,7 +102,11 @@ static Command_Status_t Command_HandleNoop(const uint8_t command[USBD_CUSTOM_OUT
 
 static Command_Status_t CommandVersion_ReadVersion(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
 {
-    uint8_t buff[] = {command[0], command[1]};
+    uint8_t buff[13] = {0x00};
+    uint8_t temp_buff[12] = {0};
+    buff[0] = VERSION_OP | COMMAND_READ_FLAG;
+    Version_GetArteryVersion(temp_buff, sizeof(temp_buff));
+    memcpy(&buff[1], temp_buff, 8);
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }

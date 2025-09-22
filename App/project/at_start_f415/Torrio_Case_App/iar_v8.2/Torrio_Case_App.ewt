@@ -1548,5 +1548,8 @@
         <file>
             <name>$PROJ_DIR$\..\src\usb.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\version.c</name>
+        </file>
     </group>
 </project>
