@@ -141,6 +141,20 @@ void OTG_IRQ_HANDLER(void)
 {
   usbd_irq_handler(&otg_core_struct);
 }
+
+/**
+  * @brief  this function handles the timer interrupt request.
+  * @param  none
+  * @retval none
+  */
+void TMR5_GLOBAL_IRQHandler(void)
+{
+  if(tmr_interrupt_flag_get(TMR5, TMR_OVF_FLAG) != RESET)
+  {
+    /* clear timer 5 ovf flag */
+    tmr_flag_clear(TMR5, TMR_OVF_FLAG);
+  }
+}
 /**
   * @}
   */

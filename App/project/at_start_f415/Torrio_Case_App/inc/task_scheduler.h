@@ -45,3 +45,4 @@ TaskScheduler_TaskStatus_t TaskScheduler_AddTask(void (*func)(void),
                                                  uint16_t interval_ticks,
                                                  TaskScheduler_RunMode_t runMode,
                                                  TaskScheduler_StartMode_t startMode);
+uint32_t TaskScheduler_GetTimeUntilNextTask(void);

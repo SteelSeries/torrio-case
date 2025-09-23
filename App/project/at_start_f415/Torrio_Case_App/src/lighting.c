@@ -25,7 +25,7 @@
  *************************************************************************************************/
 
 uint8_t i = 0;
-void Lighting_Handler(void)
+void Lighting_HandlerTask(void)
 {
     printf("[%s]%d\n", __func__, i);
     at32_led_toggle(LED2);
@@ -34,10 +34,10 @@ void Lighting_Handler(void)
     if (i > 10)
     {
         i = 0;
-        if (TaskScheduler_RemoveTask(Lighting_Handler) != TASK_OK)
-        {
-            printf("remove task fail\n");
-        }
+        // if (TaskScheduler_RemoveTask(Lighting_HandlerTask) != TASK_OK)
+        // {
+        //     printf("remove task fail\n");
+        // }
     }
     i++;
 }

@@ -8,8 +8,11 @@
 #include "usb.h"
 #include "Commands.h"
 #include "timer2.h"
+#include "timer5.h"
 #include "task_scheduler.h"
 #include "lighting.h"
+#include "sy8809.h"
+#include "power_control.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -23,6 +26,7 @@
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+static uint32_t sleepTime;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -73,14 +77,30 @@ int main(void)
             &custom_hid_desc_handler);
 
   Timer2_Init();
-  if (TaskScheduler_AddTask(Lighting_Handler, 1000, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+
+  Timer5_Init();
+
+  PowerControl_Init();
+
+  if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
-    printf("add Lighting_Handler fail\n");
+    printf("add sy8809 task fail\n");
   }
+  
   printf("main loop start\n");
   while (1)
   {
     TaskScheduler_Run();
+
+    sleepTime = TaskScheduler_GetTimeUntilNextTask();
+    if (sleepTime > 0)
+    {
+      printf("setting sleep time:%d\n", sleepTime);
+      Timer5_StartOneShot(sleepTime);
+      PowerControl_EnterSleep();
+      printf("system wakeup\n");
+    }
+
     if (SS_RESET_FLAG)
     {
       printf("system reset\n");

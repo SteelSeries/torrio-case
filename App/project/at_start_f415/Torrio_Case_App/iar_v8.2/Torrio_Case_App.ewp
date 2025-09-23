@@ -820,7 +820,7 @@
                 </option>
                 <option>
                     <name>DoFill</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>FillerByte</name>
@@ -1192,10 +1192,19 @@
             <name>$PROJ_DIR$\..\src\main.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\power_control.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sy8809.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\timer2.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer5.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\usb.c</name>

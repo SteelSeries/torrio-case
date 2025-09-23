@@ -117,6 +117,26 @@ TaskScheduler_TaskStatus_t TaskScheduler_RemoveTask(void (*func)(void))
     return TASK_REMOVE_NOT_FOUND;
 }
 
+uint32_t TaskScheduler_GetTimeUntilNextTask(void)
+{
+    int32_t minDelta = -1;
+    uint32_t now = Timer2_GetTick();
+
+    for (uint32_t i = 0; i < numTasks; i++)
+    {
+        int32_t delta = taskList[i].interval - (now - taskList[i].lastRun);
+        if (delta <= 0)
+        {
+            return 0; // 任務已到期，立即執行
+        }
+        if (minDelta == -1 || delta < minDelta)
+        {
+            minDelta = delta;
+        }
+    }
+    return minDelta; // 剩餘時間（ticks 單位）
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
