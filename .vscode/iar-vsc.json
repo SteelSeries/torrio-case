@@ -1,0 +1,16 @@
+{
+  "workspace": {
+    "path": "${workspaceFolder}\\App\\utilities\\at32f415_usart_iap_demo\\source_code\\app_led3_toggle\\iar_v8.2\\app_led3_toggle.eww"
+  },
+  "workspaces": {
+    "${workspaceFolder}\\App\\utilities\\at32f415_usart_iap_demo\\source_code\\app_led3_toggle\\iar_v8.2\\app_led3_toggle.eww": {
+      "configs": {},
+      "selected": {
+        "path": "${workspaceFolder}\\App\\utilities\\at32f415_usart_iap_demo\\source_code\\app_led3_toggle\\iar_v8.2\\app_led3_toggle.ewp"
+      }
+    }
+  },
+  "workbench": {
+    "path": "C:\\Program Files\\IAR Systems\\Embedded Workbench 9.0"
+  }
+}
