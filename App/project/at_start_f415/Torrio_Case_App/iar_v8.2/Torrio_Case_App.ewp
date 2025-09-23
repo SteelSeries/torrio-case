@@ -663,7 +663,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>176</hasPrio>
+                <hasPrio>1</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -1186,7 +1186,13 @@
             <name>$PROJ_DIR$\..\src\Commands.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\lighting.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\main.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\timer2.c</name>
