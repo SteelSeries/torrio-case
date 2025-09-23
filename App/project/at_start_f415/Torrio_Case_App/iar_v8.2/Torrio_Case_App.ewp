@@ -1189,6 +1189,9 @@
             <name>$PROJ_DIR$\..\src\main.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\timer2.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\usb.c</name>
         </file>
         <file>

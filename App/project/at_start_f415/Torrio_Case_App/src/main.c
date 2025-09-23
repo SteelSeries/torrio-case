@@ -7,6 +7,7 @@
 #include "custom_hid_desc.h"
 #include "usb.h"
 #include "Commands.h"
+#include "timer2.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -22,18 +23,28 @@
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
+static void print_clock(const char *name, uint32_t hz);
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
 int main(void)
 {
+  crm_clocks_freq_type crm_clocks_freq_struct = {0};
+
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   system_clock_config();
+  
+  crm_clocks_freq_get(&crm_clocks_freq_struct);
 
   at32_board_init();
-  
+
   printf("APP Start!!!\n");
+  print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
+  print_clock("AHB",  crm_clocks_freq_struct.ahb_freq);
+  print_clock("APB2", crm_clocks_freq_struct.apb2_freq);
+  print_clock("APB1", crm_clocks_freq_struct.apb1_freq);
+  print_clock("ADC",  crm_clocks_freq_struct.adc_freq);
 
   /* usb gpio config */
   Usb_GpioConfig();
@@ -58,10 +69,14 @@ int main(void)
             &custom_hid_class_handler,
             &custom_hid_desc_handler);
 
+  Timer2_Init();
+
+  printf("main loop start\n");
   while (1)
   {
     if (SS_RESET_FLAG)
     {
+      printf("system reset\n");
       SS_RESET_FLAG = false;
       delay_ms(500);
       usbd_disconnect(&otg_core_struct.dev);
@@ -74,3 +89,12 @@ int main(void)
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static void print_clock(const char *name, uint32_t hz)
+{
+    unsigned long hz_ul = (unsigned long)hz;
+    unsigned long mhz_int = hz_ul / 1000000UL;
+    unsigned long mhz_frac = (hz_ul % 1000000UL) / 1000UL; /* 三位數小數 (kHz) */
+
+    /* %-12s 讓名稱對齊 */
+    printf("%-12s: %lu Hz (%lu.%03lu MHz)\n", name, hz_ul, mhz_int, mhz_frac);
+}

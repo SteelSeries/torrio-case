@@ -23,8 +23,6 @@
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
-// static bool format_as_bytes_dotted(uint32_t val, uint8_t *buf, size_t bufsz);
-// static int write_dec_min2_uint8(uint8_t *dst, size_t dstsz, unsigned v);
 static int write_hex2_uint8(uint8_t *dst, size_t dstsz, unsigned v);
 static bool format_as_bytes_dotted_hex(uint32_t val, uint8_t *buf, size_t bufsz);
 

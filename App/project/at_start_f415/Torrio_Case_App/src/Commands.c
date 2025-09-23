@@ -41,7 +41,6 @@ static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_O
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static uint8_t buffer[USBD_CUSTOM_OUT_MAXPACKET_SIZE] = {0};
-// static uint8_t txBuf[USBD_CUSTOM_OUT_MAXPACKET_SIZE] = {0};
 static const cmd_handler_t handler_table[] =
 {
     { .op = NO_OP,                    .read = Command_HandleNoop,                       .write = Command_HandleNoop },
