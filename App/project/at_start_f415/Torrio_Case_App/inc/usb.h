@@ -26,5 +26,9 @@ extern otg_core_type otg_core_struct;
 void Usb_GpioConfig(void);
 void Usb_Clock48mSelect(usb_clk48_s clk_s);
 void Usb_LowPowerWakeupConfig(void);
+void Usb_ReadyStateSet(usbd_event_type usb_state);
+usbd_event_type Usb_ReadyStateGet(void);
+
+
 
 

@@ -21,3 +21,5 @@
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void Timer2_Init(void);
+uint32_t Timer2_GetTick(void);
+
