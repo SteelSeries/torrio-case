@@ -86,14 +86,15 @@ int main(void)
   {
     printf("add sy8809 task fail\n");
   }
-  
+
   printf("main loop start\n");
   while (1)
   {
     TaskScheduler_Run();
 
     sleepTime = TaskScheduler_GetTimeUntilNextTask();
-    if (sleepTime > 0)
+  
+    if ((sleepTime > 0) && (Usb_ReadyStateGet() != USBD_RESET_EVENT))
     {
       printf("setting sleep time:%d\n", sleepTime);
       Timer5_StartOneShot(sleepTime);

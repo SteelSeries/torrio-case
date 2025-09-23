@@ -49,4 +49,8 @@ C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_
   C:\Users\timmy.tien\Documents\Torrio_Case\App\middlewares\usbd_class\custom_hid\custom_hid_desc.h \
   C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\inc\Commands.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\string.h \
-  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_string.h
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_string.h \
+  C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\inc\usb.h \
+  C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\inc\usb_conf.h \
+  C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usb_core.h \
+  C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usbd_core.h

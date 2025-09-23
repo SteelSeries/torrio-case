@@ -26,6 +26,7 @@
 #include "custom_hid_desc.h"
 #include "Commands.h"
 #include <string.h>
+#include "usb.h"
 
 /** @addtogroup AT32F415_middlewares_usbd_class
   * @{
@@ -332,20 +333,27 @@ static usb_sts_type class_event_handler(void *udev, usbd_event_type event)
   switch(event)
   {
     case USBD_RESET_EVENT:
+      Usb_ReadyStateSet(USBD_RESET_EVENT);
 
       /* ...user code... */
 
       break;
     case USBD_SUSPEND_EVENT:
+      Usb_ReadyStateSet(USBD_SUSPEND_EVENT);
+
 
       /* ...user code... */
 
       break;
     case USBD_WAKEUP_EVENT:
+      Usb_ReadyStateSet(USBD_WAKEUP_EVENT);
+
       /* ...user code... */
 
       break;
     default:
+      Usb_ReadyStateSet(event);
+    
       break;
   }
   return status;
