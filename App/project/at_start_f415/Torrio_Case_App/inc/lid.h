@@ -25,4 +25,4 @@ typedef struct
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Lid_Init(const Lid_HardwareSettings_t *hardware_settings);
+void Lid_GpioConfigHardware(const Lid_HardwareSettings_t *hardware_settings);

@@ -24,7 +24,7 @@ static Lid_HardwareSettings_t user_hardware_settings = {0};
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-void Lid_Init(const Lid_HardwareSettings_t *hardware_settings)
+void Lid_GpioConfigHardware(const Lid_HardwareSettings_t *hardware_settings)
 {
     gpio_init_type gpio_init_struct;
     memcpy(&user_hardware_settings, hardware_settings, sizeof(Lid_HardwareSettings_t));

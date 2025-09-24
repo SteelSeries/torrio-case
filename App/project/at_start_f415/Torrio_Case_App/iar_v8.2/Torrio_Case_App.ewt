@@ -1502,6 +1502,12 @@
         </file>
     </group>
     <group>
+        <name>i2c_application_library</name>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</name>
+        </file>
+    </group>
+    <group>
         <name>readme</name>
         <file>
             <name>$PROJ_DIR$\..\readme.txt</name>
@@ -1541,6 +1547,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\Commands.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c1.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\init_pinout.c</name>

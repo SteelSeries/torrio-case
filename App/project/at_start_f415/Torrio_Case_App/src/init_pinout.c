@@ -4,6 +4,7 @@
 #include "init_pinout.h"
 #include "pinout.h"
 #include "lid.h"
+#include "i2c1.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -23,6 +24,22 @@ static const Lid_HardwareSettings_t lid_config =
         .lid_gpio_pin = HALL_OUT_PIN,
         .lid_gpio_crm_clk = CRM_GPIOB_PERIPH_CLOCK,
 };
+
+static const I2c1_HardwareSettings_t i2c1_config =
+    {
+        .i2c1_sda_gpio_port = I2C1_SDA_GPIO_PORT,
+        .i2c1_sda_gpio_pin = I2C1_SDA_PIN,
+        .i2c1_sda_gpio_crm_clk = I2C1_SDA_GPIO_CLK,
+
+        .i2c1_scl_gpio_port = I2C1_SCL_GPIO_PORT,
+        .i2c1_scl_gpio_pin = I2C1_SCL_PIN,
+        .i2c1_scl_gpio_crm_clk = I2C1_SCL_GPIO_CLK,
+
+        .i2c1_port = I2C1_PORT,
+        .i2c1_crm_clk = I2C1_CLK,
+
+        .i2c1_speed = I2C1_SPEED,
+};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -31,7 +48,8 @@ static const Lid_HardwareSettings_t lid_config =
  *************************************************************************************************/
 void InitPinout_Init(void)
 {
-    Lid_Init(&lid_config);
+    Lid_GpioConfigHardware(&lid_config);
+    I2c1_GpioConfigHardware(&i2c1_config);
 }
 
 /*************************************************************************************************

@@ -33,6 +33,8 @@ extern "C" {
 #include "stdio.h"
 #include "at32f415.h"
 #include  <stdbool.h>
+#include "i2c_application.h"
+
 /** @addtogroup AT32F415_board
   * @{
   */
