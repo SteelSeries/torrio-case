@@ -1186,6 +1186,12 @@
             <name>$PROJ_DIR$\..\src\Commands.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\init_pinout.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\lid.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\lighting.c</name>
         </file>
         <file>

@@ -13,6 +13,7 @@
 #include "lighting.h"
 #include "sy8809.h"
 #include "power_control.h"
+#include "init_pinout.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -82,6 +83,8 @@ int main(void)
 
   PowerControl_Init();
 
+  InitPinout_Init();
+
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
     printf("add sy8809 task fail\n");
@@ -93,7 +96,7 @@ int main(void)
     TaskScheduler_Run();
 
     sleepTime = TaskScheduler_GetTimeUntilNextTask();
-  
+
     if ((sleepTime > 0) && (Usb_ReadyStateGet() != USBD_RESET_EVENT))
     {
       printf("setting sleep time:%d\n", sleepTime);
