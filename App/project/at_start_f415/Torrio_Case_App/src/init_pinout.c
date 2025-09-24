@@ -5,7 +5,7 @@
 #include "pinout.h"
 #include "lid.h"
 #include "i2c1.h"
-
+#include "sy8809.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -40,6 +40,15 @@ static const I2c1_HardwareSettings_t i2c1_config =
 
         .i2c1_speed = I2C1_SPEED,
 };
+
+static const Sy8809_HardwareSettings_t sy8809_config =
+    {
+        .sy8809_sda_gpio_port = I2C1_SDA_GPIO_PORT,
+        .sy8809_sda_gpio_pin = I2C1_SDA_PIN,
+        .sy8809_sda_gpio_crm_clk = I2C1_SDA_GPIO_CLK,
+
+};
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -49,6 +58,11 @@ static const I2c1_HardwareSettings_t i2c1_config =
 void InitPinout_Init(void)
 {
     Lid_GpioConfigHardware(&lid_config);
+    Sy8809_GpioConfigHardware(&sy8809_config);
+}
+
+void InitPinout_I2c1Init(void)
+{
     I2c1_GpioConfigHardware(&i2c1_config);
 }
 

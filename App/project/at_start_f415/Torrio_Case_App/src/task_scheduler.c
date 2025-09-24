@@ -31,6 +31,7 @@ typedef struct
  *************************************************************************************************/
 static Task taskList[MAX_TASKS];
 static uint8_t numTasks = 0;
+static volatile void (*temp_taskFunc)(void);
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -39,14 +40,12 @@ static uint8_t numTasks = 0;
  *************************************************************************************************/
 void TaskScheduler_Run(void)
 {
-    uint32_t now = Timer2_GetTick();
-
     for (uint8_t i = 0; i < numTasks; /* no i++ here */)
     {
-        if ((now - taskList[i].lastRun) >= taskList[i].interval)
+        if ((Timer2_GetTick() - taskList[i].lastRun) >= taskList[i].interval)
         {
-            taskList[i].lastRun = now;
-            taskList[i].taskFunc();
+            temp_taskFunc = taskList[i].taskFunc;
+            taskList[i].lastRun = Timer2_GetTick();
 
             if (taskList[i].runMode == TASK_RUN_ONCE)
             {
@@ -56,8 +55,9 @@ void TaskScheduler_Run(void)
                     taskList[j] = taskList[j + 1];
                 }
                 numTasks--;
-                continue;
             }
+            temp_taskFunc();
+            continue;
         }
         i++;
     }
@@ -80,6 +80,7 @@ TaskScheduler_TaskStatus_t TaskScheduler_AddTask(void (*func)(void),
             return TASK_ALREADY_EXISTS;
         }
     }
+
     uint32_t now = Timer2_GetTick();
 
     taskList[numTasks].taskFunc = func;

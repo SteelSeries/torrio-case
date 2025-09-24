@@ -95,14 +95,16 @@ int main(void)
   {
     TaskScheduler_Run();
 
-    sleepTime = TaskScheduler_GetTimeUntilNextTask();
-
-    if ((sleepTime > 0) && (Usb_ReadyStateGet() != USBD_RESET_EVENT))
+    if (Usb_ReadyStateGet() != USBD_RESET_EVENT)
     {
-      printf("setting sleep time:%d\n", sleepTime);
-      Timer5_StartOneShot(sleepTime);
-      PowerControl_EnterSleep();
-      printf("system wakeup\n");
+      sleepTime = TaskScheduler_GetTimeUntilNextTask();
+      if (sleepTime > 0)
+      {
+        printf("setting sleep time:%d\n", sleepTime);
+        Timer5_StartOneShot(sleepTime);
+        PowerControl_EnterSleep();
+        printf("system wakeup\n");
+      }
     }
 
     if (SS_RESET_FLAG)

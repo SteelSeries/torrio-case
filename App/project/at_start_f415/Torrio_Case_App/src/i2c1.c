@@ -7,6 +7,8 @@
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
+#define I2C_TIMEOUT 0xFFFFFFFF
+
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -17,7 +19,7 @@
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static I2c1_HardwareSettings_t user_hardware_settings = {0};
-static i2c_handle_type hi2cx = {0};
+i2c_handle_type hi2cx = {0};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -60,6 +62,25 @@ void i2c_lowlevel_init(i2c_handle_type *hi2c)
 
         i2c_own_address1_set(hi2c->i2cx, I2C_ADDRESS_MODE_7BIT, SY8809_I2C_SLAVE_ADDRESS);
     }
+}
+
+i2c_status_type I2c1_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff)
+{
+    i2c_status_type i2c_status;
+    uint8_t reg_tx_buff[] = {reg};
+    /* start the request reception process */
+    if ((i2c_status = i2c_master_transmit(&hi2cx, address, reg_tx_buff, sizeof(reg_tx_buff), I2C_TIMEOUT)) != I2C_OK)
+    {
+        return i2c_status;
+    }
+
+    /* start the request reception process */
+    if ((i2c_status = i2c_master_receive(&hi2cx, address, i2c_rx_buff, sizeof(i2c_rx_buff), I2C_TIMEOUT)) != I2C_OK)
+    {
+        return i2c_status;
+    }
+
+    return i2c_status;
 }
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *

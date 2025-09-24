@@ -99,6 +99,10 @@ typedef enum
 #define USER_BUTTON_PORT                 GPIOA
 #define USER_BUTTON_CRM_CLK              CRM_GPIOA_PERIPH_CLOCK
 
+#define REG_BIT(BIT) (0x01 << BIT)
+#define SET_REG_BIT(BIT) (0x01 << BIT)
+#define RESET_REG_BIT(BIT) (0xFF ^ (0x01 << BIT))
+
 /**
   * @}
   */
