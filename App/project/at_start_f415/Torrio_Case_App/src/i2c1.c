@@ -82,6 +82,18 @@ i2c_status_type I2c1_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff
 
     return i2c_status;
 }
+
+i2c_status_type I2c1_WriteReg(uint16_t address, uint8_t reg, uint8_t data)
+{
+    i2c_status_type i2c_status;
+    uint8_t reg_tx_buff[] = {reg, data};
+    /* start the request reception process */
+    if ((i2c_status = i2c_master_transmit(&hi2cx, address, reg_tx_buff, sizeof(reg_tx_buff), I2C_TIMEOUT)) != I2C_OK)
+    {
+        return i2c_status;
+    }
+    return i2c_status;
+}
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/

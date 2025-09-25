@@ -48,6 +48,47 @@ typedef enum
     SY8809_REG_0x44
 } Sy8809_Reg_Table_t;
 
+typedef enum
+{
+    SY8809_0x20,
+    SY8809_0x21,
+    SY8809_0x22,
+    SY8809_0x23,
+    SY8809_0x24,
+    SY8809_0x25,
+    SY8809_0x26,
+    SY8809_0x2E,
+    SY8809_0x2F,
+    SY8809_0x30,
+    SY8809_0x31,
+    SY8809_0x32,
+    SY8809_0x33,
+    SY8809_0x34,
+    SY8809_0x35,
+    SY8809_0x36,
+    SY8809_0x37,
+    SY8809_0x44,
+    SY8809_0x27
+} setting_8809_table_list;
+
+typedef enum
+{
+    SY8809_REG_UNKNOWN = 0,
+    SY8809_REG_TABLE_3 = 3,
+    SY8809_REG_TABLE_4,
+    SY8809_REG_TABLE_5H,
+    SY8809_REG_TABLE_6,
+    SY8809_REG_TABLE_A,
+    SY8809_REG_TABLE_B,
+    SY8809_REG_TABLE_CEI,
+    SY8809_REG_TABLE_DFJ,
+    SY8809_REG_TABLE_G
+    // SY8809_REG_TABLE_E,
+    // SY8809_REG_TABLE_F,
+    // SY8809_REG_TABLE_H,
+    // SY8809_REG_TABLE_I,
+    // SY8809_REG_TABLE_J
+} SY8809_REG_TABLE;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/

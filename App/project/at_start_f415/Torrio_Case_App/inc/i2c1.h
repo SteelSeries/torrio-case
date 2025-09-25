@@ -38,3 +38,4 @@ extern i2c_handle_type hi2cx;
  *************************************************************************************************/
 void I2c1_GpioConfigHardware(const I2c1_HardwareSettings_t *hardware_settings);
 i2c_status_type I2c1_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff);
+i2c_status_type I2c1_WriteReg(uint16_t address, uint8_t reg, uint8_t data);
