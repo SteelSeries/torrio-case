@@ -2,6 +2,7 @@
  *                                         INCLUDES                                              *
  *************************************************************************************************/
 #include "usb.h"
+#include <string.h>
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -18,23 +19,69 @@ otg_core_type otg_core_struct;
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static usbd_event_type usb_ready = USBD_NOP_EVENT;
+static Usb_HardwareSettings_t user_hardware_settings = {0};
+static Usb_DetectConnectState_t usb_detect_state = USB_UNKNOW;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+void Usb_GpioConfigHardware(const Usb_HardwareSettings_t *hardware_settings)
+{
+  gpio_init_type gpio_init_struct;
+
+  memcpy(&user_hardware_settings, hardware_settings, sizeof(Usb_HardwareSettings_t));
+
+  crm_periph_clock_enable(user_hardware_settings.usb_detect_gpio_crm_clk, TRUE);
+  crm_periph_clock_enable(user_hardware_settings.usb_otg_pin_vbus_gpio_crm_clk, TRUE);
+  crm_periph_clock_enable(user_hardware_settings.usb_detect_gpio_crm_clk, TRUE);
+
+  gpio_default_para_init(&gpio_init_struct);
+
+  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
+  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+
+#ifdef USB_SOF_OUTPUT_ENABLE
+  crm_periph_clock_enable(user_hardware_settings.usb_otg_pin_sof_gpio_crm_clk, TRUE);
+  gpio_init_struct.gpio_pins = user_hardware_settings.usb_otg_pin_sof_gpio_pin;
+  gpio_init(user_hardware_settings.usb_otg_pin_sof_gpio_port, &gpio_init_struct);
+#endif
+
+  /* otgfs use vbus pin */
+#ifndef USB_VBUS_IGNORE
+  gpio_init_struct.gpio_pins = user_hardware_settings.usb_otg_pin_vbus_gpio_pin;
+  gpio_init_struct.gpio_pull = GPIO_PULL_DOWN;
+  gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
+  gpio_init(user_hardware_settings.usb_otg_pin_vbus_gpio_port, &gpio_init_struct);
+#endif
+
+  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  gpio_init_struct.gpio_pins = user_hardware_settings.usb_detect_gpio_pin;
+  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+  gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
+  gpio_init(user_hardware_settings.usb_detect_gpio_port, &gpio_init_struct);
+}
+
+Usb_DetectConnectState_t Usb_GetUsbDetectState(void)
+{
+  usb_detect_state = (Usb_DetectConnectState_t)gpio_input_data_bit_read(user_hardware_settings.usb_detect_gpio_port, user_hardware_settings.usb_detect_gpio_pin);
+  return usb_detect_state;
+}
+
 void Usb_ReadyStateSet(usbd_event_type usb_state)
 {
   usb_ready = usb_state;
-  printf("USB event:%d\n",usb_ready);
+  printf("USB event:%d\n", usb_ready);
 }
 
 usbd_event_type Usb_ReadyStateGet(void)
 {
   return usb_ready;
 }
-
 
 void usb_delay_ms(uint32_t ms)
 {
@@ -45,33 +92,6 @@ void usb_delay_ms(uint32_t ms)
 void usb_delay_us(uint32_t us)
 {
   delay_us(us);
-}
-
-void Usb_GpioConfig(void)
-{
-  gpio_init_type gpio_init_struct;
-
-  crm_periph_clock_enable(OTG_PIN_GPIO_CLOCK, TRUE);
-  gpio_default_para_init(&gpio_init_struct);
-
-  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-  gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
-  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
-
-#ifdef USB_SOF_OUTPUT_ENABLE
-  crm_periph_clock_enable(OTG_PIN_SOF_GPIO_CLOCK, TRUE);
-  gpio_init_struct.gpio_pins = OTG_PIN_SOF;
-  gpio_init(OTG_PIN_SOF_GPIO, &gpio_init_struct);
-#endif
-
-  /* otgfs use vbus pin */
-#ifndef USB_VBUS_IGNORE
-  gpio_init_struct.gpio_pins = OTG_PIN_VBUS;
-  gpio_init_struct.gpio_pull = GPIO_PULL_DOWN;
-  gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
-  gpio_init(OTG_PIN_GPIO, &gpio_init_struct);
-#endif
 }
 
 void Usb_Clock48mSelect(usb_clk48_s clk_s)

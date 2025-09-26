@@ -7,22 +7,19 @@
 #include "i2c1.h"
 #include "task_scheduler.h"
 #include "timer2.h"
+#include "usb.h"
+#include "lid.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-#define NUM_CHECK_REGS ARRAY_SIZE(check_regs)
+#define NUM_CHECK_REGS ARRAY_SIZE(current_table_check_list)
+#define SY8809_REG_0x16_NTC_MASK 0x0FU // Mask for bits [3:0] indicating NTC level
+
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
-
-typedef struct
-{
-    const uint8_t (*tbl)[2];
-    int table_id; /* 對應 sy8809_current_table 的 enum */
-} sy8809_table_t;
-
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -30,7 +27,7 @@ typedef struct
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static Sy8809_HardwareSettings_t user_hardware_settings = {0};
-static const sy8809_table_t table_map[] = {
+static const Sy8809_TableMap_t table_map[] = {
     {sy8809_reg_table3_list, SY8809_REG_TABLE_3},
     {sy8809_reg_table4_list, SY8809_REG_TABLE_4},
     {sy8809_reg_table6_list, SY8809_REG_TABLE_6},
@@ -41,21 +38,22 @@ static const sy8809_table_t table_map[] = {
     {sy8809_reg_tableG_list, SY8809_REG_TABLE_G},
 };
 
-static const setting_8809_table_list check_regs[] = {
+static const Sy8809_SettingTableList_t current_table_check_list[] = {
     SY8809_0x22,
     SY8809_0x26,
     SY8809_0x27,
     SY8809_0x36,
 };
 
-static const uint8_t check_reg_addrs[NUM_CHECK_REGS] = {
+static const uint8_t current_table_check_addrs[NUM_CHECK_REGS] = {
     SY8809_REG_0x22,
     SY8809_REG_0x26,
     SY8809_REG_0x27,
     SY8809_REG_0x36,
 };
 
-static uint8_t sy8809_current_table = SY8809_REG_UNKNOWN;
+static Sy8809_Table_t current_table = SY8809_REG_UNKNOWN;
+static Sy8809_RegStateCheck_t check_reg_state = {0x00};
 
 /*
  * Flag set by the Charge IC IRQ interrupt.
@@ -67,18 +65,31 @@ static uint8_t sy8809_current_table = SY8809_REG_UNKNOWN;
  */
 static volatile bool charge_irq_flag = false;
 
+static Sy8809_NtcLevel_t ntc_level = SY8809_NTC_LEVEL_UNKNOW;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
 static flag_status GetSdaState(void);
-static void DetectCurrentTable(void);
 static bool match_table(const uint8_t tbl[][2], const uint8_t *read_values);
-static void SettingRegTable5H(void);
+static void DetectCurrentTable(void);
 static void ConfigBudDetectResistPin(confirm_state enable);
 static void StartChipModeCheck(void);
 static void ReadVbatProcess(void);
 static void ReadNtcProcess(void);
 static void StartWorkTask(void);
+static void UpdateTableByPowerSource(void);
+static void UpdateStatusRegisters(void);
+static void UsbModeApplyTable(void);
+static void NormalModeApplyTable(void);
+static void SettingRegTable5H(void);
+static void SettingRegTable3(void);
+static void SettingRegTable4(void);
+static void SettingRegTableA(void);
+static void SettingRegTableB(void);
+static void SettingRegTableCEI(void);
+static void SettingRegTableDFJ(void);
+static void SettingRegTable6(void);
+static void SettingRegTableG(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -166,7 +177,7 @@ static bool match_table(const uint8_t tbl[][2], const uint8_t *read_values)
 {
     for (size_t i = 0; i < NUM_CHECK_REGS; ++i)
     {
-        setting_8809_table_list idx = check_regs[i];
+        Sy8809_SettingTableList_t idx = current_table_check_list[i];
         if (tbl[idx][1] != read_values[i])
         {
             return false;
@@ -181,7 +192,7 @@ static void DetectCurrentTable(void)
     uint8_t read_values[NUM_CHECK_REGS] = {0};
     for (uint8_t i = 0; i < NUM_CHECK_REGS; i++)
     {
-        I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, check_reg_addrs[i], sy8809_reg_rx_buff);
+        I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, current_table_check_addrs[i], sy8809_reg_rx_buff);
         read_values[i] = sy8809_reg_rx_buff[0];
     }
 
@@ -191,18 +202,18 @@ static void DetectCurrentTable(void)
            read_values[2],
            read_values[3]);
 
-    sy8809_current_table = SY8809_REG_UNKNOWN;
+    current_table = SY8809_REG_UNKNOWN;
 
     for (uint8_t t = 0; t < ARRAY_SIZE(table_map); ++t)
     {
         if (match_table(table_map[t].tbl, read_values))
         {
-            sy8809_current_table = table_map[t].table_id;
+            current_table = table_map[t].table_id;
             break;
         }
     }
 
-    printf("judge table:%d\n", sy8809_current_table);
+    printf("judge table:%d\n", current_table);
 }
 
 static void ConfigBudDetectResistPin(confirm_state enable)
@@ -220,22 +231,6 @@ static void ConfigBudDetectResistPin(confirm_state enable)
     // }
 }
 
-static void SettingRegTable5H(void)
-{
-    if (sy8809_current_table != SY8809_REG_TABLE_5H)
-    {
-        sy8809_current_table = SY8809_REG_TABLE_5H;
-        printf("table5H\n");
-        ConfigBudDetectResistPin(TRUE);
-        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
-        {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
-                          sy8809_reg_table5H_list[i][0],
-                          sy8809_reg_table5H_list[i][1]);
-        }
-    }
-}
-
 static void StartChipModeCheck(void)
 {
     printf("%d sy8809 check chip\n", Timer2_GetTick());
@@ -246,13 +241,9 @@ static void StartChipModeCheck(void)
         printf("check 0x15 is start woking\n");
         DetectCurrentTable();
 
-        // todo: need check USB connect state
-        // if ((sy8809_current_table == SY8809_REG_TABLE_4) ||
-        //     (sy8809_current_table == SY8809_REG_UNKNOWN) ||
-        //     (USB_State == USB_PLUG))
-
-        if ((sy8809_current_table == SY8809_REG_TABLE_4) ||
-            (sy8809_current_table == SY8809_REG_UNKNOWN))
+        if ((current_table == SY8809_REG_TABLE_4) ||
+            (current_table == SY8809_REG_UNKNOWN) ||
+            (Usb_GetUsbDetectState() == USB_PLUG))
         {
             SettingRegTable5H();
             if (TaskScheduler_AddTask(ReadVbatProcess, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
@@ -298,24 +289,306 @@ static void ReadNtcProcess(void)
     }
 }
 
-uint8_t temp_test_count = 0;
 static void StartWorkTask(void)
 {
-    if (temp_test_count > 100)
-    {
-        temp_test_count = 0;
-        printf("%d [%s]\n", Timer2_GetTick(), __func__);
-    }
-    temp_test_count++;
-
     if (charge_irq_flag == true)
     {
-        charge_irq_flag = false;
         printf("charge_irq_flag detected \n");
+        charge_irq_flag = false;
+        UpdateTableByPowerSource();
     }
 
     if (TaskScheduler_AddTask(StartWorkTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
         printf("add sy8809 working task fail\n");
+    }
+}
+
+static void UpdateTableByPowerSource(void)
+{
+    UpdateStatusRegisters();
+
+    if (Usb_GetUsbDetectState() == USB_PLUG)
+    {
+        printf("USB table check\n");
+        UsbModeApplyTable();
+    }
+    // todo: check Qi chatge whether connect.
+    // else if (QI_Charge_state == QI_CONTACT)
+    // {
+    //     printf("Qi table check\n");
+    //     sy8809_QiInCheckIccTable();
+    // }
+    else
+    {
+        printf("normal table check\n");
+        NormalModeApplyTable();
+    }
+}
+
+/**
+ * @brief Reads SY8809 status registers after an interrupt
+ *        and stores them into check_reg_state.
+ *
+ * This function should be called immediately after the SY8809 IRQ
+ * to capture the current interrupt and status register values.
+ * It does not process or interpret the values;
+ * other modules should handle state evaluation.
+ */
+static void UpdateStatusRegisters(void)
+{
+    uint8_t sy8809_reg_rx_buff[1] = {0};
+    printf("start read 8809 int state\n");
+    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x12, sy8809_reg_rx_buff);
+    check_reg_state.reg_0x12 = sy8809_reg_rx_buff[0];
+    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x13, sy8809_reg_rx_buff);
+    check_reg_state.reg_0x13 = sy8809_reg_rx_buff[0];
+    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
+    check_reg_state.reg_0x15 = sy8809_reg_rx_buff[0];
+    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x14, sy8809_reg_rx_buff);
+    check_reg_state.reg_0x14 = sy8809_reg_rx_buff[0];
+    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x16, sy8809_reg_rx_buff);
+    check_reg_state.reg_0x16 = sy8809_reg_rx_buff[0];
+
+    ntc_level = (Sy8809_NtcLevel_t)(check_reg_state.reg_0x16 & SY8809_REG_0x16_NTC_MASK);
+
+    // check_LR_Bud_charge_state();
+    // sy8809_check_NTC_over_tempe();
+
+    uint8_t sy8809_debug_read_reg_table[] = {0x10, 0x11, 0x12, 0x13, 0x14,
+                                             0x15, 0x16, 0x17, 0x20, 0x21,
+                                             0x22, 0x23, 0x24, 0x25, 0x26,
+                                             0x27, 0x30, 0x31, 0x32, 0x33,
+                                             0x34, 0x35, 0x36, 0x37, 0x40,
+                                             0x41, 0x42, 0x43, 0x44, 0x4F};
+    printf("sy8809 debug ");
+    for (size_t i = 0; i < sizeof(sy8809_debug_read_reg_table); i++)
+    {
+        I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff);
+        printf("%02X:%02X ", sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff[0]);
+    }
+    printf("\n");
+}
+
+static void UsbModeApplyTable(void)
+{
+    // if (NTC_over_tempe_alarm)
+    // {
+    //     return;
+    // }
+
+    switch (ntc_level)
+    {
+
+    case SY8809_NTC_LEVEL_0_TO_10:
+    {
+        SettingRegTableCEI();
+        break;
+    }
+
+    case SY8809_NTC_LEVEL_45_TO_60:
+    {
+        SettingRegTableDFJ();
+        break;
+    }
+
+    case SY8809_NTC_LEVEL_10_TO_20:
+    case SY8809_NTC_LEVEL_20_TO_45:
+    {
+
+        if (((check_reg_state.reg_0x14 & REG_BIT(4)) == 0) ||
+            ((check_reg_state.reg_0x14 & REG_BIT(5)) == 0))
+        {
+            SettingRegTableB();
+        }
+        else
+        {
+            SettingRegTableA();
+        }
+        break;
+    }
+    }
+}
+
+static void NormalModeApplyTable(void)
+{
+    // if ((NTC_over_tempe_alarm == false) && (Case_VBAT_level != BATTERY_LEVEL_POWEROFF))
+    // {
+    if (Usb_GetUsbDetectState() == USB_UNPLUG)
+    // (first_start_state == WDT_WAKE_UP))
+    {
+        if (Lid_GetState() == LID_OPEN)
+        {
+            SettingRegTable3();
+        }
+        else
+        {
+            // if ((L_Bud.charging_state == BUD_CHARGE_STATE_CHARGING) || (R_Bud.charging_state == BUD_CHARGE_STATE_CHARGING))
+            // {
+            //     sy8809_reg_table3();
+            // }
+            // else if ((L_Bud.charging_state == BUD_CHARGE_STATE_COMPLETE) && (R_Bud.charging_state == BUD_CHARGE_STATE_COMPLETE))
+            // {
+            SettingRegTable4();
+            // }
+        }
+    }
+    else
+    {
+        SettingRegTable3();
+    }
+    // }
+}
+
+static void SettingRegTable5H(void)
+{
+    if (current_table != SY8809_REG_TABLE_5H)
+    {
+        current_table = SY8809_REG_TABLE_5H;
+        printf("table5H\n");
+        ConfigBudDetectResistPin(TRUE);
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_table5H_list[i][0],
+                          sy8809_reg_table5H_list[i][1]);
+        }
+    }
+}
+
+static void SettingRegTable3(void)
+{
+    if ((Usb_GetUsbDetectState() == USB_PLUG) ||
+        (Lid_GetState() == LID_OPEN))
+    // (first_start_state == NORMAL_START))
+    {
+        ConfigBudDetectResistPin(TRUE);
+        printf("set table 3 PC1 to H\n");
+    }
+
+    if (current_table != SY8809_REG_TABLE_3)
+    {
+        current_table = SY8809_REG_TABLE_3;
+        printf("table3\n");
+        ConfigBudDetectResistPin(TRUE);
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_table3_list[i][0],
+                          sy8809_reg_table3_list[i][1]);
+        }
+    }
+}
+
+static void SettingRegTable4(void)
+{
+    if (current_table != SY8809_REG_TABLE_4)
+    {
+        current_table = SY8809_REG_TABLE_4;
+        printf("table4\n");
+
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_table4_list[i][0],
+                          sy8809_reg_table4_list[i][1]);
+        }
+        ConfigBudDetectResistPin(FALSE);
+    }
+}
+
+static void SettingRegTableA(void)
+{
+    if (current_table != SY8809_REG_TABLE_A)
+    {
+        current_table = SY8809_REG_TABLE_A;
+        printf("tableA\n");
+        ConfigBudDetectResistPin(TRUE);
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_tableA_list[i][0],
+                          sy8809_reg_tableA_list[i][1]);
+        }
+    }
+}
+
+static void SettingRegTableB(void)
+{
+    if (current_table != SY8809_REG_TABLE_B)
+    {
+        current_table = SY8809_REG_TABLE_B;
+        printf("tableB\n");
+        ConfigBudDetectResistPin(TRUE);
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_tableB_list[i][0],
+                          sy8809_reg_tableB_list[i][1]);
+        }
+    }
+}
+
+static void SettingRegTableCEI(void)
+{
+    if (current_table != SY8809_REG_TABLE_CEI)
+    {
+        current_table = SY8809_REG_TABLE_CEI;
+        printf("tableCEI\n");
+        ConfigBudDetectResistPin(TRUE);
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_tableCEI_list[i][0],
+                          sy8809_reg_tableCEI_list[i][1]);
+        }
+    }
+}
+
+static void SettingRegTableDFJ(void)
+{
+    if (current_table != SY8809_REG_TABLE_DFJ)
+    {
+        current_table = SY8809_REG_TABLE_DFJ;
+        printf("tableDFJ\n");
+        ConfigBudDetectResistPin(TRUE);
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_tableDFJ_list[i][0],
+                          sy8809_reg_tableDFJ_list[i][1]);
+        }
+    }
+}
+
+static void SettingRegTable6(void)
+{
+    if (current_table != SY8809_REG_TABLE_6)
+    {
+        current_table = SY8809_REG_TABLE_6;
+        printf("table6\n");
+        ConfigBudDetectResistPin(TRUE);
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_table6_list[i][0],
+                          sy8809_reg_table6_list[i][1]);
+        }
+    }
+}
+
+static void SettingRegTableG(void)
+{
+    if (current_table != SY8809_REG_TABLE_G)
+    {
+        current_table = SY8809_REG_TABLE_G;
+        printf("tableG\n");
+        ConfigBudDetectResistPin(TRUE);
+        for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          sy8809_reg_tableG_list[i][0],
+                          sy8809_reg_tableG_list[i][1]);
+        }
     }
 }

@@ -5,6 +5,7 @@
 #include "pinout.h"
 #include "lid.h"
 #include "i2c1.h"
+#include "usb.h"
 #include "sy8809.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -56,6 +57,21 @@ static const Sy8809_HardwareSettings_t sy8809_config =
         .sy8809_irq_gpio_crm_clk = CHARGER_IRQ_CRM_CLK,
 };
 
+static const Usb_HardwareSettings_t usb_config =
+    {
+        .usb_detect_gpio_port = I2C1_SDA_GPIO_PORT,
+        .usb_detect_gpio_pin = I2C1_SDA_PIN,
+        .usb_detect_gpio_crm_clk = I2C1_SDA_GPIO_CLK,
+
+        .usb_otg_pin_sof_gpio_port = BUD_DETECT_RESIST_SWITCH_GPIO,
+        .usb_otg_pin_sof_gpio_pin = BUD_DETECT_RESIST_SWITCH_PIN,
+        .usb_otg_pin_sof_gpio_crm_clk = BUD_DETECT_RESIST_SWITCH_CRM_CLK,
+
+        .usb_otg_pin_vbus_gpio_port = CHARGER_IRQ_GPIO,
+        .usb_otg_pin_vbus_gpio_pin = CHARGER_IRQ_PIN,
+        .usb_otg_pin_vbus_gpio_crm_clk = CHARGER_IRQ_CRM_CLK,
+};
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -66,6 +82,7 @@ void InitPinout_Init(void)
 {
     Lid_GpioConfigHardware(&lid_config);
     Sy8809_GpioConfigHardware(&sy8809_config);
+    Usb_GpioConfigHardware(&usb_config);
 }
 
 void InitPinout_I2c1Init(void)

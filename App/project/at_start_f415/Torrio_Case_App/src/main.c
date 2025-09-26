@@ -42,10 +42,10 @@ int main(void)
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   system_clock_config();
+  
+  at32_board_init();
 
   crm_clocks_freq_get(&crm_clocks_freq_struct);
-
-  at32_board_init();
 
   printf("APP Start!!!\n");
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
@@ -54,8 +54,7 @@ int main(void)
   print_clock("APB1", crm_clocks_freq_struct.apb1_freq);
   print_clock("ADC", crm_clocks_freq_struct.adc_freq);
 
-  /* usb gpio config */
-  Usb_GpioConfig();
+  InitPinout_Init();
 
 #ifdef USB_LOW_POWER_WAKUP
   Usb_LowPowerWakeupConfig();
@@ -83,7 +82,6 @@ int main(void)
 
   PowerControl_Init();
 
-  InitPinout_Init();
 
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {

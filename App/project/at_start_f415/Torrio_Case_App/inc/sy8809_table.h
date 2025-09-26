@@ -46,7 +46,7 @@ typedef enum
     SY8809_REG_0x42,
     SY8809_REG_0x43,
     SY8809_REG_0x44
-} Sy8809_Reg_Table_t;
+} Sy8809_Reg_t;
 
 typedef enum
 {
@@ -69,7 +69,7 @@ typedef enum
     SY8809_0x37,
     SY8809_0x44,
     SY8809_0x27
-} setting_8809_table_list;
+} Sy8809_SettingTableList_t;
 
 typedef enum
 {
@@ -83,12 +83,37 @@ typedef enum
     SY8809_REG_TABLE_CEI,
     SY8809_REG_TABLE_DFJ,
     SY8809_REG_TABLE_G
-    // SY8809_REG_TABLE_E,
-    // SY8809_REG_TABLE_F,
-    // SY8809_REG_TABLE_H,
-    // SY8809_REG_TABLE_I,
-    // SY8809_REG_TABLE_J
-} SY8809_REG_TABLE;
+} Sy8809_Table_t;
+
+typedef enum
+{
+    SY8809_NTC_LEVEL_20_TO_45 = 0x00,
+    SY8809_NTC_LEVEL_10_TO_20 = 0x01,
+    SY8809_NTC_LEVEL_0_TO_10 = 0x03,
+    SY8809_NTC_LEVEL_45_TO_60 = 0x04,
+    SY8809_NTC_LEVEL_OVER_60 = 0x0C,
+    SY8809_NTC_LEVEL_BELOW_MINUS_10 = 0x0F,
+    SY8809_NTC_LEVEL_UNKNOW = 0xFF
+} Sy8809_NtcLevel_t;
+
+typedef struct
+{
+    uint8_t reg_0x10;
+    uint8_t reg_0x11;
+    uint8_t reg_0x12;
+    uint8_t reg_0x13;
+    uint8_t reg_0x14;
+    uint8_t reg_0x15;
+    uint8_t reg_0x16;
+    uint8_t reg_0x17;
+} Sy8809_RegStateCheck_t;
+
+typedef struct
+{
+    const uint8_t (*tbl)[2];
+    Sy8809_Table_t table_id;
+} Sy8809_TableMap_t;
+
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/

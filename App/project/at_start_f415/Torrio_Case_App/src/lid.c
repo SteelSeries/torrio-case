@@ -13,11 +13,12 @@
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static Lid_HardwareSettings_t user_hardware_settings = {0};
-
+static Lid_State_t lid_state = LID_UNKNOW;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -39,6 +40,12 @@ void Lid_GpioConfigHardware(const Lid_HardwareSettings_t *hardware_settings)
     gpio_init_struct.gpio_pins = user_hardware_settings.lid_gpio_pin;
     gpio_init_struct.gpio_pull = GPIO_PULL_DOWN;
     gpio_init(user_hardware_settings.lid_gpio_port, &gpio_init_struct);
+}
+
+Lid_State_t Lid_GetState(void)
+{
+  lid_state = (Lid_State_t)gpio_input_data_bit_read(user_hardware_settings.lid_gpio_port, user_hardware_settings.lid_gpio_pin);
+  return lid_state;
 }
 
 /*************************************************************************************************
