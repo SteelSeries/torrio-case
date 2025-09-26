@@ -50,6 +50,10 @@ static const Sy8809_HardwareSettings_t sy8809_config =
         .busd_detect_resist_gpio_port = BUD_DETECT_RESIST_SWITCH_GPIO,
         .busd_detect_resist_gpio_pin = BUD_DETECT_RESIST_SWITCH_PIN,
         .busd_detect_resist_gpio_crm_clk = BUD_DETECT_RESIST_SWITCH_CRM_CLK,
+
+        .sy8809_irq_gpio_port = CHARGER_IRQ_GPIO,
+        .sy8809_irq_gpio_pin = CHARGER_IRQ_PIN,
+        .sy8809_irq_gpio_crm_clk = CHARGER_IRQ_CRM_CLK,
 };
 
 /*************************************************************************************************

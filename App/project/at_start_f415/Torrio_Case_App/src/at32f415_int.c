@@ -26,6 +26,7 @@
 #include "at32f415_int.h"
 #include "usbd_int.h"
 #include "usb.h"
+#include "sy8809.h"
 
 /** @addtogroup AT32F415_periph_examples
   * @{
@@ -153,6 +154,20 @@ void TMR5_GLOBAL_IRQHandler(void)
   {
     /* clear timer 5 ovf flag */
     tmr_flag_clear(TMR5, TMR_OVF_FLAG);
+  }
+}
+
+/**
+  * @brief  exint0 interrupt handler
+  * @param  none
+  * @retval none
+  */
+void EXINT0_IRQHandler(void)
+{
+  if(exint_interrupt_flag_get(EXINT_LINE_0) != RESET)
+  {
+    Sy8809_ReadIrqState();
+    exint_flag_clear(EXINT_LINE_0);
   }
 }
 /**

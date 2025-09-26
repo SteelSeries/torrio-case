@@ -22,6 +22,11 @@ typedef struct
     gpio_type *busd_detect_resist_gpio_port;
     uint32_t busd_detect_resist_gpio_pin;
     crm_periph_clock_type busd_detect_resist_gpio_crm_clk;
+
+    gpio_type *sy8809_irq_gpio_port;
+    uint32_t sy8809_irq_gpio_pin;
+    crm_periph_clock_type sy8809_irq_gpio_crm_clk;
+
 } Sy8809_HardwareSettings_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
@@ -32,6 +37,4 @@ typedef struct
  *************************************************************************************************/
 void Sy8809_InitTask(void);
 void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_settings);
-void Sy8809_StartChipModeCheck(void);
-
-
+void Sy8809_ReadIrqState(void);

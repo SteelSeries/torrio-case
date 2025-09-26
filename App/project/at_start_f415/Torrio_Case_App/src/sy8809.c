@@ -57,6 +57,16 @@ static const uint8_t check_reg_addrs[NUM_CHECK_REGS] = {
 
 static uint8_t sy8809_current_table = SY8809_REG_UNKNOWN;
 
+/*
+ * Flag set by the Charge IC IRQ interrupt.
+ *
+ * When the external interrupt (IRQ pin) from the Charge IC is triggered,
+ * this flag will be set to true. The main loop should check this flag
+ * periodically to determine when it needs to read and process the
+ * updated charging status from the Charge IC.
+ */
+static volatile bool charge_irq_flag = false;
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -65,6 +75,10 @@ static void DetectCurrentTable(void);
 static bool match_table(const uint8_t tbl[][2], const uint8_t *read_values);
 static void SettingRegTable5H(void);
 static void ConfigBudDetectResistPin(confirm_state enable);
+static void StartChipModeCheck(void);
+static void ReadVbatProcess(void);
+static void ReadNtcProcess(void);
+static void StartWorkTask(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -77,7 +91,7 @@ void Sy8809_InitTask(void)
     {
         printf("sy8809 SDA state High power on comple\n");
         InitPinout_I2c1Init();
-        if (TaskScheduler_AddTask(Sy8809_StartChipModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+        if (TaskScheduler_AddTask(StartChipModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
             printf("add sy8809 check chip task fail\n");
         }
@@ -93,51 +107,17 @@ void Sy8809_InitTask(void)
     }
 }
 
-void Sy8809_StartChipModeCheck(void)
-{
-    printf("%d sy8809 check chip\n", Timer2_GetTick());
-    uint8_t sy8809_reg_rx_buff[1] = {0};
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
-    if ((sy8809_reg_rx_buff[0] & REG_BIT(0)) == SET_REG_BIT(0))
-    {
-        printf("check 0x15 is start woking\n");
-        DetectCurrentTable();
-
-        // todo: need check USB connect state
-        // if ((sy8809_current_table == SY8809_REG_TABLE_4) ||
-        //     (sy8809_current_table == SY8809_REG_UNKNOWN) ||
-        //     (USB_State == USB_PLUG))
-
-        if ((sy8809_current_table == SY8809_REG_TABLE_4) ||
-            (sy8809_current_table == SY8809_REG_UNKNOWN))
-        {
-            SettingRegTable5H();
-            // sy8809_stage_wait_timer = SY8809_INIT_STAGE_WAIT_TIME;
-            // sy8809_delay_init_state = SY8809_INIT_STAPE_3;
-        }
-        else
-        {
-            // sy8809_delay_init_state = SY8809_INIT_STAPE_4;
-        }
-        // todo:sy8809 init comple can start work, add sy8809 start working task.
-    }
-    else
-    {
-        // // check 0x15 chip reg state bit 0 not is 1, so wait 2.5 Sec retry this reg.
-        if (TaskScheduler_AddTask(Sy8809_StartChipModeCheck, 2500, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
-        {
-            printf("add retry sy8809 check chip task fail\n");
-        }
-    }
-}
-
 void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_settings)
 {
     gpio_init_type gpio_init_struct;
+    exint_init_type exint_init_struct;
+
     memcpy(&user_hardware_settings, hardware_settings, sizeof(Sy8809_HardwareSettings_t));
 
     crm_periph_clock_enable(user_hardware_settings.sy8809_sda_gpio_crm_clk, TRUE);
     crm_periph_clock_enable(user_hardware_settings.busd_detect_resist_gpio_crm_clk, TRUE);
+    crm_periph_clock_enable(user_hardware_settings.sy8809_irq_gpio_crm_clk, TRUE);
+    crm_periph_clock_enable(CRM_IOMUX_PERIPH_CLOCK, TRUE);
 
     gpio_default_para_init(&gpio_init_struct);
 
@@ -145,14 +125,33 @@ void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_setting
     gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
     gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
 
+    gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
+    gpio_init_struct.gpio_pins = user_hardware_settings.busd_detect_resist_gpio_pin;
+    gpio_init(user_hardware_settings.busd_detect_resist_gpio_port, &gpio_init_struct);
+    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE);
+
     gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
     gpio_init_struct.gpio_pins = user_hardware_settings.sy8809_sda_gpio_pin;
     gpio_init(user_hardware_settings.sy8809_sda_gpio_port, &gpio_init_struct);
 
-    gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
-    gpio_init_struct.gpio_pins = user_hardware_settings.busd_detect_resist_gpio_pin;
-    gpio_init(user_hardware_settings.busd_detect_resist_gpio_port, &gpio_init_struct);
-    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE)
+    gpio_init_struct.gpio_pull = GPIO_PULL_UP;
+    gpio_init_struct.gpio_pins = user_hardware_settings.sy8809_irq_gpio_pin;
+    gpio_init(user_hardware_settings.sy8809_irq_gpio_port, &gpio_init_struct);
+
+    gpio_exint_line_config(GPIO_PORT_SOURCE_GPIOA, GPIO_PINS_SOURCE4);
+
+    exint_default_para_init(&exint_init_struct);
+    exint_init_struct.line_enable = TRUE;
+    exint_init_struct.line_mode = EXINT_LINE_INTERRUPT;
+    exint_init_struct.line_select = EXINT_LINE_0;
+    exint_init_struct.line_polarity = EXINT_TRIGGER_FALLING_EDGE;
+    exint_init(&exint_init_struct);
+    nvic_irq_enable(EXINT0_IRQn, 1, 0);
+}
+
+void Sy8809_ReadIrqState(void)
+{
+    charge_irq_flag = true;
 }
 
 /*************************************************************************************************
@@ -217,7 +216,7 @@ static void ConfigBudDetectResistPin(confirm_state enable)
     // }
     // else
     // {
-    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE)
+    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE);
     // }
 }
 
@@ -234,5 +233,89 @@ static void SettingRegTable5H(void)
                           sy8809_reg_table5H_list[i][0],
                           sy8809_reg_table5H_list[i][1]);
         }
+    }
+}
+
+static void StartChipModeCheck(void)
+{
+    printf("%d sy8809 check chip\n", Timer2_GetTick());
+    uint8_t sy8809_reg_rx_buff[1] = {0};
+    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
+    if ((sy8809_reg_rx_buff[0] & REG_BIT(0)) == SET_REG_BIT(0))
+    {
+        printf("check 0x15 is start woking\n");
+        DetectCurrentTable();
+
+        // todo: need check USB connect state
+        // if ((sy8809_current_table == SY8809_REG_TABLE_4) ||
+        //     (sy8809_current_table == SY8809_REG_UNKNOWN) ||
+        //     (USB_State == USB_PLUG))
+
+        if ((sy8809_current_table == SY8809_REG_TABLE_4) ||
+            (sy8809_current_table == SY8809_REG_UNKNOWN))
+        {
+            SettingRegTable5H();
+            if (TaskScheduler_AddTask(ReadVbatProcess, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+            {
+                printf("add sy8809 delay 100ms read vbat task fail\n");
+            }
+        }
+        else
+        {
+            if (TaskScheduler_AddTask(ReadVbatProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add sy8809 read vbat task fail\n");
+            }
+        }
+    }
+    else
+    {
+        // // check 0x15 chip reg state bit 0 not is 1, so wait 2.5 Sec retry this reg.
+        if (TaskScheduler_AddTask(StartChipModeCheck, 2500, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+        {
+            printf("add retry sy8809 check chip task fail\n");
+        }
+    }
+}
+
+static void ReadVbatProcess(void)
+{
+    printf("[%s]\n", __func__);
+    // Todo: read vbat Process
+    if (TaskScheduler_AddTask(ReadNtcProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        printf("add sy8809 read vbat task fail\n");
+    }
+}
+static void ReadNtcProcess(void)
+{
+    printf("[%s]\n", __func__);
+
+    // Todo: read NTC Process
+    if (TaskScheduler_AddTask(StartWorkTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        printf("add sy8809 read vbat task fail\n");
+    }
+}
+
+uint8_t temp_test_count = 0;
+static void StartWorkTask(void)
+{
+    if (temp_test_count > 100)
+    {
+        temp_test_count = 0;
+        printf("%d [%s]\n", Timer2_GetTick(), __func__);
+    }
+    temp_test_count++;
+
+    if (charge_irq_flag == true)
+    {
+        charge_irq_flag = false;
+        printf("charge_irq_flag detected \n");
+    }
+
+    if (TaskScheduler_AddTask(StartWorkTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        printf("add sy8809 working task fail\n");
     }
 }
