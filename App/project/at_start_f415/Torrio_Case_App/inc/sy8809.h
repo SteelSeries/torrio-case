@@ -18,6 +18,10 @@ typedef struct
     gpio_type *sy8809_sda_gpio_port;
     uint32_t sy8809_sda_gpio_pin;
     crm_periph_clock_type sy8809_sda_gpio_crm_clk;
+
+    gpio_type *busd_detect_resist_gpio_port;
+    uint32_t busd_detect_resist_gpio_pin;
+    crm_periph_clock_type busd_detect_resist_gpio_crm_clk;
 } Sy8809_HardwareSettings_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *

@@ -47,6 +47,9 @@ static const Sy8809_HardwareSettings_t sy8809_config =
         .sy8809_sda_gpio_pin = I2C1_SDA_PIN,
         .sy8809_sda_gpio_crm_clk = I2C1_SDA_GPIO_CLK,
 
+        .busd_detect_resist_gpio_port = BUD_DETECT_RESIST_SWITCH_GPIO,
+        .busd_detect_resist_gpio_pin = BUD_DETECT_RESIST_SWITCH_PIN,
+        .busd_detect_resist_gpio_crm_clk = BUD_DETECT_RESIST_SWITCH_CRM_CLK,
 };
 
 /*************************************************************************************************

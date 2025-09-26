@@ -64,6 +64,7 @@ static flag_status GetSdaState(void);
 static void DetectCurrentTable(void);
 static bool match_table(const uint8_t tbl[][2], const uint8_t *read_values);
 static void SettingRegTable5H(void);
+static void ConfigBudDetectResistPin(confirm_state enable);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -136,15 +137,22 @@ void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_setting
     memcpy(&user_hardware_settings, hardware_settings, sizeof(Sy8809_HardwareSettings_t));
 
     crm_periph_clock_enable(user_hardware_settings.sy8809_sda_gpio_crm_clk, TRUE);
+    crm_periph_clock_enable(user_hardware_settings.busd_detect_resist_gpio_crm_clk, TRUE);
 
     gpio_default_para_init(&gpio_init_struct);
 
     gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+
     gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
     gpio_init_struct.gpio_pins = user_hardware_settings.sy8809_sda_gpio_pin;
-    gpio_init_struct.gpio_pull = GPIO_PULL_DOWN;
     gpio_init(user_hardware_settings.sy8809_sda_gpio_port, &gpio_init_struct);
+
+    gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
+    gpio_init_struct.gpio_pins = user_hardware_settings.busd_detect_resist_gpio_pin;
+    gpio_init(user_hardware_settings.busd_detect_resist_gpio_port, &gpio_init_struct);
+    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE)
 }
 
 /*************************************************************************************************
@@ -198,13 +206,28 @@ static void DetectCurrentTable(void)
     printf("judge table:%d\n", sy8809_current_table);
 }
 
+static void ConfigBudDetectResistPin(confirm_state enable)
+{
+    // if (first_start_state != WDT_WAKE_UP)
+    // {
+    //     if (gpio_output_data_bit_read(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin) != enable)
+    //     {
+    //         gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, enable)
+    //     }
+    // }
+    // else
+    // {
+    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE)
+    // }
+}
+
 static void SettingRegTable5H(void)
 {
     if (sy8809_current_table != SY8809_REG_TABLE_5H)
     {
         sy8809_current_table = SY8809_REG_TABLE_5H;
         printf("table5H\n");
-        // config_bud_detect_resist_pin(Bit_SET);
+        ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
             I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
