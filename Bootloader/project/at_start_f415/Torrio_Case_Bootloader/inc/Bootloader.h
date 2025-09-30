@@ -4,19 +4,28 @@
  *                                          INCLUDES                                             *
  *************************************************************************************************/
 #include "at32f415_board.h"
-#include "at32f415_clock.h"
-#include "usb_conf.h"
-#include "usb_core.h"
-#include "usbd_int.h"
-#include "custom_hid_class.h"
-#include "custom_hid_desc.h"
 #include <stdbool.h>
-#include "usb.h"
-#include "Command.h"
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-
+//  0x0800 0000 - 0x0800 37FF : Bootloader(16K)
+//  0x0800 3800 - 0x0800 3801 : Flash 2(color spin)
+//  0x0800 3802 - 0x0800 3802 : Flash 2(shipping flag)
+//  0x0800 3803 - 0x0800 3803 : Flash 2(factory charge flag)
+//  0x0800 3804 - 0x0800 3BFF : Flash 2(null)
+//  0x0800 3C00 - 0x0800 3FFF : Flash 1(SN)
+//  0x0800 4000 - 0x0801 FFFF : APP CODE
+#define APP_FLASH_SIZE (0x20000)
+#define APP_FLASH_START (0x4000)
+  
+#define APP_FLASH_START_ADDRESS (FLASH_BASE + APP_FLASH_START)
+#define ERASE_FLASH_END_ADDRESS (FLASH_BASE + APP_FLASH_SIZE)
+#define APP_CRC_FLASH_START_ADDRESS (ERASE_FLASH_END_ADDRESS - 4)
+  
+#define BOOTPATCH_FLASH_START_ADDRESS   0x08000000
+#define BOOTPATCH_FLASH_END_ADDRESS     0x08003FFF
+#define BUFFER_LEN                      1012
+#define bootloader_len                  1024
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -24,17 +33,13 @@
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
-extern bool crc_used_flag;
-extern uint32_t bootloader_len;
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-bool check_backdoor(void);
-void JumpToApp(void);
-bool CheckAppCodeComplete(void);
-extern uint32_t crc32_compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc);
-extern void FLASH_Read(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead);
-extern void FLASH_Read(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead);
-extern uint16_t FLASH_ReadHalfWord(uint32_t faddr);
-extern bool CheckAppCodeComplete(void);
-extern void JumpToApp(void);
+extern bool Bootloader_CheckBackDoor(void);
+extern bool Bootloader_CheckAppCodeComplete(void);
+extern void Bootloader_JumpToApp(void);
+extern error_status Bootloader_FlashErase(void);
+extern error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len);
+extern error_status Bootloader_CmdCrcCheckHandler(uint8_t * buff);
+extern error_status Bootloader_CommandHandleReadFlash(uint8_t *buff , const uint8_t *in);

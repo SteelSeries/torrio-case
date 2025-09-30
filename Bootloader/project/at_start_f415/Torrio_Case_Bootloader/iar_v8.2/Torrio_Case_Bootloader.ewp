@@ -344,7 +344,6 @@
                     <state>$PROJ_DIR$\..\..\..\at32f415_board</state>
                     <state>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc</state>
                     <state>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid</state>
-                    <state>C:\Users\eva.chou\AT32_ChargingCase\AT32F415_Firmware_Library_V2.1.7\project\at_start_f415\examples\flash\flash_write_read\inc</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -664,7 +663,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>1</hasPrio>
+                <hasPrio>144</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>

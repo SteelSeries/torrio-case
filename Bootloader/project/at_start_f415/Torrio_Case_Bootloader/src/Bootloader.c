@@ -1,10 +1,21 @@
 /*************************************************************************************************
  *                                         INCLUDES                                              *
  *************************************************************************************************/
-#include "Bootloader.h"
+#include "bootloader.h"
+#include "command.h"
+#include <string.h>
+#include "at32f415_clock.h"
+#include "usb_conf.h"
+#include "usb_core.h"
+#include "usbd_int.h"
+#include "custom_hid_class.h"
+#include "custom_hid_desc.h"
+#include <stdbool.h>
+#include "usb.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
+#define IN_MAXPACKET_SIZE           1024
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -12,19 +23,23 @@ typedef void (*pFunction)(void);
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-bool crc_used_flag = false;
-uint32_t bootloader_len = 0x400;
+
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-
- /*************************************************************************************************
+static uint32_t i;
+static uint16_t gFW_BinLen = 0;
+static uint16_t gFW_FirstBinLen = 0;
+static uint8_t Read_flash_data[READ_FLASH_BUFFER_LEN];
+static uint32_t Read_flash_address = 0;
+static uint8_t Read_flashAdrss_tab[4] = {0};
+static bool crc_used_flag = false;
+static uint32_t sum_crc32;
+static uint8_t crc_data[BUFFER_LEN];
+/*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
-/*************************************************************************************************
- *                                GLOBAL FUNCTION DEFINITIONS                                    *
- *************************************************************************************************/
-bool check_backdoor(void)
+bool Bootloader_CheckBackDoor(void)
 {
     uint8_t i = 0;
     while(gpio_input_data_bit_read(USER_BUTTON_PORT , USER_BUTTON_PIN) == SET)
@@ -58,7 +73,7 @@ void FLASH_Read(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead)
     ReadAddr += 1; //shift 1 byte
   }
 }
-void JumpToApp(void)
+void Bootloader_JumpToApp(void)
 {
     pFunction JumpToApplication;
     uint32_t JumpAddress;
@@ -74,7 +89,7 @@ void JumpToApp(void)
         JumpToApplication();
     }
 }
-bool CheckAppCodeComplete(void)
+bool Bootloader_CheckAppCodeComplete(void)
 {
     uint8_t FLASH_ReadCRC[4] = {0};
     uint8_t null_count = 0;
@@ -112,6 +127,163 @@ uint32_t crc32_compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_c
     }
   }
   return ~crc;
+}
+/*************************************************************************************************
+ *                                GLOBAL FUNCTION DEFINITIONS                                    *
+ *************************************************************************************************/
+error_status Bootloader_FlashErase(void)
+{
+  flash_unlock();
+  flash_flag_clear(FLASH_PRGMERR_FLAG);
+  for (i = (ERASE_FLASH_END_ADDRESS - 1024); i >= APP_FLASH_START_ADDRESS; i -= 1024)
+  {
+      flash_status_type status = flash_sector_erase(i);
+      if (status != FLASH_OPERATE_DONE)
+      {
+          return ERROR;
+      }
+  }
+  flash_lock();
+  return SUCCESS;
+}
+error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
+{
+  uint8_t buffer[IN_MAXPACKET_SIZE];
+  uint32_t FW_UPDATE_Buffer[(BUFFER_LEN / 4)];
+  uint32_t FW_Updateing_destAdrss;
+  memcpy(buffer, in, in_len);
+  gFW_BinLen = buffer[3] | (buffer[4] << 8);
+
+  if (gFW_BinLen != gFW_FirstBinLen)
+  {
+      gFW_FirstBinLen = gFW_BinLen;
+  }
+  flash_unlock();
+  flash_status_type status = flash_operation_wait_for(ERASE_TIMEOUT);
+  if ((status == FLASH_PROGRAM_ERROR) || (status == FLASH_EPP_ERROR))
+  {
+      flash_flag_clear(FLASH_PRGMERR_FLAG | FLASH_EPPERR_FLAG);
+      flash_lock();
+      return ERROR;
+  }
+  else if (status == FLASH_OPERATE_TIMEOUT)
+  {
+      flash_lock();
+      return ERROR;
+  }
+
+  uint32_t k = 0;
+  for (i = 0; i < (BUFFER_LEN / 4); ++i)
+  {
+      FW_UPDATE_Buffer[i] = 0;
+      FW_UPDATE_Buffer[i] = buffer[k + 9];
+      FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 10] << 8);
+      FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 11] << 16);
+      FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 12] << 24);
+      k += 4;
+  }
+
+  FW_Updateing_destAdrss = (uint32_t)(buffer[5]);
+  FW_Updateing_destAdrss |= (uint32_t)(buffer[6] << 8);
+  FW_Updateing_destAdrss |= (uint32_t)(buffer[7] << 16);
+  FW_Updateing_destAdrss |= (uint32_t)(buffer[8] << 24);
+  FW_Updateing_destAdrss += APP_FLASH_START_ADDRESS;
+  for (i = 0; i < (BUFFER_LEN / 4); ++i)
+  {
+      if (flash_word_program(FW_Updateing_destAdrss, FW_UPDATE_Buffer[i]) != FLASH_OPERATE_DONE)
+      {
+          return ERROR;
+      }
+      if (FW_UPDATE_Buffer[i] != *(uint32_t *)FW_Updateing_destAdrss)
+      {
+          return ERROR;
+      }
+      FW_Updateing_destAdrss += 4;
+      if (FW_Updateing_destAdrss >= ERASE_FLASH_END_ADDRESS) // if this address of last page to break the program.
+      {
+          break;
+      }
+  }
+
+  if (FW_Updateing_destAdrss >= ERASE_FLASH_END_ADDRESS) // if this address of last page to break the program.
+  {
+      for (i = 0; i < LAST_CRC_INDES; ++i)
+      {
+          crc_data[i] = buffer[i + 9]; // include CRC of binary last 4 bytes
+      }
+      sum_crc32 = crc32_compute(crc_data, LAST_CRC_INDES - 4, &sum_crc32); // No need last 4 bytes for CRC
+  }
+  else
+  {
+      for (i = 0; i < BUFFER_LEN; ++i)
+      {
+          crc_data[i] = buffer[i + 9];
+      }
+      sum_crc32 = crc32_compute(crc_data, BUFFER_LEN, &sum_crc32);
+  }
+  flash_lock();
+  return SUCCESS;
+}
+error_status Bootloader_CmdCrcCheckHandler(uint8_t * buff)
+{
+    if (crc_used_flag == false)
+    {
+        FLASH_Read(APP_CRC_FLASH_START_ADDRESS, Read_flash_data, 4);
+
+        for (int i = 0; i < 4; ++i)
+        {
+            crc_data[i] = Read_flash_data[i];
+        }
+
+        sum_crc32 = (uint32_t)Read_flash_data[0] + ((uint32_t)Read_flash_data[1] << 8) + ((uint32_t)Read_flash_data[2] << 16) + ((uint32_t)Read_flash_data[3] << 24);
+
+        crc_data[LAST_CRC_INDES - 4] = Read_flash_data[0];
+        crc_data[LAST_CRC_INDES - 3] = Read_flash_data[1];
+        crc_data[LAST_CRC_INDES - 2] = Read_flash_data[2];
+        crc_data[LAST_CRC_INDES - 1] = Read_flash_data[3];
+    }
+
+    buff[1] = FLASH_OPERATION_SUCCESS;
+    buff[2] = crc_data[LAST_CRC_INDES - 4];
+    buff[3] = crc_data[LAST_CRC_INDES - 3];
+    buff[4] = crc_data[LAST_CRC_INDES - 2];
+    buff[5] = crc_data[LAST_CRC_INDES - 1];
+    buff[6] = sum_crc32;
+    buff[7] = (sum_crc32 >> 8);
+    buff[8] = (sum_crc32 >> 16);
+    buff[9] = (sum_crc32 >> 24);
+    return SUCCESS;
+}
+error_status Bootloader_CommandHandleReadFlash(uint8_t *buff , const uint8_t *in)
+{
+  uint8_t command[IN_MAXPACKET_SIZE];
+  memcpy(command, in, IN_MAXPACKET_SIZE);
+  uint16_t Read_Flash_len = (command[4] << 8) + command[3];
+
+  for (int i = 0; i < 4; ++i)
+  {
+      Read_flashAdrss_tab[i] = command[i + 5];
+  }
+
+  Read_flash_address = (uint32_t)(Read_flashAdrss_tab[0]);
+  Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[1] << 8);
+  Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[2] << 16);
+  Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[3] << 24);
+
+  if ((Read_flash_address >= BOOTPATCH_FLASH_START_ADDRESS) && (Read_flash_address <= BOOTPATCH_FLASH_END_ADDRESS)) // 0x2004000 - 0x202FFFF = boot_patch (176K)
+  {
+      buff[1] = FLASH_WRITE_ERRORS;
+  }
+
+  FLASH_Read(Read_flash_address, Read_flash_data, Read_Flash_len);
+
+  buff[0] = READ_FLASH_BLOCK;
+
+  for (int i = 0; i < Read_Flash_len; ++i)
+  {
+      buff[i + 2] = Read_flash_data[i];
+  }
+  return SUCCESS;
 }
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *

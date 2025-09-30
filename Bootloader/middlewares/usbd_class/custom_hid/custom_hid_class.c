@@ -26,7 +26,8 @@
 #include "custom_hid_desc.h"
 #include "at32f415_flash.h"
 #include "stdbool.h"
-#include "Bootloader.h"
+#include "bootloader.h"
+#include "command.h"
 
 /** @addtogroup AT32F415_middlewares_usbd_class
   * @{

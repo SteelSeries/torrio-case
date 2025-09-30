@@ -22,8 +22,8 @@ extern otg_core_type otg_core_struct;
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Usb_Clock48mSelect(usb_clk48_s clk_s);
-void Usb_GpioConfig(void);
-void Usb_LowPowerWakeupConfig(void);
-void usb_delay_ms(uint32_t ms);
-void usb_delay_us(uint32_t us);
+extern void Usb_Clock48mSelect(usb_clk48_s clk_s);
+extern void Usb_GpioConfig(void);
+extern void Usb_LowPowerWakeupConfig(void);
+extern void usb_delay_ms(uint32_t ms);
+extern void usb_delay_us(uint32_t us);

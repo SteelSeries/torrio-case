@@ -53,16 +53,6 @@ extern "C" {
 #define USBD_CUSTOM_HID_IN_EPT2                 0x82
 #define USBD_CUSTOM_HID_IN_EPT3                 0x83
 
-#define APP_FLASH_SIZE (0x20000)
-#define APP_FLASH_START (0x4000)
-  
-#define APP_FLASH_START_ADDRESS (FLASH_BASE + APP_FLASH_START)
-#define ERASE_FLASH_END_ADDRESS (FLASH_BASE + APP_FLASH_SIZE)
-#define APP_CRC_FLASH_START_ADDRESS (ERASE_FLASH_END_ADDRESS - 4)
-  
-#define BOOTPATCH_FLASH_START_ADDRESS 0x08000000
-#define BOOTPATCH_FLASH_END_ADDRESS 0x08003FFF
-
 extern uint8_t gCurrentMode;
 
 /**
@@ -98,7 +88,7 @@ typedef struct
   uint32_t alt_setting;
   
   uint8_t hid_set_report[1024];
-  uint8_t hid_get_report[1024];
+  uint8_t hid_get_report[64];
   uint8_t hid_state;
   uint8_t send_state;
 }custom_hid_type;
