@@ -2,7 +2,6 @@
  *                                         INCLUDES                                              *
  *************************************************************************************************/
 #include "sy8809.h"
-#include "sy8809_table.h"
 #include "init_pinout.h"
 #include "i2c1.h"
 #include "task_scheduler.h"
@@ -26,6 +25,201 @@
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+static const uint8_t sy8809_reg_table3_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41}, // IINDPM = 0.5A, VDPPM = 4.7V
+    {SY8809_REG_0x21, 0x06}, // Vfloat = 4.35V
+    {SY8809_REG_0x22, 0x09}, // ICC = 480mA
+    {SY8809_REG_0x23, 0x20}, // ITC = 60mA, IEND = 20mA
+    {SY8809_REG_0x24, 0x00}, // VSYS_MIN = 3.35V
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x00}, // Disable VOX loading detect
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87}, // VPMID = 4.8V, BAT_UVLO = 3.0V, lowBAT_Set = 3.5V
+    {SY8809_REG_0x31, 0x00}, // default xsense mode setting need delay 100ms
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F}, // IOFF_Base = 3mA, TD_L2H = 100ms, TD_H2L = 50ms
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x10}, // default no JETA    JETA : 0x10    suspend need sleep
+    {SY8809_REG_0x37, 0x00}, // 809 internal HW protect setting -> FW no use
+    {SY8809_REG_0x44, 0x00}, // default
+    {SY8809_REG_0x27, 0x27}};
+
+static const uint8_t sy8809_reg_table4_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41},
+    {SY8809_REG_0x21, 0x06},
+    {SY8809_REG_0x22, 0x02},
+    {SY8809_REG_0x23, 0x20},
+    {SY8809_REG_0x24, 0x00},
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x60},
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87},
+    {SY8809_REG_0x31, 0x00},
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F},
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x00},
+    {SY8809_REG_0x37, 0x00},
+    {SY8809_REG_0x44, 0x00},
+    {SY8809_REG_0x27, 0x20}};
+
+static const uint8_t sy8809_reg_table5H_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41},
+    {SY8809_REG_0x21, 0x06},
+    {SY8809_REG_0x22, 0x02},
+    {SY8809_REG_0x23, 0x20},
+    {SY8809_REG_0x24, 0x00},
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x00},
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87},
+    {SY8809_REG_0x31, 0x00},
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F},
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x10},
+    {SY8809_REG_0x37, 0x00},
+    {SY8809_REG_0x44, 0x00},
+    {SY8809_REG_0x27, 0x27}};
+
+static const uint8_t sy8809_reg_table6_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41},
+    {SY8809_REG_0x21, 0x06},
+    {SY8809_REG_0x22, 0x02},
+    {SY8809_REG_0x23, 0x20},
+    {SY8809_REG_0x24, 0x00},
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x60},
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87},
+    {SY8809_REG_0x31, 0x00},
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F},
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x10},
+    {SY8809_REG_0x37, 0x00},
+    {SY8809_REG_0x44, 0x00},
+    {SY8809_REG_0x27, 0x20}};
+
+static const uint8_t sy8809_reg_tableA_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41},
+    {SY8809_REG_0x21, 0x06},
+    {SY8809_REG_0x22, 0x1C},
+    {SY8809_REG_0x23, 0x20},
+    {SY8809_REG_0x24, 0x00},
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x00},
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87},
+    {SY8809_REG_0x31, 0x00},
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F},
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x10},
+    {SY8809_REG_0x37, 0x00},
+    {SY8809_REG_0x44, 0x00},
+    {SY8809_REG_0x27, 0x27}};
+
+static const uint8_t sy8809_reg_tableB_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41},
+    {SY8809_REG_0x21, 0x06},
+    {SY8809_REG_0x22, 0x09},
+    {SY8809_REG_0x23, 0x20},
+    {SY8809_REG_0x24, 0x00},
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x00},
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87},
+    {SY8809_REG_0x31, 0x00},
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F},
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x10},
+    {SY8809_REG_0x37, 0x00},
+    {SY8809_REG_0x44, 0x00},
+    {SY8809_REG_0x27, 0x27}};
+
+static const uint8_t sy8809_reg_tableCEI_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41},
+    {SY8809_REG_0x21, 0x06},
+    {SY8809_REG_0x22, 0x0C},
+    {SY8809_REG_0x23, 0x20},
+    {SY8809_REG_0x24, 0x00},
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x00},
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87},
+    {SY8809_REG_0x31, 0x00},
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F},
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x10},
+    {SY8809_REG_0x37, 0x00},
+    {SY8809_REG_0x44, 0x00},
+    {SY8809_REG_0x27, 0x27}};
+
+static const uint8_t sy8809_reg_tableDFJ_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41},
+    {SY8809_REG_0x21, 0x06},
+    {SY8809_REG_0x22, 0x06},
+    {SY8809_REG_0x23, 0x20},
+    {SY8809_REG_0x24, 0x00},
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x00},
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87},
+    {SY8809_REG_0x31, 0x00},
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F},
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x10},
+    {SY8809_REG_0x37, 0x00},
+    {SY8809_REG_0x44, 0x00},
+    {SY8809_REG_0x27, 0x27}};
+
+static const uint8_t sy8809_reg_tableG_list[SY8809_REG_TABLE_LEN][2] = {
+    {SY8809_REG_0x20, 0x41},
+    {SY8809_REG_0x21, 0x06},
+    {SY8809_REG_0x22, 0x17},
+    {SY8809_REG_0x23, 0x20},
+    {SY8809_REG_0x24, 0x00},
+    {SY8809_REG_0x25, 0xE0},
+    {SY8809_REG_0x26, 0x00},
+    {SY8809_REG_0x2E, 0x00},
+    {SY8809_REG_0x2F, 0x00},
+    {SY8809_REG_0x30, 0x87},
+    {SY8809_REG_0x31, 0x00},
+    {SY8809_REG_0x32, 0x00},
+    {SY8809_REG_0x33, 0x1F},
+    {SY8809_REG_0x34, 0x10},
+    {SY8809_REG_0x35, 0x03},
+    {SY8809_REG_0x36, 0x10},
+    {SY8809_REG_0x37, 0x00},
+    {SY8809_REG_0x44, 0x00},
+    {SY8809_REG_0x27, 0x27}};
+
+// const uint16_t battery_voltage_table[21] = {3510, 3590, 3610, 3630, 3650,
+//                                             3670, 3690, 3710, 3740, 3760,
+//                                             3800, 3840, 3880, 3920, 3980,
+//                                             4030, 4080, 4140, 4200, 4250,
+//                                             CASE_MAX_VBAT};
+
 static Sy8809_HardwareSettings_t user_hardware_settings = {0};
 static const Sy8809_TableMap_t table_map[] = {
     {sy8809_reg_table3_list, SY8809_REG_TABLE_3},
@@ -170,6 +364,15 @@ void Sy8809_ReadIrqState(void)
     charge_irq_flag = true;
 }
 
+void Sy8809_SetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp)
+{
+    memcpy(&ChargeIcStatusInfo, ChargeIcStatusInfoTemp, sizeof(Sy8809_ChargeStatus_t));
+}
+
+void Sy8809_GetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp)
+{
+    memcpy(ChargeIcStatusInfoTemp, &ChargeIcStatusInfo, sizeof(Sy8809_ChargeStatus_t));
+}
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/

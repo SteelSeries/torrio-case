@@ -27,6 +27,7 @@
 #include "usbd_int.h"
 #include "usb.h"
 #include "sy8809.h"
+#include "timer4.h"
 
 /** @addtogroup AT32F415_periph_examples
   * @{
@@ -170,6 +171,34 @@ void EXINT0_IRQHandler(void)
     exint_flag_clear(EXINT_LINE_0);
   }
 }
+
+/**
+  * @brief  this function handles adc1 handler.
+  * @param  none
+  * @retval none
+  */
+void ADC1_IRQHandler(void)
+{
+  if(adc_interrupt_flag_get(ADC1, ADC_PCCE_FLAG) != RESET)
+  {
+    adc_flag_clear(ADC1, ADC_PCCE_FLAG);
+  }
+}
+
+/**
+  * @brief  this function handles dma1_channel1 handler.
+  * @param  none
+  * @retval none
+  */
+void DMA1_Channel1_IRQHandler(void)
+{
+  if(dma_interrupt_flag_get(DMA1_FDT1_FLAG) != RESET)
+  {
+    dma_flag_clear(DMA1_FDT1_FLAG);
+    Timer4_AdcTrigStop();
+  }
+}
+
 /**
   * @}
   */

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>5</fileVersion>
-    <fileChecksum>1577146548</fileChecksum>
+    <fileChecksum>2580674861</fileChecksum>
     <configuration>
         <name>Torrio_Case_App</name>
         <outputs>
@@ -173,6 +173,15 @@
             <file>$PROJ_DIR$\..\src\usb.c</file>
             <file>$PROJ_DIR$\..\src\timer5.c</file>
             <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_crm.o</file>
+            <file>$PROJ_DIR$\..\src\sy8809_xsense.c</file>
+            <file>$PROJ_DIR$\..\src\adc.c</file>
+            <file>$PROJ_DIR$\..\inc\sy8809_xsense.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\sy8809_xsense.o</file>
+            <file>$PROJ_DIR$\..\inc\timer4.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer4.o</file>
+            <file>$PROJ_DIR$\..\src\timer4.c</file>
+            <file>$PROJ_DIR$\..\inc\adc.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\adc.o</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.c</name>
@@ -590,16 +599,10 @@
         </file>
         <file>
             <name>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 95</file>
-                </tool>
-            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 70 140 64 110 81 46 153 148 144 118 77 127 167 121 115 91 92 40 106 49 164 88 66 90 85 112 78 84 27 98 120 132 111 54 152 96 138 42 33 113 159 62 73 104 149 130 65 61 63 86 80</file>
+                    <file> 70 140 64 110 81 46 153 148 144 118 77 127 167 121 115 91 92 40 106 49 164 88 66 90 85 112 78 84 27 98 120 132 111 54 152 96 138 176 42 33 113 159 62 73 104 149 130 171 65 61 173 63 86 80</file>
                 </tool>
             </inputs>
         </file>
@@ -638,7 +641,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 43 31 162 28 60 52 29 107 101 109</file>
+                    <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 43 31 162 28 60 52 29 107 30 172 101 109</file>
                 </tool>
             </inputs>
         </file>
@@ -653,7 +656,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 53 87 94 35 102 75 79 103 99 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 60 52 32 107</file>
+                    <file> 53 87 94 35 102 75 79 103 99 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 60 52 32 107 30</file>
                 </tool>
             </inputs>
         </file>
@@ -698,7 +701,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 53 87 94 35 102 75 79 103 99 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 43 31 162 37 60 145 52 101 109 50</file>
+                    <file> 53 87 94 35 102 75 79 103 99 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 43 31 162 37 60 145 52 170 161 101 109 50</file>
                 </tool>
             </inputs>
         </file>
@@ -758,7 +761,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 43 31 162 60 52 32 117 34 47 107 101 109</file>
+                    <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 43 31 162 60 175 52 32 117 34 47 107 30 101 109</file>
                 </tool>
             </inputs>
         </file>
@@ -773,7 +776,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 43 31 162 37 116 60 145 155 52 117 56 41 107 161 151 160 101 109</file>
+                    <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 43 31 162 37 116 60 145 175 155 52 117 56 41 107 30 161 151 172 160 101 109</file>
                 </tool>
             </inputs>
         </file>
@@ -894,6 +897,51 @@
                 <tool>
                     <name>ICCARM</name>
                     <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 60 155 52 160</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 171</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 60 52 32 107 30 170 161 172</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\adc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 176</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 53 87 94 35 102 75 79 103 99 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 60 175 52</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer4.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 173</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 53 87 94 102 75 79 103 114 82 147 58 71 72 76 45 122 36 38 97 150 57 100 55 136 139 126 74 108 119 59 39 89 44 51 48 67 69 141 68 105 60 52 172</file>
                 </tool>
             </inputs>
         </file>

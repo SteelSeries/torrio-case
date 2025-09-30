@@ -1540,6 +1540,9 @@
     <group>
         <name>user</name>
         <file>
+            <name>$PROJ_DIR$\..\src\adc.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\at32f415_clock.c</name>
         </file>
         <file>
@@ -1570,10 +1573,16 @@
             <name>$PROJ_DIR$\..\src\sy8809.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\timer2.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer4.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\timer5.c</name>

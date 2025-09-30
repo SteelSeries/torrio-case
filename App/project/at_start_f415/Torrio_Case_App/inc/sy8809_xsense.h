@@ -4,31 +4,25 @@
  *                                          INCLUDES                                             *
  *************************************************************************************************/
 #include "at32f415_board.h"
-#include "sy8809_table.h"
 
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-#define SY8809_I2C_SLAVE_ADDRESS 0x0C
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
-typedef struct
+typedef enum
 {
-    gpio_type *sy8809_sda_gpio_port;
-    uint32_t sy8809_sda_gpio_pin;
-    crm_periph_clock_type sy8809_sda_gpio_crm_clk;
-
-    gpio_type *busd_detect_resist_gpio_port;
-    uint32_t busd_detect_resist_gpio_pin;
-    crm_periph_clock_type busd_detect_resist_gpio_crm_clk;
-
-    gpio_type *sy8809_irq_gpio_port;
-    uint32_t sy8809_irq_gpio_pin;
-    crm_periph_clock_type sy8809_irq_gpio_crm_clk;
-
-} Sy8809_HardwareSettings_t;
+    SY8809_XSENSE_NULL,
+    SY8809_XSENSE_NTC,
+    SY8809_XSENSE_IBAT,
+    SY8809_XSENSE_IVOR,
+    SY8809_XSENSE_IVOL,
+    SY8809_XSENSE_IVIN,
+    SY8809_XSENSE_VBAT,
+    SY8809_XSENSE_VBIN
+} Sy8809Xsense_OutputItem_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -36,8 +30,6 @@ typedef struct
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Sy8809_InitTask(void);
-void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_settings);
-void Sy8809_ReadIrqState(void);
-void Sy8809_SetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp);
-void Sy8809_GetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp);
+void Sy8809Xsense_TrigXsenseConv(void);
+void Sy8809Xsense_SetPendingXsense(Sy8809Xsense_OutputItem_t Pending);
+

@@ -8,6 +8,10 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
+#define ADC_PIN             GPIO_PINS_0                 // PC0
+#define ADC_GPIO            GPIOC                       // PC0
+#define ADC_CRM_CLK         CRM_GPIOC_PERIPH_CLOCK      // PC0
+
 #define USB_DET_PIN         GPIO_PINS_3                 // PC3
 #define USB_DET_GPIO        GPIOC                       // PC3
 #define USB_DET_CRM_CLK     CRM_GPIOC_PERIPH_CLOCK      // PC3

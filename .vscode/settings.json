@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "usb.h": "c"
+        "usb.h": "c",
+        "string.h": "c",
+        "sy8809_table.h": "c"
     }
 }

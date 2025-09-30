@@ -21,6 +21,7 @@
 
 // debug
 #define DEBUG_CUSTOM_OP             0x08U // each application implements it as they see fit
+#define DEBUG_SY8809_OP             0x09U 
 
 // internal - we can reuse those as USB APIs for Artery
 #define INTERNAL_USB_SUSPEND_OP     0x0CU // USB entered suspend mode. Lower power usage

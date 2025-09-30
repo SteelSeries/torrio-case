@@ -14,6 +14,8 @@
 #include "sy8809.h"
 #include "power_control.h"
 #include "init_pinout.h"
+#include "adc.h"
+#include "timer4.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -42,7 +44,7 @@ int main(void)
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
   system_clock_config();
-  
+
   at32_board_init();
 
   crm_clocks_freq_get(&crm_clocks_freq_struct);
@@ -80,8 +82,11 @@ int main(void)
 
   Timer5_Init();
 
-  PowerControl_Init();
+  Timer4_Init();
 
+  Adc_Init();
+
+  PowerControl_Init();
 
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
