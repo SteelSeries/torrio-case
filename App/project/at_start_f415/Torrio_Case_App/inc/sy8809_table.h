@@ -96,6 +96,14 @@ typedef enum
     SY8809_NTC_LEVEL_UNKNOW = 0xFF
 } Sy8809_NtcLevel_t;
 
+typedef enum
+{
+    SY8809_BUD_CHARGE_STATE_UNKNOW = 0,
+    SY8809_BUD_CHARGE_STATE_CHARGING,
+    SY8809_BUD_CHARGE_STATE_COMPLETE,
+    SY8809_BUD_CHARGE_STATE_TABLE4_COMPLETE
+} Sy8809_BudsChargeStatus_t;
+
 typedef struct
 {
     uint8_t reg_0x10;
@@ -107,6 +115,15 @@ typedef struct
     uint8_t reg_0x16;
     uint8_t reg_0x17;
 } Sy8809_RegStateCheck_t;
+
+typedef struct
+{
+    Sy8809_NtcLevel_t ntc_level;
+    Sy8809_Table_t current_table;
+    Sy8809_BudsChargeStatus_t left_bud_charge_status;
+    Sy8809_BudsChargeStatus_t right_bud_charge_status;
+    Sy8809_RegStateCheck_t check_reg_state;
+} Sy8809_ChargeStatus_t;
 
 typedef struct
 {

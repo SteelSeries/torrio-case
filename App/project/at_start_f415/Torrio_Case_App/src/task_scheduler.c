@@ -120,12 +120,12 @@ TaskScheduler_TaskStatus_t TaskScheduler_RemoveTask(void (*func)(void))
 
 uint32_t TaskScheduler_GetTimeUntilNextTask(void)
 {
-    int32_t minDelta = -1;
+    uint32_t minDelta = -1;
     uint32_t now = Timer2_GetTick();
 
     for (uint32_t i = 0; i < numTasks; i++)
     {
-        int32_t delta = taskList[i].interval - (now - taskList[i].lastRun);
+        uint32_t delta = taskList[i].interval - (now - taskList[i].lastRun);
         if (delta <= 0)
         {
             return 0; // 任務已到期，立即執行
