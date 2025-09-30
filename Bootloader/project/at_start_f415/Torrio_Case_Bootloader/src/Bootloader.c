@@ -4,14 +4,7 @@
 #include "bootloader.h"
 #include "command.h"
 #include <string.h>
-#include "at32f415_clock.h"
-#include "usb_conf.h"
-#include "usb_core.h"
-#include "usbd_int.h"
-#include "custom_hid_class.h"
-#include "custom_hid_desc.h"
 #include <stdbool.h>
-#include "usb.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -39,21 +32,6 @@ static uint8_t crc_data[BUFFER_LEN];
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
-bool Bootloader_CheckBackDoor(void)
-{
-    uint8_t i = 0;
-    while(gpio_input_data_bit_read(USER_BUTTON_PORT , USER_BUTTON_PIN) == SET)
-    {
-      delay_ms(10);
-      i++;
-      if(i>10)
-      {
-        gCurrentMode = BOOTLOADER_MODE;
-        return true;
-      }
-    }
-    return false;
-}
 uint16_t FLASH_ReadHalfWord(uint32_t faddr)
 {
   return *(vu8*)faddr;
@@ -72,44 +50,6 @@ void FLASH_Read(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead)
     pBuffer[i]=FLASH_ReadHalfWord(ReadAddr); // Read 1 byte
     ReadAddr += 1; //shift 1 byte
   }
-}
-void Bootloader_JumpToApp(void)
-{
-    pFunction JumpToApplication;
-    uint32_t JumpAddress;
-    /* Test if user code is programmed starting from USBD_DFU_APP_DEFAULT_ADD address */
-    if (((*(__IO uint32_t *)APP_FLASH_START_ADDRESS) & 0x2FFE0000) == 0x20000000)
-    {
-        /* Jump to user application */
-        JumpAddress = *(__IO uint32_t *)(APP_FLASH_START_ADDRESS + 4);
-        JumpToApplication = (pFunction)JumpAddress;
-
-        /* Initialize user application's Stack Pointer */
-        __set_MSP(*(__IO uint32_t *)APP_FLASH_START_ADDRESS);
-        JumpToApplication();
-    }
-}
-bool Bootloader_CheckAppCodeComplete(void)
-{
-    uint8_t FLASH_ReadCRC[4] = {0};
-    uint8_t null_count = 0;
-    FLASH_Read(ERASE_FLASH_END_ADDRESS - 4, FLASH_ReadCRC, 4);
-    for (uint8_t i = 0; i < 4; i++)
-    {
-        if (FLASH_ReadCRC[i] == 0Xff)
-        {
-            null_count++;
-        }
-    }
-    
-    if (null_count == 4)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
 }
 uint32_t crc32_compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc)
 {
@@ -277,7 +217,7 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff , const uint8_t *in
 
   FLASH_Read(Read_flash_address, Read_flash_data, Read_Flash_len);
 
-  buff[0] = READ_FLASH_BLOCK;
+  buff[0] = WRITE_READ_FLASH_BLOCK;
 
   for (int i = 0; i < Read_Flash_len; ++i)
   {
@@ -285,6 +225,56 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff , const uint8_t *in
   }
   return SUCCESS;
 }
-/*************************************************************************************************
- *                                STATIC FUNCTION DEFINITIONS                                    *
- *************************************************************************************************/
+bool Bootloader_CheckBackDoor(void)
+{
+    uint8_t i = 0;
+    while(gpio_input_data_bit_read(USER_BUTTON_PORT , USER_BUTTON_PIN) == SET)
+    {
+      delay_ms(10);
+      i++;
+      if(i>10)
+      {
+        gCurrentMode = BOOTLOADER_MODE;
+        return true;
+      }
+    }
+    return false;
+}
+void Bootloader_JumpToApp(void)
+{
+    pFunction JumpToApplication;
+    uint32_t JumpAddress;
+    /* Test if user code is programmed starting from USBD_DFU_APP_DEFAULT_ADD address */
+    if (((*(__IO uint32_t *)APP_FLASH_START_ADDRESS) & 0x2FFE0000) == 0x20000000)
+    {
+        /* Jump to user application */
+        JumpAddress = *(__IO uint32_t *)(APP_FLASH_START_ADDRESS + 4);
+        JumpToApplication = (pFunction)JumpAddress;
+
+        /* Initialize user application's Stack Pointer */
+        __set_MSP(*(__IO uint32_t *)APP_FLASH_START_ADDRESS);
+        JumpToApplication();
+    }
+}
+bool Bootloader_CheckAppCodeComplete(void)
+{
+    uint8_t FLASH_ReadCRC[4] = {0};
+    uint8_t null_count = 0;
+    FLASH_Read(ERASE_FLASH_END_ADDRESS - 4, FLASH_ReadCRC, 4);
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        if (FLASH_ReadCRC[i] == 0Xff)
+        {
+            null_count++;
+        }
+    }
+    
+    if (null_count == 4)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}

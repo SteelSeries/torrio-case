@@ -44,18 +44,4 @@ C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\projec
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\stdbool.h \
   C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\inc\command.h \
   C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\string.h \
-  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_string.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\inc\at32f415_clock.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\inc\usb_conf.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usb_core.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usb_std.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usbd_core.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usbd_int.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usb_core.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usb_std.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\usbd_core.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\inc\usb.h \
-  C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\..\inc\usb_conf.h
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_string.h

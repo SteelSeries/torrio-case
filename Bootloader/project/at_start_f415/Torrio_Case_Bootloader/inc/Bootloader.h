@@ -26,6 +26,8 @@
 #define BOOTPATCH_FLASH_END_ADDRESS     0x08003FFF
 #define BUFFER_LEN                      1012
 #define bootloader_len                  1024
+#define READ_FLASH_BUFFER_LEN           64
+#define LAST_CRC_INDES                  332
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/

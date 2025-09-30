@@ -4,7 +4,6 @@
 #include "command.h"
 #include "custom_hid_class.h"
 #include "usb.h"
-#include "version.h"
 #include "bootloader.h"
 #include <stdio.h>
 #include <string.h>
@@ -63,8 +62,7 @@ static const cmd_handler_t handler_table[] =
      { .op = NO_OP,                     .read = Command_HandleNoop,                       .write = Command_HandleNoop },
      { .op = RESET_DEVICE,              .read = Command_HandleResetDevice,                .write = Command_HandleResetDevice },
      { .op = ERASE_THE_FLASH,           .read = Command_HandleNoop,                       .write = Command_HandleEraseFlash },
-     { .op = WRITE_FLASH_BLOCK,         .read = Command_HandleReadFlash,                  .write = Command_HandleWriteFlash },
-     { .op = READ_FLASH_BLOCK,          .read = Command_HandleNoop,                       .write = Command_HandleNoop },
+     { .op = WRITE_READ_FLASH_BLOCK,    .read = Command_HandleReadFlash,                  .write = Command_HandleWriteFlash },
      { .op = CRC_FLASH_CHECK,           .read = Command_CheckCRC32,                       .write = Command_HandleNoop },
      { .op = GET_FIRMWARE_VERSION,      .read = Command_HandleNoop,                       .write = Command_HandleNoop }, 
 
@@ -153,7 +151,7 @@ static Command_Status_t Command_HandleEraseFlash(const uint8_t command[IN_MAXPAC
 }
 static Command_Status_t Command_HandleWriteFlash(const uint8_t command[IN_MAXPACKET_SIZE])
 {
-    txBuf[0] = WRITE_FLASH_BLOCK;
+    txBuf[0] = WRITE_READ_FLASH_BLOCK;
     txBuf[1] = FLASH_OPERATION_SUCCESS;
     if (Bootloader_FlashWrite(command, IN_MAXPACKET_SIZE) != SUCCESS)
     {
@@ -166,7 +164,7 @@ static Command_Status_t Command_HandleReadFlash(const uint8_t command[IN_MAXPACK
 {
     uint8_t buff[OUT_MAXPACKET_SIZE] = {0};
     //read the flash
-    buff[0] = READ_FLASH_BLOCK;
+    buff[0] = WRITE_READ_FLASH_BLOCK + 0x80;
     Bootloader_CommandHandleReadFlash(buff , command);
     custom_hid_class_send_report(&otg_core_struct.dev, buff, 64);
     return COMMAND_STATUS_SUCCESS;

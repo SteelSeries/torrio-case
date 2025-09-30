@@ -10,8 +10,7 @@
 #define RESET_DEVICE                 0x01U
 #define RESET_COMMAND                0x00U
 #define ERASE_THE_FLASH              0x02U
-#define WRITE_FLASH_BLOCK            0x03U
-#define READ_FLASH_BLOCK             0x03U
+#define WRITE_READ_FLASH_BLOCK       0x03U
 #define CRC_FLASH_CHECK              0x04U
 // firmware info
 #define GET_FIRMWARE_VERSION         0x10U
