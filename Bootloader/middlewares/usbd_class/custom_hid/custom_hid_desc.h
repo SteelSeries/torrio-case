@@ -54,8 +54,8 @@ extern "C" {
 /**
   * @brief usb vendor id and product id define
   */
-#define USBD_CUSHID_VENDOR_ID            0x1038//0x2E3C
-#define USBD_CUSHID_PRODUCT_ID           0x163D//0x5745
+#define USBD_CUSHID_VENDOR_ID            0x1038
+#define USBD_CUSHID_PRODUCT_ID           0x163D
 
 /**
   * @brief usb descriptor size define
@@ -71,8 +71,8 @@ extern "C" {
 /**
   * @brief usb string define(vendor, product configuration, interface)
   */
-#define USBD_CUSHID_DESC_MANUFACTURER_STRING    "Artery"
-#define USBD_CUSHID_DESC_PRODUCT_STRING         "Custom HID"
+#define USBD_CUSHID_DESC_MANUFACTURER_STRING    "SteelSeries"
+#define USBD_CUSHID_DESC_PRODUCT_STRING         "Bootloader"
 #define USBD_CUSHID_DESC_CONFIGURATION_STRING   "Custom HID Config"
 #define USBD_CUSHID_DESC_INTERFACE_STRING       "Custom HID Interface"
 

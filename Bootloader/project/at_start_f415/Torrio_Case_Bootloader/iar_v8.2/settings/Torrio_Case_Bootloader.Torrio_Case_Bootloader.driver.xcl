@@ -6,13 +6,13 @@
 
 "-p" 
 
-"C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xC_v2.ddf" 
+"C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xB_v2.ddf" 
 
 "--drv_verify_download" 
 
 "--semihosting" 
 
-"--device=-AT32F415RCT7" 
+"--device=-AT32F415RBT7-7" 
 
 "--multicore_nr_of_cores=1" 
 
