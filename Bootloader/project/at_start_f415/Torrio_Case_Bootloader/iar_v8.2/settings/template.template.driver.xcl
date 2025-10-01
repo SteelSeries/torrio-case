@@ -1,0 +1,19 @@
+"--endian=little" 
+
+"--cpu=Cortex-M4" 
+
+"--fpu=None" 
+
+"-p" 
+
+"C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xC_v2.ddf" 
+
+"--semihosting" 
+
+"--device=-AT32F415RCT7" 
+
+"--multicore_nr_of_cores=1" 
+
+
+
+

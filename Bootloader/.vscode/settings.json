@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "command.h": "c",
+        "at32f415_clock.h": "c",
+        "version.h": "c",
+        "bootloader.h": "c"
+    }
+}
