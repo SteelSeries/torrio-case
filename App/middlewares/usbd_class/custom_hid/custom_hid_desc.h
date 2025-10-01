@@ -55,7 +55,7 @@ extern "C" {
   * @brief usb vendor id and product id define
   */
 #define USBD_CUSHID_VENDOR_ID            0x1038
-#define USBD_CUSHID_PRODUCT_ID           0x230C
+#define USBD_CUSHID_PRODUCT_ID           0x163C
 
 /**
   * @brief usb descriptor size define
