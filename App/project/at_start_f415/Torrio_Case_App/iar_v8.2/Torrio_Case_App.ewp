@@ -757,7 +757,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\Torrio_Case_App.icf</state>
+                    <state>$PROJ_DIR$\\Torrio_Case_App.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
