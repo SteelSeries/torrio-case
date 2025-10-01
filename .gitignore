@@ -28,6 +28,6 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 .vs/
-.Torrio_Case_Bootloader/
 #Nuget packages folder
 packages/
+/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/
