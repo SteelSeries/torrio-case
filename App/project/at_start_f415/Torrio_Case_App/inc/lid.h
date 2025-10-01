@@ -18,6 +18,13 @@ typedef struct
     uint32_t lid_gpio_pin;
     crm_periph_clock_type lid_gpio_crm_clk;
 } Lid_HardwareSettings_t;
+
+typedef enum
+{
+    LID_CLOSE = 0,
+    LID_OPEN,
+    LID_UNKNOW
+} Lid_State_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -25,4 +32,5 @@ typedef struct
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Lid_Init(const Lid_HardwareSettings_t *hardware_settings);
+void Lid_GpioConfigHardware(const Lid_HardwareSettings_t *hardware_settings);
+Lid_State_t Lid_GetState(void);

@@ -159,7 +159,7 @@ static void adc_config(void)
   adc_preempt_channel_set(ADC1, ADC_CHANNEL_9, 3, ADC_SAMPLETIME_239_5);
   adc_preempt_conversion_trigger_set(ADC1, ADC12_PREEMPT_TRIG_SOFTWARE, TRUE);
   adc_preempt_auto_mode_enable(ADC1, TRUE);
-  adc_interrupt_enable(ADC1, ADC_PCCE_INT, TRUE);
+  adc_interrupt_enable(ADC1, ADC_CCE_INT, TRUE);
 
   adc_enable(ADC1, TRUE);
 

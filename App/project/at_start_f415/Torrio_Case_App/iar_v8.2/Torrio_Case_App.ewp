@@ -344,6 +344,7 @@
                     <state>$PROJ_DIR$\..\..\..\at32f415_board</state>
                     <state>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid</state>
                     <state>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -820,7 +821,7 @@
                 </option>
                 <option>
                     <name>DoFill</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>FillerByte</name>
@@ -1145,6 +1146,12 @@
         </file>
     </group>
     <group>
+        <name>i2c_application_library</name>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</name>
+        </file>
+    </group>
+    <group>
         <name>readme</name>
         <file>
             <name>$PROJ_DIR$\..\readme.txt</name>
@@ -1177,6 +1184,9 @@
     <group>
         <name>user</name>
         <file>
+            <name>$PROJ_DIR$\..\src\adc.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\at32f415_clock.c</name>
         </file>
         <file>
@@ -1184,6 +1194,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\Commands.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c1.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\init_pinout.c</name>
@@ -1204,10 +1217,16 @@
             <name>$PROJ_DIR$\..\src\sy8809.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\timer2.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer4.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\timer5.c</name>

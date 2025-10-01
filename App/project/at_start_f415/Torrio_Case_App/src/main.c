@@ -14,6 +14,8 @@
 #include "sy8809.h"
 #include "power_control.h"
 #include "init_pinout.h"
+#include "adc.h"
+#include "timer4.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -43,9 +45,9 @@ int main(void)
 
   system_clock_config();
 
-  crm_clocks_freq_get(&crm_clocks_freq_struct);
-
   at32_board_init();
+
+  crm_clocks_freq_get(&crm_clocks_freq_struct);
 
   printf("APP Start!!!\n");
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
@@ -54,8 +56,7 @@ int main(void)
   print_clock("APB1", crm_clocks_freq_struct.apb1_freq);
   print_clock("ADC", crm_clocks_freq_struct.adc_freq);
 
-  /* usb gpio config */
-  Usb_GpioConfig();
+  InitPinout_Init();
 
 #ifdef USB_LOW_POWER_WAKUP
   Usb_LowPowerWakeupConfig();
@@ -81,9 +82,11 @@ int main(void)
 
   Timer5_Init();
 
-  PowerControl_Init();
+  Timer4_Init();
 
-  InitPinout_Init();
+  Adc_Init();
+
+  PowerControl_Init();
 
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
@@ -95,14 +98,16 @@ int main(void)
   {
     TaskScheduler_Run();
 
-    sleepTime = TaskScheduler_GetTimeUntilNextTask();
-
-    if ((sleepTime > 0) && (Usb_ReadyStateGet() != USBD_RESET_EVENT))
+    if (Usb_ReadyStateGet() != USBD_RESET_EVENT)
     {
-      printf("setting sleep time:%d\n", sleepTime);
-      Timer5_StartOneShot(sleepTime);
-      PowerControl_EnterSleep();
-      printf("system wakeup\n");
+      sleepTime = TaskScheduler_GetTimeUntilNextTask();
+      if (sleepTime > 0)
+      {
+        // printf("setting sleep time:%d\n", sleepTime);
+        Timer5_StartOneShot(sleepTime);
+        PowerControl_EnterSleep();
+        // printf("system wakeup\n");
+      }
     }
 
     if (SS_RESET_FLAG)

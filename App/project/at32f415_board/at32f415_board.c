@@ -190,19 +190,19 @@ void at32_board_init()
   delay_init();
 
   /* configure led in at_start_board */
-  at32_led_init(LED2);
-  at32_led_init(LED3);
-  at32_led_init(LED4);
-  at32_led_off(LED2);
-  at32_led_off(LED3);
-  at32_led_off(LED4);
+  // at32_led_init(LED2);
+  // at32_led_init(LED3);
+  // at32_led_init(LED4);
+  // at32_led_off(LED2);
+  // at32_led_off(LED3);
+  // at32_led_off(LED4);
 
   /* configure button in at_start board */
-  at32_button_init();
+  // at32_button_init();
 
   uart_print_init(921600);
 
-  clkout_config();
+  // clkout_config();
 }
 
 /**

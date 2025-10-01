@@ -4,40 +4,38 @@
  *                                          INCLUDES                                             *
  *************************************************************************************************/
 #include "at32f415_board.h"
-#include "sy8809_table.h"
 
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-#define SY8809_I2C_SLAVE_ADDRESS 0x0C
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
 typedef struct
 {
-    gpio_type *sy8809_sda_gpio_port;
-    uint32_t sy8809_sda_gpio_pin;
-    crm_periph_clock_type sy8809_sda_gpio_crm_clk;
+    gpio_type *i2c1_sda_gpio_port;
+    gpio_type *i2c1_scl_gpio_port;
 
-    gpio_type *busd_detect_resist_gpio_port;
-    uint32_t busd_detect_resist_gpio_pin;
-    crm_periph_clock_type busd_detect_resist_gpio_crm_clk;
+    uint32_t i2c1_sda_gpio_pin;
+    uint32_t i2c1_scl_gpio_pin;
 
-    gpio_type *sy8809_irq_gpio_port;
-    uint32_t sy8809_irq_gpio_pin;
-    crm_periph_clock_type sy8809_irq_gpio_crm_clk;
+    crm_periph_clock_type i2c1_sda_gpio_crm_clk;
+    crm_periph_clock_type i2c1_scl_gpio_crm_clk;
 
-} Sy8809_HardwareSettings_t;
+    i2c_type *i2c1_port;
+    crm_periph_clock_type i2c1_crm_clk;
+    uint32_t i2c1_speed;
+
+} I2c1_HardwareSettings_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
+extern i2c_handle_type hi2cx;
 
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Sy8809_InitTask(void);
-void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_settings);
-void Sy8809_ReadIrqState(void);
-void Sy8809_SetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp);
-void Sy8809_GetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp);
+void I2c1_GpioConfigHardware(const I2c1_HardwareSettings_t *hardware_settings);
+i2c_status_type I2c1_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff);
+i2c_status_type I2c1_WriteReg(uint16_t address, uint8_t reg, uint8_t data);

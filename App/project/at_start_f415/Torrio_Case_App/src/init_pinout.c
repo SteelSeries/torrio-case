@@ -4,7 +4,10 @@
 #include "init_pinout.h"
 #include "pinout.h"
 #include "lid.h"
-
+#include "i2c1.h"
+#include "usb.h"
+#include "sy8809.h"
+#include "adc.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -21,8 +24,62 @@ static const Lid_HardwareSettings_t lid_config =
     {
         .lid_gpio_port = HALL_OUT_GPIO,
         .lid_gpio_pin = HALL_OUT_PIN,
-        .lid_gpio_crm_clk = CRM_GPIOB_PERIPH_CLOCK,
+        .lid_gpio_crm_clk = HALL_OUT_CRM_CLK,
 };
+
+static const I2c1_HardwareSettings_t i2c1_config =
+    {
+        .i2c1_sda_gpio_port = I2C1_SDA_GPIO_PORT,
+        .i2c1_sda_gpio_pin = I2C1_SDA_PIN,
+        .i2c1_sda_gpio_crm_clk = I2C1_SDA_GPIO_CLK,
+
+        .i2c1_scl_gpio_port = I2C1_SCL_GPIO_PORT,
+        .i2c1_scl_gpio_pin = I2C1_SCL_PIN,
+        .i2c1_scl_gpio_crm_clk = I2C1_SCL_GPIO_CLK,
+
+        .i2c1_port = I2C1_PORT,
+        .i2c1_crm_clk = I2C1_CLK,
+
+        .i2c1_speed = I2C1_SPEED,
+};
+
+static const Sy8809_HardwareSettings_t sy8809_config =
+    {
+        .sy8809_sda_gpio_port = I2C1_SDA_GPIO_PORT,
+        .sy8809_sda_gpio_pin = I2C1_SDA_PIN,
+        .sy8809_sda_gpio_crm_clk = I2C1_SDA_GPIO_CLK,
+
+        .busd_detect_resist_gpio_port = BUD_DETECT_RESIST_SWITCH_GPIO,
+        .busd_detect_resist_gpio_pin = BUD_DETECT_RESIST_SWITCH_PIN,
+        .busd_detect_resist_gpio_crm_clk = BUD_DETECT_RESIST_SWITCH_CRM_CLK,
+
+        .sy8809_irq_gpio_port = CHARGER_IRQ_GPIO,
+        .sy8809_irq_gpio_pin = CHARGER_IRQ_PIN,
+        .sy8809_irq_gpio_crm_clk = CHARGER_IRQ_CRM_CLK,
+};
+
+static const Usb_HardwareSettings_t usb_config =
+    {
+        .usb_detect_gpio_port = I2C1_SDA_GPIO_PORT,
+        .usb_detect_gpio_pin = I2C1_SDA_PIN,
+        .usb_detect_gpio_crm_clk = I2C1_SDA_GPIO_CLK,
+
+        .usb_otg_pin_sof_gpio_port = BUD_DETECT_RESIST_SWITCH_GPIO,
+        .usb_otg_pin_sof_gpio_pin = BUD_DETECT_RESIST_SWITCH_PIN,
+        .usb_otg_pin_sof_gpio_crm_clk = BUD_DETECT_RESIST_SWITCH_CRM_CLK,
+
+        .usb_otg_pin_vbus_gpio_port = CHARGER_IRQ_GPIO,
+        .usb_otg_pin_vbus_gpio_pin = CHARGER_IRQ_PIN,
+        .usb_otg_pin_vbus_gpio_crm_clk = CHARGER_IRQ_CRM_CLK,
+};
+
+static const Adc_HardwareSettings_t adc_config =
+    {
+        .adc_gpio_port = ADC_GPIO,
+        .adc_gpio_pin = ADC_PIN,
+        .adc_gpio_crm_clk = ADC_CRM_CLK,
+};
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -31,7 +88,15 @@ static const Lid_HardwareSettings_t lid_config =
  *************************************************************************************************/
 void InitPinout_Init(void)
 {
-    Lid_Init(&lid_config);
+    Lid_GpioConfigHardware(&lid_config);
+    Sy8809_GpioConfigHardware(&sy8809_config);
+    Usb_GpioConfigHardware(&usb_config);
+    Adc_GpioConfigHardware(&adc_config);
+}
+
+void InitPinout_I2c1Init(void)
+{
+    I2c1_GpioConfigHardware(&i2c1_config);
 }
 
 /*************************************************************************************************

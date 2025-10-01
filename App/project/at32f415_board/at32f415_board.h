@@ -33,6 +33,8 @@ extern "C" {
 #include "stdio.h"
 #include "at32f415.h"
 #include  <stdbool.h>
+#include "i2c_application.h"
+
 /** @addtogroup AT32F415_board
   * @{
   */
@@ -96,6 +98,10 @@ typedef enum
 #define USER_BUTTON_PIN                  GPIO_PINS_0
 #define USER_BUTTON_PORT                 GPIOA
 #define USER_BUTTON_CRM_CLK              CRM_GPIOA_PERIPH_CLOCK
+
+#define REG_BIT(BIT) (0x01 << BIT)
+#define SET_REG_BIT(BIT) (0x01 << BIT)
+#define RESET_REG_BIT(BIT) (0xFF ^ (0x01 << BIT))
 
 /**
   * @}

@@ -14,8 +14,8 @@
  *************************************************************************************************/
 typedef enum
 {
-    TASK_RUN_FOREVER = 0,
-    TASK_RUN_ONCE
+    TASK_RUN_FOREVER = 0, // Task will persist indefinitely and will not be removed after execution
+    TASK_RUN_ONCE,        // Task will be executed only once and then automatically removed
 } TaskScheduler_RunMode_t;
 
 typedef enum

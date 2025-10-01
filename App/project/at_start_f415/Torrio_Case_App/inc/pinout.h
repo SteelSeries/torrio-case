@@ -8,6 +8,10 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
+#define ADC_PIN             GPIO_PINS_0                 // PC0
+#define ADC_GPIO            GPIOC                       // PC0
+#define ADC_CRM_CLK         CRM_GPIOC_PERIPH_CLOCK      // PC0
+
 #define USB_DET_PIN         GPIO_PINS_3                 // PC3
 #define USB_DET_GPIO        GPIOC                       // PC3
 #define USB_DET_CRM_CLK     CRM_GPIOC_PERIPH_CLOCK      // PC3
@@ -59,6 +63,19 @@
 #define QI_CHARGE_DETECT_PIN                GPIO_PINS_13                // PB13
 #define QI_CHARGE_DETECT_GPIO               GPIOB                       // PB13
 #define QI_CHARGE_DETECT_CRM_CLK            CRM_GPIOB_PERIPH_CLOCK      // PB13
+
+#define I2C1_SCL_PIN                        GPIO_PINS_6                 // PB6
+#define I2C1_SCL_GPIO_PORT                  GPIOB                       // PB6
+#define I2C1_SCL_GPIO_CLK                   CRM_GPIOB_PERIPH_CLOCK      // PB6
+
+#define I2C1_SDA_PIN                        GPIO_PINS_7                 // PB7
+#define I2C1_SDA_GPIO_PORT                  GPIOB                       // PB7
+#define I2C1_SDA_GPIO_CLK                   CRM_GPIOB_PERIPH_CLOCK      // PB7
+
+#define I2C1_PORT                           I2C1
+#define I2C1_CLK                            CRM_I2C1_PERIPH_CLOCK
+
+#define I2C1_SPEED                          100000
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
