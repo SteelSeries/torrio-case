@@ -5,9 +5,9 @@
 #include "custom_hid_class.h"
 #include "usb.h"
 #include "bootloader.h"
+#include "version.h"
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -52,20 +52,23 @@ static Command_Status_t Command_HandleEraseFlash(const uint8_t command[IN_MAXPAC
 static Command_Status_t Command_HandleWriteFlash(const uint8_t command[IN_MAXPACKET_SIZE]);
 static Command_Status_t Command_HandleReadFlash(const uint8_t command[IN_MAXPACKET_SIZE]);
 static Command_Status_t Command_CheckCRC32(const uint8_t command[IN_MAXPACKET_SIZE]);
+static Command_Status_t CommandVersion_ReadVersion(const uint8_t command[IN_MAXPACKET_SIZE]);
+
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static uint8_t buffer[IN_MAXPACKET_SIZE] = {0};
-static uint8_t txBuf[64] = {0};
 static const cmd_handler_t handler_table[] =
 {
      { .op = NO_OP,                     .read = Command_HandleNoop,                       .write = Command_HandleNoop },
+    // mcu control
      { .op = RESET_DEVICE,              .read = Command_HandleResetDevice,                .write = Command_HandleResetDevice },
+    // file/firmware update
      { .op = ERASE_THE_FLASH,           .read = Command_HandleNoop,                       .write = Command_HandleEraseFlash },
      { .op = WRITE_READ_FLASH_BLOCK,    .read = Command_HandleReadFlash,                  .write = Command_HandleWriteFlash },
      { .op = CRC_FLASH_CHECK,           .read = Command_CheckCRC32,                       .write = Command_HandleNoop },
-     { .op = GET_FIRMWARE_VERSION,      .read = Command_HandleNoop,                       .write = Command_HandleNoop }, 
-
+    // info
+     { .op = GET_FIRMWARE_VERSION,      .read = CommandVersion_ReadVersion,               .write = Command_HandleNoop }, 
 };
 
 /*************************************************************************************************
@@ -146,35 +149,47 @@ static Command_Status_t Command_HandleEraseFlash(const uint8_t command[IN_MAXPAC
     {
         buff[1] = FLASH_WRITE_ERRORS;
     }
-    custom_hid_class_send_report(&otg_core_struct.dev, buff, 64);
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, OUT_MAXPACKET_SIZE);
     return COMMAND_STATUS_SUCCESS;
 }
 static Command_Status_t Command_HandleWriteFlash(const uint8_t command[IN_MAXPACKET_SIZE])
 {
-    txBuf[0] = WRITE_READ_FLASH_BLOCK;
-    txBuf[1] = FLASH_OPERATION_SUCCESS;
+    uint8_t buff[OUT_MAXPACKET_SIZE] = {0};
+    buff[0] = WRITE_READ_FLASH_BLOCK;
+    buff[1] = FLASH_OPERATION_SUCCESS;
     if (Bootloader_FlashWrite(command, IN_MAXPACKET_SIZE) != SUCCESS)
     {
-        txBuf[1] = FLASH_WRITE_ERRORS;
+        buff[1] = FLASH_WRITE_ERRORS;
     }
-    custom_hid_class_send_report(&otg_core_struct.dev, txBuf, 64);
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, OUT_MAXPACKET_SIZE);
     return COMMAND_STATUS_SUCCESS;
 }
 static Command_Status_t Command_HandleReadFlash(const uint8_t command[IN_MAXPACKET_SIZE])
 {
     uint8_t buff[OUT_MAXPACKET_SIZE] = {0};
     //read the flash
-    buff[0] = WRITE_READ_FLASH_BLOCK + 0x80;
+    buff[0] = WRITE_READ_FLASH_BLOCK | COMMAND_READ_FLAG;
     Bootloader_CommandHandleReadFlash(buff , command);
-    custom_hid_class_send_report(&otg_core_struct.dev, buff, 64);
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, OUT_MAXPACKET_SIZE);
     return COMMAND_STATUS_SUCCESS;
 }
 static Command_Status_t Command_CheckCRC32(const uint8_t command[IN_MAXPACKET_SIZE])
 {
     //crc check
     uint8_t buff[OUT_MAXPACKET_SIZE] = {0};
-    buff[0] = CRC_FLASH_CHECK+0x80;
+    buff[0] = CRC_FLASH_CHECK | COMMAND_READ_FLAG;
     Bootloader_CmdCrcCheckHandler(buff);
-    custom_hid_class_send_report(&otg_core_struct.dev, buff, 64);
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, OUT_MAXPACKET_SIZE);
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t CommandVersion_ReadVersion(const uint8_t command[IN_MAXPACKET_SIZE])
+{
+    uint8_t buff[OUT_MAXPACKET_SIZE] = {0x00};
+    uint8_t temp_buff[12] = {0};
+    buff[0] = GET_FIRMWARE_VERSION | COMMAND_READ_FLAG;
+    Version_GetArteryVersion(temp_buff, sizeof(temp_buff));
+    memcpy(&buff[1], temp_buff, 8);
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, OUT_MAXPACKET_SIZE);
     return COMMAND_STATUS_SUCCESS;
 }

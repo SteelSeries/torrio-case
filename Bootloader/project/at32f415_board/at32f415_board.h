@@ -32,6 +32,7 @@ extern "C" {
 
 #include "stdio.h"
 #include "at32f415.h"
+#include  <stdbool.h>
 
 /** @addtogroup AT32F415_board
   * @{

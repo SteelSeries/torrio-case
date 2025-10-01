@@ -4,7 +4,6 @@
  *                                          INCLUDES                                             *
  *************************************************************************************************/
 #include "at32f415_board.h"
-#include <stdbool.h>
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
@@ -38,10 +37,10 @@
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-extern bool Bootloader_CheckBackDoor(void);
-extern bool Bootloader_CheckAppCodeComplete(void);
-extern void Bootloader_JumpToApp(void);
-extern error_status Bootloader_FlashErase(void);
-extern error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len);
-extern error_status Bootloader_CmdCrcCheckHandler(uint8_t * buff);
-extern error_status Bootloader_CommandHandleReadFlash(uint8_t *buff , const uint8_t *in);
+bool Bootloader_CheckBackDoor(void);
+bool Bootloader_CheckAppCodeComplete(void);
+void Bootloader_JumpToApp(void);
+error_status Bootloader_FlashErase(void);
+error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len);
+error_status Bootloader_CmdCrcCheckHandler(uint8_t * buff);
+error_status Bootloader_CommandHandleReadFlash(uint8_t *buff , const uint8_t *in);

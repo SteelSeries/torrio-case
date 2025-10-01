@@ -663,7 +663,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>1</hasPrio>
+                <hasPrio>48</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -756,7 +756,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>C:\Users\eva.chou\AT32_ChargingCase\AT32F415_Firmware_Library_V2.1.7\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader.icf</state>
+                    <state>$PROJ_DIR$\Torrio_Case_Bootloader.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1193,6 +1193,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\usb.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\version.c</name>
         </file>
     </group>
 </project>

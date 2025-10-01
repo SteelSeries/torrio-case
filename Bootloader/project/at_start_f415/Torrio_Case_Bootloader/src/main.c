@@ -1,26 +1,3 @@
-/**
-  **************************************************************************
-  * @file     main.c
-  * @brief    main program
-  **************************************************************************
-  *                       Copyright notice & Disclaimer
-  *
-  * The software Board Support Package (BSP) that is made available to
-  * download from Artery official website is the copyrighted work of Artery.
-  * Artery authorizes customers to use, copy, and distribute the BSP
-  * software and its related documentation for the purpose of design and
-  * development in conjunction with Artery microcontrollers. Use of the
-  * software is governed by this copyright notice and the following disclaimer.
-  *
-  * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
-  * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
-  * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
-  * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
-  * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
-  *
-  **************************************************************************
-  */
 /*************************************************************************************************
  *                                         INCLUDES                                              *
  *************************************************************************************************/
@@ -31,18 +8,25 @@
 #include "usb.h"
 #include "command.h"
 #include "bootloader.h"
-#if defined ( __ICCARM__ ) /* iar compiler */
-  #pragma data_alignment=4
-#endif
-ALIGNED_HEAD uint8_t report_buf[USBD_CUSTOM_IN_MAXPACKET_SIZE] ALIGNED_TAIL;
+/*************************************************************************************************
+ *                                  LOCAL MACRO DEFINITIONS                                      *
+ *************************************************************************************************/
 
-typedef void (*pFunction)(void);
-
-/**
-  * @brief  main function.
-  * @param  none
-  * @retval none
-  */
+/*************************************************************************************************
+ *                                  LOCAL TYPE DEFINITIONS                                       *
+ *************************************************************************************************/
+/*************************************************************************************************
+ *                                GLOBAL VARIABLE DEFINITIONS                                    *
+ *************************************************************************************************/
+/*************************************************************************************************
+ *                                STATIC VARIABLE DEFINITIONS                                    *
+ *************************************************************************************************/
+/*************************************************************************************************
+ *                                STATIC FUNCTION DECLARATIONS                                   *
+ *************************************************************************************************/
+/*************************************************************************************************
+ *                                GLOBAL FUNCTION DEFINITIONS                                    *
+ *************************************************************************************************/
 int main(void)
 {
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
@@ -58,7 +42,7 @@ int main(void)
     }
   }
 
-    /* usb gpio config */
+  /* usb gpio config */
   Usb_GpioConfig();
 
 #ifdef USB_LOW_POWER_WAKUP
@@ -81,7 +65,7 @@ int main(void)
             &custom_hid_class_handler,
             &custom_hid_desc_handler);
 
-  while(1)
+  while (1)
   {
     if (SS_RESET_FLAG)
     {
@@ -91,10 +75,6 @@ int main(void)
     }
   }
 }
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
+/*************************************************************************************************
+ *                                STATIC FUNCTION DEFINITIONS                                    *
+ *************************************************************************************************/
