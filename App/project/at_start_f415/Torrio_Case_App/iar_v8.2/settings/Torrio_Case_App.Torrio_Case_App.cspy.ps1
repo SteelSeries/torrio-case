@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\settings\Torrio_Case_App.Torrio_Case_App.general.xcl" --backend -f "C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\settings\Torrio_Case_App.Torrio_Case_App.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\settings\Torrio_Case_App.Torrio_Case_App.general.xcl" --backend -f "C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\settings\Torrio_Case_App.Torrio_Case_App.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\settings\Torrio_Case_App.Torrio_Case_App.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\timmy.tien\Documents\Torrio_Case\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\settings\Torrio_Case_App.Torrio_Case_App.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\settings\Torrio_Case_App.Torrio_Case_App.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\settings\Torrio_Case_App.Torrio_Case_App.driver.xcl" 
 }

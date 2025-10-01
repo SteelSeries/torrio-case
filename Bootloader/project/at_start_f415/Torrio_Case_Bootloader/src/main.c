@@ -34,11 +34,19 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
-  if (Bootloader_CheckAppCodeComplete())
+
+  Bootloader_BackDoorGpioInit();
+
+  printf("Bootloader start!!!\n");
+
+  if (Bootloader_CheckBackDoor() == FALSE)
   {
-    if ((gCurrentMode == NORMAL_MODE) && (Bootloader_CheckBackDoor() == FALSE))
+    if (Bootloader_CheckAppCodeComplete())
     {
-      Bootloader_JumpToApp();
+      if (gCurrentMode != BOOTLOADER_MODE)
+      {
+        Bootloader_JumpToApp();
+      }
     }
   }
 

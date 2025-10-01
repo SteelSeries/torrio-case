@@ -14,7 +14,7 @@
         <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xB_v2.ddf</MemConfigValue>
     </PlDriver>
     <DebugChecksum>
-        <Checksum>2156393954</Checksum>
+        <Checksum>1649510428</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>

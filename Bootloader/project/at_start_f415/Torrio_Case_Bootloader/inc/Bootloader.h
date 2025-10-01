@@ -44,3 +44,5 @@ error_status Bootloader_FlashErase(void);
 error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len);
 error_status Bootloader_CmdCrcCheckHandler(uint8_t * buff);
 error_status Bootloader_CommandHandleReadFlash(uint8_t *buff , const uint8_t *in);
+void Bootloader_BackDoorGpioInit(void);
+
