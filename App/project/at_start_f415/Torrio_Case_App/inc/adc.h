@@ -27,4 +27,5 @@ typedef struct
  *************************************************************************************************/
 void Adc_GpioConfigHardware(const Adc_HardwareSettings_t *hardware_settings);
 void Adc_Init(void);
+void Adc_GetAvgRawAndVoltage(uint16_t *adc_raw, uint16_t *voltage_mv);
 

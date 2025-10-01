@@ -42,8 +42,13 @@ void Timer4_Init(void)
 
     crm_periph_clock_enable(CRM_TMR4_PERIPH_CLOCK, TRUE);
 
-    /* (systemclock/(systemclock/10000))/10000 = 1Hz(1s) */
-    tmr_base_init(TMR4, 9999, (crm_clocks_freq_struct.sclk_freq / 10000 - 1));
+    // System clock is 144 MHz
+    // Prescaler value is 9 → actual division is (9 + 1) = 10
+    // Timer clock after prescaler: 144,000,000 / 10 = 14,400,000 Hz
+    // Auto-reload value:
+    // (144,000,000 / 10) / 1000 = 14,400 → ARR = 14,400 - 1 = 14399
+    // Timer will generate an update event every 14,400 counts → 1ms interval (1000 Hz)
+    tmr_base_init(TMR4, 9, (crm_clocks_freq_struct.sclk_freq / 10000 - 1));
     tmr_cnt_dir_set(TMR4, TMR_COUNT_UP);
     tmr_clock_source_div_set(TMR4, TMR_CLOCK_DIV1);
 
@@ -54,7 +59,7 @@ void Timer4_Init(void)
     tmr_oc_init_structure.oc_idle_state = FALSE;
 
     tmr_output_channel_config(TMR4, TMR_SELECT_CHANNEL_4, &tmr_oc_init_structure);
-    tmr_channel_value_set(TMR4, TMR_SELECT_CHANNEL_4, 5000);
+    tmr_channel_value_set(TMR4, TMR_SELECT_CHANNEL_4, 5);
 }
 
 void Timer4_AdcTrigStart(void)

@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <settings>
     <Jet>
+        <JetConnSerialNo>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07</JetConnSerialNo>
+        <JetConnFoundProbes>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07:AT-Link-Plus(WinUSB) CMSIS-DAP:ECA81400004001210C156C07:</JetConnFoundProbes>
+        <PrevWtdReset>Connect during reset</PrevWtdReset>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>0</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
         <OnlineReset>Software</OnlineReset>
-        <JetConnSerialNo>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07</JetConnSerialNo>
-        <JetConnFoundProbes>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07:AT-Link-Plus(WinUSB) CMSIS-DAP:ECA81400004001210C156C07:</JetConnFoundProbes>
-        <PrevWtdReset>Connect during reset</PrevWtdReset>
     </Jet>
     <PlDriver>
-        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xB_v2.ddf</MemConfigValue>
         <FirstRun>0</FirstRun>
+        <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xB_v2.ddf</MemConfigValue>
     </PlDriver>
     <Stack>
         <FillEnabled>0</FillEnabled>
@@ -46,7 +46,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>3081293558</Checksum>
+        <Checksum>1848954251</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -54,6 +54,11 @@
     <CallStack>
         <ShowArgs>0</ShowArgs>
     </CallStack>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
+        <Category2>_ 2</Category2>
+    </LogFile>
     <Trace1>
         <Enabled>0</Enabled>
         <ShowSource>1</ShowSource>
@@ -90,17 +95,12 @@
     <Breakpoints2>
         <Count>0</Count>
     </Breakpoints2>
-    <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
-        <Category2>_ 2</Category2>
-    </LogFile>
+    <Aliases>
+        <Count>0</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
 </settings>

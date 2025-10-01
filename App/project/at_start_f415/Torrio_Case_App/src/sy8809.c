@@ -313,7 +313,7 @@ void Sy8809_InitTask(void)
         {
             printf("add retry sy8809 task fail\n");
         }
-        // todo: sy8809 setup fail need reset function.
+        // Todo: sy8809 setup fail need reset function.
     }
 }
 
@@ -524,7 +524,7 @@ static void UpdateTableByPowerSource(void)
         printf("USB table check\n");
         UsbModeApplyTable();
     }
-    // todo: check Qi chatge whether connect.
+    // Todo: check Qi chatge whether connect.
     // else if (QI_Charge_state == QI_CONTACT)
     // {
     //     printf("Qi table check\n");
@@ -587,7 +587,7 @@ static void CheckNtcOverTempe(void)
         if ((Lid_GetState() == LID_OPEN) &&
             (Usb_GetUsbDetectState() == USB_UNPLUG))
         {
-            // todo: over tempetrue system enter suspend state.
+            // Todo: over tempetrue system enter suspend state.
         }
     }
     else

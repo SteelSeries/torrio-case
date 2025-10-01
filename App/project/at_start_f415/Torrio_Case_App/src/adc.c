@@ -8,6 +8,8 @@
  *************************************************************************************************/
 // Number of ADC samples per read for averaging
 #define ADC_DMA_BUFFER_SIZE 8
+#define ADC_REF_VOLTAGE_MV 3300
+#define ADC_RESOLUTION 4095
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -25,6 +27,7 @@ static __IO uint16_t adc1_ordinary_valuetab[ADC_DMA_BUFFER_SIZE] = {0};
  *************************************************************************************************/
 static void DmaConfig(void);
 static void AdcConfig(void);
+static uint16_t GetAvgRawValueHandle(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -48,9 +51,39 @@ void Adc_Init(void)
     AdcConfig();
 }
 
+void Adc_GetAvgRawAndVoltage(uint16_t *adc_raw, uint16_t *voltage_mv)
+{
+    uint16_t adc_value = GetAvgRawValueHandle();
+
+    if (adc_raw != NULL)
+    {
+        *adc_raw = adc_value;
+    }
+
+    if (voltage_mv != NULL)
+    {
+        *voltage_mv = (uint16_t)(((uint32_t)adc_value * ADC_REF_VOLTAGE_MV) / ADC_RESOLUTION);
+    }
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static uint16_t GetAvgRawValueHandle(void)
+{
+    printf("[%s] ", __func__);
+    uint32_t Adc_Avg_Value_temp = 0;
+
+    for (uint8_t sample_times_index = 0; sample_times_index < ADC_DMA_BUFFER_SIZE; sample_times_index++)
+    {
+        printf("%d ", adc1_ordinary_valuetab[sample_times_index]);
+        Adc_Avg_Value_temp += adc1_ordinary_valuetab[sample_times_index];
+    }
+    printf("\n");
+    Adc_Avg_Value_temp = Adc_Avg_Value_temp >> 3;
+    return Adc_Avg_Value_temp;
+}
+
 static void DmaConfig(void)
 {
     dma_init_type dma_init_struct;
@@ -89,7 +122,6 @@ static void AdcConfig(void)
     crm_periph_clock_enable(CRM_ADC1_PERIPH_CLOCK, TRUE);
     adc_reset(ADC1);
 
-    nvic_irq_enable(ADC1_IRQn, 0, 0);
 
     crm_adc_clock_div_set(CRM_ADC_DIV_4);
 
