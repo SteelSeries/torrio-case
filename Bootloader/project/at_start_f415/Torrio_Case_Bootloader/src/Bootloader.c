@@ -38,6 +38,30 @@ static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t cons
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+void Bootloader_BackDoorGpioInit(void)
+{
+    gpio_init_type gpio_init_struct;
+
+    /* enable the button clock */
+    crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
+    crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
+
+    /* set default parameter */
+    gpio_default_para_init(&gpio_init_struct);
+
+    /* configure button pin as input with pull-up/pull-down */
+    gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
+    gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+
+    gpio_init_struct.gpio_pins = GPIO_PINS_3;
+    gpio_init(GPIOC, &gpio_init_struct);
+
+    gpio_init_struct.gpio_pins = GPIO_PINS_1;
+    gpio_init(GPIOB, &gpio_init_struct);
+}
+
 error_status Bootloader_FlashErase(void)
 {
     flash_unlock();
@@ -192,21 +216,13 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
     }
     return SUCCESS;
 }
+
 bool Bootloader_CheckBackDoor(void)
 {
-    uint8_t i = 0;
-    while (gpio_input_data_bit_read(USER_BUTTON_PORT, USER_BUTTON_PIN) == SET)
-    {
-        delay_ms(10);
-        i++;
-        if (i > 10)
-        {
-            gCurrentMode = BOOTLOADER_MODE;
-            return true;
-        }
-    }
+    // todo: check back door state.
     return false;
 }
+
 void Bootloader_JumpToApp(void)
 {
     pFunction JumpToApplication;
@@ -223,6 +239,7 @@ void Bootloader_JumpToApp(void)
         JumpToApplication();
     }
 }
+
 bool Bootloader_CheckAppCodeComplete(void)
 {
     uint8_t FLASH_ReadCRC[4] = {0};

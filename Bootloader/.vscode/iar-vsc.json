@@ -1,0 +1,16 @@
+{
+  "workspace": {
+    "path": "${workspaceFolder}\\project\\at_start_f415\\Torrio_Case_Bootloader\\iar_v8.2\\Torrio_Case_Bootloader.eww"
+  },
+  "workspaces": {
+    "${workspaceFolder}\\project\\at_start_f415\\Torrio_Case_Bootloader\\iar_v8.2\\Torrio_Case_Bootloader.eww": {
+      "configs": {},
+      "selected": {
+        "path": "${workspaceFolder}\\project\\at_start_f415\\Torrio_Case_Bootloader\\iar_v8.2\\Torrio_Case_Bootloader.ewp"
+      }
+    }
+  },
+  "workbench": {
+    "path": "C:\\Program Files\\IAR Systems\\Embedded Workbench 9.0"
+  }
+}
