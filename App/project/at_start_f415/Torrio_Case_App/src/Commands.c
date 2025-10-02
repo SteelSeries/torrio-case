@@ -7,6 +7,7 @@
 #include "version.h"
 #include "task_scheduler.h"
 #include "sy8809_xsense.h"
+#include "app_fw_update.h"
 #include <stdio.h>
 #include <string.h>
 /*************************************************************************************************
@@ -28,8 +29,6 @@ typedef struct
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-__root __no_init uint8_t gCurrentMode @0x20000000;
-bool SS_RESET_FLAG = false;
 
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
@@ -40,6 +39,9 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
 static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static Command_Status_t CommandHcfs_EraseFile(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static Command_Status_t CommandHcfs_WriteFile(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static Command_Status_t CommandHcfs_Crc32File(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -50,6 +52,10 @@ static const cmd_handler_t handler_table[] =
         {.op = NO_OP, .read = Command_HandleNoop, .write = Command_HandleNoop},
         // mcu control
         {.op = RESET_OP, .read = Command_HandleNoop, .write = CommandRecovery_Reset},
+        // file/firmware update
+        {.op = ERASE_FILE_OP, .read = Command_HandleNoop, .write = CommandHcfs_EraseFile},
+        {.op = FILE_ACCESS_OP, .read = Command_HandleNoop, .write = CommandHcfs_WriteFile},
+        {.op = FILE_CRC32_OP, .read = CommandHcfs_Crc32File, .write = Command_HandleNoop},
         // info
         {.op = VERSION_OP, .read = CommandVersion_ReadVersion, .write = Command_HandleNoop},
         // debug
@@ -122,8 +128,8 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
         {
             if (command[2] == FILE_ID_LOCAL)
             {
-                SS_RESET_FLAG = true;
-                gCurrentMode = BOOTLOADER_MODE;
+                AppFwUpdata_SetResetFlag(true);
+                AppFwUpdata_SetCurrentMode(BOOTLOADER_MODE);
             }
             else if (command[2] == FILE_ID_PERIPHERAL)
             {
@@ -134,8 +140,8 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
         {
             if (command[2] == FILE_ID_LOCAL)
             {
-                SS_RESET_FLAG = true;
-                gCurrentMode = NORMAL_MODE;
+                AppFwUpdata_SetResetFlag(true);
+                AppFwUpdata_SetCurrentMode(NORMAL_MODE);
             }
             else if (command[2] == FILE_ID_PERIPHERAL)
             {
@@ -145,8 +151,8 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
     }
     else
     {
-        SS_RESET_FLAG = true;
-        gCurrentMode = NORMAL_MODE;
+        AppFwUpdata_SetResetFlag(true);
+        AppFwUpdata_SetCurrentMode(NORMAL_MODE);
     }
     return COMMAND_STATUS_SUCCESS;
 }
@@ -182,5 +188,52 @@ static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[U
 static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
 {
     // Todo: sy8809 write function.
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t CommandHcfs_EraseFile(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+{
+    if (command[1] < FILE_ID_NUM_MODES)
+    {
+        if (command[1] == FILE_ID_LOCAL)
+        {
+            if (TaskScheduler_AddTask(AppFwUpdate_CmdEraseHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add fw update erase task fail\n");
+            }
+        }
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t CommandHcfs_WriteFile(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+{
+    uint8_t Temp_buffer[USBD_CUSTOM_OUT_MAXPACKET_SIZE] = {0};
+    if (command[1] < FILE_ID_NUM_MODES)
+    {
+        if (command[1] == FILE_ID_LOCAL)
+        {
+            memcpy(Temp_buffer, command, USBD_CUSTOM_OUT_MAXPACKET_SIZE);
+            AppFwUpdata_UsbReceiveData(Temp_buffer, USB_UPDATE_BUFFER_LEN);
+            if (TaskScheduler_AddTask(AppFwUpdate_CmdWriteFlashHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add fw update write task fail\n");
+            }
+        }
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t CommandHcfs_Crc32File(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+{
+    if (command[1] < FILE_ID_NUM_MODES)
+    {
+        if (command[1] == FILE_ID_LOCAL)
+        {
+            uint8_t buff[10] = {0x00};
+            AppFwUpdate_CmdCrcCheckHandler(buff);
+            custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+        }
+    }
     return COMMAND_STATUS_SUCCESS;
 }

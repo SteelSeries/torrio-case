@@ -833,7 +833,7 @@
                 </option>
                 <option>
                     <name>FillerEnd</name>
-                    <state>0x0801FFFF</state>
+                    <state>0x08011FFF</state>
                 </option>
                 <option>
                     <name>CrcSize</name>
@@ -1185,6 +1185,9 @@
         <name>user</name>
         <file>
             <name>$PROJ_DIR$\..\src\adc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\at32f415_clock.c</name>

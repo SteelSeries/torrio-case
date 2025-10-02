@@ -16,6 +16,7 @@
 #include "init_pinout.h"
 #include "adc.h"
 #include "timer4.h"
+#include "app_fw_update.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -109,11 +110,10 @@ int main(void)
         // printf("system wakeup\n");
       }
     }
-
-    if (SS_RESET_FLAG)
+    if (AppFwUpdata_GetResetFlag())
     {
       printf("system reset\n");
-      SS_RESET_FLAG = false;
+      AppFwUpdata_SetResetFlag(false);
       delay_ms(500);
       usbd_disconnect(&otg_core_struct.dev);
       delay_ms(500);

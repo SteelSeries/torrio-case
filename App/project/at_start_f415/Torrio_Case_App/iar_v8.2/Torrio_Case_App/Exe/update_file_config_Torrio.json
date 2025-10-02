@@ -11,5 +11,5 @@
 	"dev_bpid": 5693,
 	"use_feature_reports_for_write": true,
 	"feature_report_len": 1021,
-	"requires_boot": true
+	"requires_boot": false
 }
