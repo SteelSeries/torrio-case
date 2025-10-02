@@ -5,6 +5,7 @@
 #include "custom_hid_class.h"
 #include "usb.h"
 #include "version.h"
+#include "lighting.h"
 #include "task_scheduler.h"
 #include "sy8809_xsense.h"
 #include <stdio.h>
@@ -40,6 +41,7 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
 static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -55,6 +57,7 @@ static const cmd_handler_t handler_table[] =
         // debug
         {.op = DEBUG_CUSTOM_OP, .read = Command_HandleNoop, .write = handle_debug_command},
         {.op = DEBUG_SY8809_OP, .read = handle_sy8809_debug_read_command, .write = handle_sy8809_debug_write_command},
+        {.op = DEBUG_LEDRGB_OP, .read = Command_HandleNoop, .write = handle_LEDRGB_debug_command},
 };
 
 /*************************************************************************************************
@@ -182,5 +185,10 @@ static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[U
 static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
 {
     // Todo: sy8809 write function.
+    return COMMAND_STATUS_SUCCESS;
+}
+static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+{
+    Lighting_LEDNonPWMSetting(command[1], (confirm_state)command[2]);
     return COMMAND_STATUS_SUCCESS;
 }

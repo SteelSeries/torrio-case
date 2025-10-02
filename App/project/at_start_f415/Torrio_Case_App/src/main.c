@@ -16,6 +16,7 @@
 #include "init_pinout.h"
 #include "adc.h"
 #include "timer4.h"
+#include "timer3.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -84,6 +85,8 @@ int main(void)
 
   Timer4_Init();
 
+  Timer3_Init();
+
   Adc_Init();
 
   PowerControl_Init();
@@ -91,6 +94,10 @@ int main(void)
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
     printf("add sy8809 task fail\n");
+  }
+  if (TaskScheduler_AddTask(Lighting_HandlerTask, 1, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add lighting task fail\n");
   }
 
   printf("main loop start\n");

@@ -1582,6 +1582,9 @@
             <name>$PROJ_DIR$\..\src\timer2.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\timer3.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\timer4.c</name>
         </file>
         <file>
