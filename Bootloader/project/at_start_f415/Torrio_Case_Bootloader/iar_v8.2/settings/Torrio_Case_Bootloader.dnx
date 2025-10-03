@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <settings>
     <Jet>
-        <JetConnSerialNo>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07</JetConnSerialNo>
-        <JetConnFoundProbes>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07:AT-Link-Plus(WinUSB) CMSIS-DAP:ECA81400004001210C156C07:</JetConnFoundProbes>
-        <PrevWtdReset>Connect during reset</PrevWtdReset>
-        <OnlineReset>Software</OnlineReset>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>0</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
+        <OnlineReset>Software</OnlineReset>
+        <JetConnSerialNo>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07</JetConnSerialNo>
+        <JetConnFoundProbes>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07:AT-Link-Plus(WinUSB) CMSIS-DAP:ECA81400004001210C156C07:</JetConnFoundProbes>
+        <PrevWtdReset>Connect during reset</PrevWtdReset>
     </Jet>
     <PlDriver>
-        <FirstRun>0</FirstRun>
         <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xB_v2.ddf</MemConfigValue>
+        <FirstRun>0</FirstRun>
     </PlDriver>
     <DebugChecksum>
-        <Checksum>1649510428</Checksum>
+        <Checksum>1538572761</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -84,6 +84,17 @@
         <EventLSU>0</EventLSU>
         <EventSLEEP>0</EventSLEEP>
     </SWOTraceWindow>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\main.c}.60.7" 0 0 1 "" 0 "" 0</Bp0>
+        <Count>1</Count>
+    </Breakpoints2>
+    <Aliases>
+        <Count>0</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -93,14 +104,4 @@
         <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
         <Category2>_ 2</Category2>
     </LogFile>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Count>0</Count>
-    </Breakpoints2>
-    <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
 </settings>
