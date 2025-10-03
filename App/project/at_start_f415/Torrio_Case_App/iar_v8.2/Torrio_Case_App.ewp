@@ -1199,6 +1199,9 @@
             <name>$PROJ_DIR$\..\src\Commands.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\file_system.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\i2c1.c</name>
         </file>
         <file>

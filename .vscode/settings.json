@@ -3,6 +3,8 @@
         "usb.h": "c",
         "string.h": "c",
         "sy8809_table.h": "c",
-        "stdint.h": "c"
-    }
+        "stdint.h": "c",
+        "at32f415_board.h": "c"
+    },
+    "C_Cpp.default.configurationProvider": "iarsystems.iar-build"
 }

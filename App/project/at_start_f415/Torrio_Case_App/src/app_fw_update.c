@@ -5,6 +5,7 @@
 #include "Commands.h"
 #include "custom_hid_class.h"
 #include "usb.h"
+#include "file_system.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -23,23 +24,16 @@ static __root __no_init uint8_t CurrentMode @0x20000000;
 static bool reset_flag = false;
 static uint32_t sum_crc32 = 0;
 static uint8_t user_usb_receive_data[USB_RECEIVE_LEN] = {0};
-
 static uint16_t gFW_BinLen = 0;
 static uint16_t gFW_FirstBinLen = 0;
 static uint8_t crc_data[UPDATE_DATA_LEN];
-static const AppFwUpdate_UserData_t *user_data = (const AppFwUpdate_UserData_t *)USER_DATA_START_ADDRESS;
 
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
-static void FlashRead(uint32_t read_addr, uint8_t *p_buffer, uint16_t num_read);
-// static bool CheckAppCodeComplete(void);
 static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc);
 static error_status EraseDualImageFlashProcess(void);
 static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len);
-static void MarkDualImageReadyToMigrate(void);
-static error_status EraseFlashRegion(uint32_t start_addr, uint32_t end_addr);
-static error_status WriteFlashProcess(uint32_t address, const uint8_t *data, size_t in_len);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -109,7 +103,7 @@ void AppFwUpdate_CmdCrcCheckHandler(void)
             EraseDualImageFlashProcess();
         }
     }
-    MarkDualImageReadyToMigrate();
+    FileSystem_MarkDualImageReadyToMigrate();
     custom_hid_class_send_report(&otg_core_struct.dev, txBuf, sizeof(txBuf));
 }
 
@@ -130,125 +124,6 @@ static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t cons
         }
     }
     return ~crc;
-}
-
-static void MarkDualImageReadyToMigrate(void)
-{
-    AppFwUpdate_UserData_t user_data_ram;
-
-    memcpy(&user_data_ram, (const void *)USER_DATA_START_ADDRESS, sizeof(AppFwUpdate_UserData_t));
-
-    printf("model = 0x%02X\n", user_data->model);
-    printf("color = 0x%02X\n", user_data->color);
-    printf("shipping_flag = 0x%02X\n", user_data->shipping_flag);
-    printf("dual_image_copy_flag = 0x%02X\n\n\n", user_data->dual_image_copy_flag);
-
-    printf("model = 0x%02X\n", user_data_ram.model);
-    printf("color = 0x%02X\n", user_data_ram.color);
-    printf("shipping_flag = 0x%02X\n", user_data_ram.shipping_flag);
-    printf("dual_image_copy_flag = 0x%02X\n", user_data_ram.dual_image_copy_flag);
-
-    user_data_ram.dual_image_copy_flag = 0xAA;
-
-    EraseFlashRegion(USER_DATA_START_ADDRESS, USER_DATA_END_ADDRESS);
-
-    WriteFlashProcess(USER_DATA_START_ADDRESS, (uint8_t *)&user_data_ram, sizeof(AppFwUpdate_UserData_t));
-
-    printf("model = 0x%02X\n", user_data->model);
-    printf("color = 0x%02X\n", user_data->color);
-    printf("shipping_flag = 0x%02X\n", user_data->shipping_flag);
-    printf("dual_image_copy_flag = 0x%02X\n\n\n", user_data->dual_image_copy_flag);
-
-    printf("model = 0x%02X\n", user_data_ram.model);
-    printf("color = 0x%02X\n", user_data_ram.color);
-    printf("shipping_flag = 0x%02X\n", user_data_ram.shipping_flag);
-    printf("dual_image_copy_flag = 0x%02X\n", user_data_ram.dual_image_copy_flag);
-}
-
-static void FlashRead(uint32_t read_addr, uint8_t *p_buffer, uint16_t num_read)
-{
-    uint16_t i;
-    for (i = 0; i < num_read; i++)
-    {
-        p_buffer[i] = *(uint8_t *)(read_addr);
-        read_addr++;
-    }
-}
-
-// static bool CheckAppCodeComplete(void)
-// {
-//     uint16_t Flash_ReadCRC[4] = {0};
-//     uint8_t fail_count = 0;
-
-//     FlashRead(ERASE_FLASH_END_ADDRESS - 4, Flash_ReadCRC, 4);
-//     for (uint8_t i = 0; i < 4; i++)
-//     {
-//         if (Flash_ReadCRC[i] == 0Xff)
-//         {
-//             fail_count++;
-//         }
-//         if (fail_count > 1)
-//         {
-//             return false;
-//         }
-//     }
-//     return true;
-// }
-
-static error_status EraseFlashRegion(uint32_t start_addr, uint32_t end_addr)
-{
-    flash_status_type status = FLASH_OPERATE_DONE;
-    uint32_t sector_start = (start_addr - FLASH_BASE) / SECTOR_SIZE;
-    uint32_t sector_end = (end_addr - FLASH_BASE + SECTOR_SIZE - 1) / SECTOR_SIZE;
-    uint32_t sector;
-
-    if (start_addr < FLASH_BASE ||
-        end_addr <= start_addr ||
-        end_addr > (FLASH_BASE + FLASH_FULL_SIZE))
-    {
-        return ERROR;
-    }
-
-    flash_unlock();
-
-    status = flash_operation_wait_for(ERASE_TIMEOUT);
-    if ((status == FLASH_PROGRAM_ERROR) || (status == FLASH_EPP_ERROR))
-    {
-        flash_flag_clear(FLASH_PRGMERR_FLAG | FLASH_EPPERR_FLAG);
-    }
-    else if (status == FLASH_OPERATE_TIMEOUT)
-    {
-        flash_lock();
-        return ERROR;
-    }
-
-    for (sector = sector_start; sector < sector_end; sector++)
-    {
-        uint32_t addr = FLASH_BASE + sector * SECTOR_SIZE;
-
-        status = flash_sector_erase(addr);
-        if (status != FLASH_OPERATE_DONE)
-        {
-            flash_lock();
-            return ERROR;
-        }
-
-        status = flash_operation_wait_for(ERASE_TIMEOUT);
-        if ((status == FLASH_PROGRAM_ERROR) || (status == FLASH_EPP_ERROR))
-        {
-            flash_flag_clear(FLASH_PRGMERR_FLAG | FLASH_EPPERR_FLAG);
-            flash_lock();
-            return ERROR;
-        }
-        else if (status == FLASH_OPERATE_TIMEOUT)
-        {
-            flash_lock();
-            return ERROR;
-        }
-    }
-    /* Lock flash after operation */
-    flash_lock();
-    return SUCCESS;
 }
 
 static error_status EraseDualImageFlashProcess(void)
@@ -305,55 +180,6 @@ static error_status EraseDualImageFlashProcess(void)
         }
     }
     /* Lock flash after operation */
-    flash_lock();
-    return SUCCESS;
-}
-
-static error_status WriteFlashProcess(uint32_t address, const uint8_t *data, size_t in_len)
-{
-    uint32_t i;
-    uint8_t buffer[SECTOR_SIZE] = {0x00};
-    flash_status_type status = FLASH_OPERATE_DONE;
-
-    if (in_len > SECTOR_SIZE)
-    {
-        return ERROR;
-    }
-
-    memcpy(buffer, data, in_len);
-
-    flash_unlock();
-
-    status = flash_operation_wait_for(ERASE_TIMEOUT);
-    if ((status == FLASH_PROGRAM_ERROR) || (status == FLASH_EPP_ERROR))
-    {
-        flash_flag_clear(FLASH_PRGMERR_FLAG | FLASH_EPPERR_FLAG);
-        flash_lock();
-        return ERROR;
-    }
-    else if (status == FLASH_OPERATE_TIMEOUT)
-    {
-        flash_lock();
-        return ERROR;
-    }
-
-    uint32_t FW_Updateing_destAdrss = address;
-
-    for (i = 0; i < in_len; i++)
-    {
-        if (flash_byte_program(FW_Updateing_destAdrss, buffer[i]) != FLASH_OPERATE_DONE)
-        {
-            flash_lock();
-            return ERROR;
-        }
-
-        if (buffer[i] != *(uint8_t *)FW_Updateing_destAdrss)
-        {
-            flash_lock();
-            return ERROR;
-        }
-        FW_Updateing_destAdrss += 1;
-    }
     flash_lock();
     return SUCCESS;
 }
