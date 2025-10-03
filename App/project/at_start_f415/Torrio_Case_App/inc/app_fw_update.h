@@ -29,9 +29,8 @@
 //  0x0801 2000 - 0x0801 FFFF : Dual img code(56K)
 
 // #define SECTOR_SIZE 0x800U /* 2KB  256K flash*/
-#define SECTOR_SIZE 0x400U /* 2KB 128K flash*/
-#define BUFFER_LEN (20)
-#define USB_UPDATE_BUFFER_LEN (1024)
+#define SECTOR_SIZE 0x400U /* 1KB 128K flash*/
+#define UPDATE_DATA_LEN (1012)
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/

@@ -22,11 +22,11 @@
 static __root __no_init uint8_t CurrentMode @0x20000000;
 static bool reset_flag = false;
 static uint32_t sum_crc32 = 0;
-static uint8_t user_usb_resceive_data[USB_UPDATE_BUFFER_LEN] = {0};
+static uint8_t user_usb_receive_data[USB_RECEIVE_LEN] = {0};
 
 static uint16_t gFW_BinLen = 0;
 static uint16_t gFW_FirstBinLen = 0;
-static uint8_t crc_data[BUFFER_LEN];
+static uint8_t crc_data[UPDATE_DATA_LEN];
 
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
@@ -42,7 +42,7 @@ static error_status WriteFlashProcess(const uint8_t *in, size_t in_len);
  *************************************************************************************************/
 void AppFwUpdata_UsbReceiveData(uint8_t *data, uint16_t len)
 {
-    memcpy(user_usb_resceive_data, data, len);
+    memcpy(user_usb_receive_data, data, len);
 }
 
 void AppFwUpdata_SetResetFlag(bool state)
@@ -77,7 +77,7 @@ void AppFwUpdate_CmdWriteFlashHandler(void)
     uint8_t buff[2] = {0x00};
     buff[0] = FILE_ACCESS_OP;
     buff[1] = FLASH_OPERATION_SUCCESS;
-    if (WriteFlashProcess(user_usb_resceive_data, USB_UPDATE_BUFFER_LEN) == ERROR)
+    if (WriteFlashProcess(user_usb_receive_data, USB_RECEIVE_LEN) == ERROR)
     {
         buff[1] = FLASH_WRITE_ERRORS;
     }
@@ -171,8 +171,8 @@ static error_status EraseProcess(void)
         return ERROR;
     }
 
-    start_sector = (DUAL_IMG_START_ADDRESS - FLASH_BASE) / SECTOR_SIZE;
-    end_sector = (DUAL_IMG_END_ADDRESS - FLASH_BASE) / SECTOR_SIZE;
+    start_sector = ((DUAL_IMG_START_ADDRESS - FLASH_BASE) / SECTOR_SIZE);
+    end_sector = ((DUAL_IMG_END_ADDRESS - FLASH_BASE) / SECTOR_SIZE);
 
     flash_unlock();
 
@@ -187,7 +187,7 @@ static error_status EraseProcess(void)
         return ERROR;
     }
 
-    for (sector = start_sector; sector < end_sector; sector++)
+    for (sector = end_sector - 1; sector >= start_sector; sector--)
     {
         uint32_t addr = FLASH_BASE + sector * SECTOR_SIZE;
 
@@ -219,8 +219,8 @@ static error_status EraseProcess(void)
 static error_status WriteFlashProcess(const uint8_t *in, size_t in_len)
 {
     uint32_t i;
-    uint8_t buffer[USB_UPDATE_BUFFER_LEN] = {0x00};
-    uint32_t FW_UPDATE_Buffer[(USB_UPDATE_BUFFER_LEN / 4)];
+    uint8_t buffer[USB_RECEIVE_LEN] = {0x00};
+    uint32_t FW_UPDATE_Buffer[(UPDATE_DATA_LEN / 4)];
     uint32_t FW_Updateing_destAdrss;
     flash_status_type status = FLASH_OPERATE_DONE;
 
@@ -247,7 +247,7 @@ static error_status WriteFlashProcess(const uint8_t *in, size_t in_len)
     }
 
     uint32_t k = 0;
-    for (i = 0; i < (USB_UPDATE_BUFFER_LEN / 4); ++i)
+    for (i = 0; i < (UPDATE_DATA_LEN / 4); ++i)
     {
         FW_UPDATE_Buffer[i] = 0;
         FW_UPDATE_Buffer[i] = buffer[k + 9];
@@ -262,7 +262,7 @@ static error_status WriteFlashProcess(const uint8_t *in, size_t in_len)
     FW_Updateing_destAdrss |= (uint32_t)(buffer[7] << 16);
     FW_Updateing_destAdrss |= (uint32_t)(buffer[8] << 24);
     FW_Updateing_destAdrss += DUAL_IMG_START_ADDRESS;
-    for (i = 0; i < (USB_UPDATE_BUFFER_LEN / 4); ++i)
+    for (i = 0; i < (UPDATE_DATA_LEN / 4); ++i)
     {
         if (flash_word_program(FW_Updateing_destAdrss, FW_UPDATE_Buffer[i]) != FLASH_OPERATE_DONE)
         {
@@ -289,11 +289,11 @@ static error_status WriteFlashProcess(const uint8_t *in, size_t in_len)
     }
     else
     {
-        for (i = 0; i < BUFFER_LEN; ++i)
+        for (i = 0; i < UPDATE_DATA_LEN; ++i)
         {
             crc_data[i] = buffer[i + 9];
         }
-        sum_crc32 = Crc32Compute(crc_data, USB_UPDATE_BUFFER_LEN, &sum_crc32);
+        sum_crc32 = Crc32Compute(crc_data, UPDATE_DATA_LEN, &sum_crc32);
     }
     flash_lock();
     return SUCCESS;
