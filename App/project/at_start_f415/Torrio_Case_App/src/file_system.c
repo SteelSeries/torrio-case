@@ -24,17 +24,14 @@ static const FileSystem_UserData_t *user_data = (const FileSystem_UserData_t *)U
  *************************************************************************************************/
 static error_status EraseFlashRegion(uint32_t start_addr, uint32_t end_addr);
 static error_status WriteFlashProcess(uint32_t address, const uint8_t *data, size_t in_len);
+static void MarkDualImageCopyFlag(FileSystem_DualImageFlag_t copy_flag);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
 void FileSystem_MarkDualImageReadyToMigrate(void)
 {
-    FileSystem_UserData_t user_data_ram = {0};
-    memcpy(&user_data_ram, (const void *)USER_DATA_START_ADDRESS, sizeof(FileSystem_UserData_t));
-    user_data_ram.dual_image_copy_flag = (uint8_t)DUAL_IMAGE_FLAG_REQUEST;
-    EraseFlashRegion(USER_DATA_START_ADDRESS, USER_DATA_END_ADDRESS);
-    WriteFlashProcess(USER_DATA_START_ADDRESS, (uint8_t *)&user_data_ram, sizeof(FileSystem_UserData_t));
+    MarkDualImageCopyFlag(DUAL_IMAGE_FLAG_REQUEST);
 }
 
 const FileSystem_UserData_t *FileSystem_GetUserData(void)
@@ -42,9 +39,28 @@ const FileSystem_UserData_t *FileSystem_GetUserData(void)
     return user_data;
 }
 
+void FileSystem_CheckImageCopyFlag(void)
+{
+    if (user_data->dual_image_copy_flag == DUAL_IMAGE_FLAG_REQUEST)
+    {
+        printf("Clear dual image copy flag\n");
+        MarkDualImageCopyFlag(DUAL_IMAGE_FLAG_NONE);
+        printf("Dual Image CopyFlg : %02X\n", user_data->dual_image_copy_flag);
+    }
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static void MarkDualImageCopyFlag(FileSystem_DualImageFlag_t copy_flag)
+{
+    FileSystem_UserData_t user_data_ram = {0};
+    memcpy(&user_data_ram, (const void *)USER_DATA_START_ADDRESS, sizeof(FileSystem_UserData_t));
+    user_data_ram.dual_image_copy_flag = (uint8_t)copy_flag;
+    EraseFlashRegion(USER_DATA_START_ADDRESS, USER_DATA_END_ADDRESS);
+    WriteFlashProcess(USER_DATA_START_ADDRESS, (uint8_t *)&user_data_ram, sizeof(FileSystem_UserData_t));
+}
+
 static error_status EraseFlashRegion(uint32_t start_addr, uint32_t end_addr)
 {
     flash_status_type status = FLASH_OPERATE_DONE;

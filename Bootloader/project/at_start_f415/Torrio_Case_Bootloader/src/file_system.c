@@ -24,6 +24,7 @@ static const FileSystem_UserData_t *user_data = (const FileSystem_UserData_t *)U
  *************************************************************************************************/
 static error_status EraseFlashRegion(uint32_t start_addr, uint32_t end_addr);
 static error_status WriteFlashProcess(uint32_t address, const uint8_t *data, size_t in_len);
+static error_status CopyDualImageToApp(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -42,9 +43,67 @@ const FileSystem_UserData_t *FileSystem_GetUserData(void)
     return user_data;
 }
 
+void FileSystem_CheckImageCopyFlag(void)
+{
+    if (user_data->dual_image_copy_flag == DUAL_IMAGE_FLAG_REQUEST)
+    {
+        CopyDualImageToApp();
+        printf("copy dual image done\n");
+    }
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+
+static error_status CopyDualImageToApp(void)
+{
+    uint32_t srcAddr = DUAL_IMG_START_ADDRESS;
+    uint32_t dstAddr = APP_FLASH_START_ADDRESS;
+    uint32_t remaining = APP_FLASH_SIZE;
+    uint8_t buffer[SECTOR_SIZE];
+
+    if (EraseFlashRegion(APP_FLASH_START_ADDRESS, APP_FLASH_END_ADDRESS) != SUCCESS)
+    {
+        return ERROR;
+    }
+
+    while (remaining > 0)
+    {
+        uint32_t chunk;
+
+        if (remaining > SECTOR_SIZE)
+        {
+            chunk = SECTOR_SIZE;
+        }
+        else
+        {
+            chunk = remaining;
+        }
+
+        /* Read from dual image */
+        memcpy(buffer, (uint8_t *)srcAddr, chunk);
+
+        /* Write to APP */
+        if (WriteFlashProcess(dstAddr, buffer, chunk) != SUCCESS)
+        {
+            return ERROR;
+        }
+
+        /* Optional verify */
+        if (memcmp((uint8_t *)dstAddr, buffer, chunk) != 0)
+        {
+            return ERROR;
+        }
+
+        srcAddr += chunk;
+        dstAddr += chunk;
+        remaining -= chunk;
+    }
+
+    return SUCCESS;
+}
+
 static error_status EraseFlashRegion(uint32_t start_addr, uint32_t end_addr)
 {
     flash_status_type status = FLASH_OPERATE_DONE;

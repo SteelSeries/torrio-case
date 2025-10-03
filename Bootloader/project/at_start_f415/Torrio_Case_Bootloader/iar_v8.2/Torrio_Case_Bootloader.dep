@@ -474,12 +474,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\Torrio_Case_Bootloader\Exe\Torrio_Case_Bootloader.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 96</file>
-                </tool>
-            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>

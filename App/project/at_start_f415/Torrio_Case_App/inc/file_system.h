@@ -54,3 +54,4 @@ typedef struct __attribute__((packed))
  *************************************************************************************************/
 void FileSystem_MarkDualImageReadyToMigrate(void);
 const FileSystem_UserData_t *FileSystem_GetUserData(void);
+void FileSystem_CheckImageCopyFlag(void);

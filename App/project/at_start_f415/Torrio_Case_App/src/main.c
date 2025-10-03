@@ -75,6 +75,7 @@ int main(void)
 
   printf("Reserved           : %02X\n", data->reserved);
   printf("================================\n");
+  FileSystem_CheckImageCopyFlag();
 
   InitPinout_Init();
 

@@ -35,28 +35,17 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
+  
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
 
   Bootloader_BackDoorGpioInit();
 
   printf("Bootloader start!!!\n");
 
-  printf("===== User Data Debug Info =====\n");
-  printf("Model              : %02X\n", data->model);
-  printf("Color              : %02X\n", data->color);
-  printf("Shipping Flag      : %02X\n", data->shipping_flag);
   printf("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
 
-  printf("Serial Number      : ");
-  for (uint8_t i = 0; i < sizeof(data->serial_number); i++)
-  {
-    printf("%02X ", data->serial_number[i]); // HEX 輸出
-  }
-  printf("\n");
-
-  printf("Reserved           : %02X\n", data->reserved);
-  printf("================================\n");
-
+  FileSystem_CheckImageCopyFlag();
+  
   if (Bootloader_CheckBackDoor() == FALSE)
   {
     if (Bootloader_CheckAppCodeComplete())
