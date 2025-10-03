@@ -35,24 +35,22 @@ int main(void)
   system_clock_config();
 
   at32_board_init();
-  
-  FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
 
   Bootloader_BackDoorGpioInit();
 
   printf("Bootloader start!!!\n");
 
-  printf("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
 
-  FileSystem_CheckImageCopyFlag();
-  
-  if (Bootloader_CheckBackDoor() == FALSE)
+  if (FileSystem_CheckImageCopyFlag() == SUCCESS)
   {
-    if (Bootloader_CheckAppCodeComplete())
+    if (Bootloader_CheckBackDoor() == FALSE)
     {
-      if (gCurrentMode != BOOTLOADER_MODE)
+      if (Bootloader_CheckAppCodeComplete())
       {
-        Bootloader_JumpToApp();
+        if (gCurrentMode != BOOTLOADER_MODE)
+        {
+          Bootloader_JumpToApp();
+        }
       }
     }
   }

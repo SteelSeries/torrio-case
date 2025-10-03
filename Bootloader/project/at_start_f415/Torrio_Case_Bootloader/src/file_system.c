@@ -43,13 +43,23 @@ const FileSystem_UserData_t *FileSystem_GetUserData(void)
     return user_data;
 }
 
-void FileSystem_CheckImageCopyFlag(void)
+error_status FileSystem_CheckImageCopyFlag(void)
 {
+    uint8_t retry = 10;
+    printf("Dual Image CopyFlg : %02X\n", user_data->dual_image_copy_flag);
     if (user_data->dual_image_copy_flag == DUAL_IMAGE_FLAG_REQUEST)
     {
-        CopyDualImageToApp();
-        printf("copy dual image done\n");
+        do
+        {
+            if (CopyDualImageToApp() == SUCCESS)
+            {
+                return SUCCESS;
+            }
+        } while (retry--);
+
+        return ERROR;
     }
+    return SUCCESS;
 }
 
 /*************************************************************************************************
