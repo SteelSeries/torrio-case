@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>5</fileVersion>
-    <fileChecksum>3883384931</fileChecksum>
+    <fileChecksum>791936868</fileChecksum>
     <configuration>
         <name>Torrio_Case_App</name>
         <outputs>
@@ -179,6 +179,7 @@
             <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_core.h</file>
             <file>$PROJ_DIR$\..\src\sy8809.c</file>
             <file>$PROJ_DIR$\..\src\at32f415_clock.c</file>
+            <file>$PROJ_DIR$\..\readme.txt</file>
             <file>$PROJ_DIR$\..\src\timer2.c</file>
             <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_sdio.c</file>
             <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</file>
@@ -590,7 +591,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 118 38 126 110 48 112 106 76 58 55 93 127 123 136 51 97 101 17 104 73 119 133 54 35 88 39 31 79 121 64 21 44 43 34 99 132 120 131 129 24 107 83 134 42 171 60 90 41 179 115 15 28 57 49 135</file>
+                    <file> 118 38 126 110 48 112 106 76 58 55 93 127 123 136 51 97 101 17 104 73 119 133 54 35 88 39 31 79 121 64 21 44 43 34 99 132 120 131 129 24 107 83 134 42 171 60 90 41 180 115 15 28 57 49 135</file>
                 </tool>
             </inputs>
         </file>
@@ -725,7 +726,7 @@
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 70 37 87 46 124 27 149 23 20 16 82 18 25 19 50 69 29 113 30 122 103 72 40 130 137 85 84 80 63 61 78 22 56 68 65 98 108 33 178 96 89 95 81 114 91 71 26 148 32 75 86 77 125 111 59</file>
+                    <file> 70 37 87 46 124 27 149 23 20 16 82 18 25 19 50 69 29 113 30 122 103 72 40 130 137 85 84 80 63 61 78 22 56 68 65 98 108 33 179 96 89 95 81 114 91 71 26 148 32 75 86 77 125 111 59</file>
                 </tool>
             </inputs>
         </file>
@@ -845,7 +846,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 118 38 126 48 112 106 76 55 93 127 123 136 51 97 101 17 104 73 119 133 54 35 88 39 31 79 121 64 21 44 43 34 99 132 120 131 129 24 107 83 134 42 171 60 53 90 41 52 179 140 115 100 116 62 94 128 28 117 67 47 57 49</file>
+                    <file> 118 38 126 48 112 106 76 55 93 127 123 136 51 97 101 17 104 73 119 133 54 35 88 39 31 79 121 64 21 44 43 34 99 132 120 131 129 24 107 83 134 42 171 60 53 90 41 52 180 140 115 100 116 62 94 128 28 117 67 47 57 49</file>
                 </tool>
             </inputs>
         </file>
@@ -959,16 +960,212 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 178</file>
+                    <file> 179</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 118 38 126 110 48 112 106 76 58 55 93 127 123 136 51 97 101 17 104 73 119 133 54 35 88 39 31 79 121 64 21 44 43 34 99 132 120 131 129 24 107 83 134 42 171 60 90 41 179 115 57 49</file>
+                    <file> 118 38 126 110 48 112 106 76 58 55 93 127 123 136 51 97 101 17 104 73 119 133 54 35 88 39 31 79 121 64 21 44 43 34 99 132 120 131 129 24 107 83 134 42 171 60 90 41 180 115 57 49</file>
                 </tool>
             </inputs>
         </file>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_adc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_debug.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_i2c.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_can.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_cmp.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crm.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_ertc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_exint.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_flash.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_gpio.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_int.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\timer4.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wwdt.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\at32f415_int.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\lighting.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usb_core.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\usb.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_misc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_sdr.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\Commands.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\i2c1.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_spi.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\adc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\lid.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\power_control.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_core.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usart.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\timer5.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_tmr.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wdt.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\init_pinout.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_pwc.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usb.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\main.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\version.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\sy8809.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\at32f415_clock.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\timer2.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_sdio.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
+            <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
+            <tool>ICCARM</tool>
+        </forcedrebuild>
         <forcedrebuild>
             <name>[REBUILD_ALL]</name>
         </forcedrebuild>

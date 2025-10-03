@@ -2,6 +2,7 @@
     "files.associations": {
         "usb.h": "c",
         "string.h": "c",
-        "sy8809_table.h": "c"
+        "sy8809_table.h": "c",
+        "stdint.h": "c"
     }
 }

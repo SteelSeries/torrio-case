@@ -66,7 +66,7 @@ error_status Bootloader_FlashErase(void)
 {
     flash_unlock();
     flash_flag_clear(FLASH_PRGMERR_FLAG);
-    for (i = (ERASE_FLASH_END_ADDRESS - 1024); i >= APP_FLASH_START_ADDRESS; i -= 1024)
+    for (i = (APP_FLASH_END_ADDRESS - 1024); i >= APP_FLASH_START_ADDRESS; i -= 1024)
     {
         flash_status_type status = flash_sector_erase(i);
         if (status != FLASH_OPERATE_DONE)
@@ -77,6 +77,7 @@ error_status Bootloader_FlashErase(void)
     flash_lock();
     return SUCCESS;
 }
+
 error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
 {
     uint8_t buffer[IN_MAXPACKET_SIZE];
@@ -130,13 +131,13 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
             return ERROR;
         }
         FW_Updateing_destAdrss += 4;
-        if (FW_Updateing_destAdrss >= ERASE_FLASH_END_ADDRESS) // if this address of last page to break the program.
+        if (FW_Updateing_destAdrss >= APP_FLASH_END_ADDRESS) // if this address of last page to break the program.
         {
             break;
         }
     }
 
-    if (FW_Updateing_destAdrss >= ERASE_FLASH_END_ADDRESS) // if this address of last page to break the program.
+    if (FW_Updateing_destAdrss >= APP_FLASH_END_ADDRESS) // if this address of last page to break the program.
     {
         for (i = 0; i < LAST_CRC_INDES; ++i)
         {
@@ -155,6 +156,7 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
     flash_lock();
     return SUCCESS;
 }
+
 error_status Bootloader_CmdCrcCheckHandler(uint8_t *buff)
 {
     if (crc_used_flag == false)
@@ -201,7 +203,7 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[2] << 16);
     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[3] << 24);
 
-    if ((Read_flash_address >= BOOTPATCH_FLASH_START_ADDRESS) && (Read_flash_address <= BOOTPATCH_FLASH_END_ADDRESS)) // 0x2004000 - 0x202FFFF = boot_patch (176K)
+    if ((Read_flash_address >= FLASH_BASE) && (Read_flash_address <= DUAL_IMG_END_ADDRESS))
     {
         buff[1] = FLASH_WRITE_ERRORS;
     }
@@ -244,7 +246,7 @@ bool Bootloader_CheckAppCodeComplete(void)
 {
     uint8_t FLASH_ReadCRC[4] = {0};
     uint8_t null_count = 0;
-    ReadFlash(ERASE_FLASH_END_ADDRESS - 4, FLASH_ReadCRC, 4);
+    ReadFlash(APP_FLASH_END_ADDRESS - 4, FLASH_ReadCRC, 4);
     for (uint8_t i = 0; i < 4; i++)
     {
         if (FLASH_ReadCRC[i] == 0Xff)

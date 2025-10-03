@@ -230,9 +230,14 @@ static Command_Status_t CommandHcfs_Crc32File(const uint8_t command[USB_RECEIVE_
     {
         if (command[1] == FILE_ID_LOCAL)
         {
-            uint8_t buff[10] = {0x00};
-            AppFwUpdate_CmdCrcCheckHandler(buff);
-            custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+
+            if (TaskScheduler_AddTask(AppFwUpdate_CmdCrcCheckHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add CRC check task fail\n");
+            }
+            // uint8_t buff[10] = {0x00};
+            // AppFwUpdate_CmdCrcCheckHandler(buff);
+            // custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
         }
     }
     return COMMAND_STATUS_SUCCESS;
