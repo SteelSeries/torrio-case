@@ -9,55 +9,99 @@
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
-T_LED_VAR LED_RED;
-T_LED_VAR LED_GREEN;
-T_LED_VAR LED_BLUE;
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+uint8_t LIGHTING_CHANGE_FLAG = LIGHTING_CHANGE_FALSE;
+uint8_t LIGHTING_MODE = LED_MODE_NORMAL;
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-static uint8_t pwm_flag = 1;
+static bool pwm_flag = true;
+static uint16_t breath_val = 0;
+static uint16_t breath_falling = 665;
+static uint16_t breath_rising = 1330;
+static uint16_t breath_interval = 5;
+
+static uint16_t light_max = 0;
+static uint16_t light_min = 666;
+static uint16_t light_on = 1;
+
+static uint16_t illum_val = 0;
+static uint16_t illum_falling = 665;
+static uint16_t illum_hold_dark = 965;
+static uint16_t illum_rising = 1630;
+static uint16_t illum_hold_bright = 1930;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
-static void SetPwmDuty(uint8_t color)
-{
-    tmr_output_config_type tmr_oc_init_structure;
-    tmr_output_default_para_init(&tmr_oc_init_structure);
-    tmr_oc_init_structure.oc_output_state = TRUE;
-    tmr_oc_init_structure.oc_polarity = TMR_OUTPUT_ACTIVE_HIGH;
-}
+static void lighting_illum_handler(void);
+static void lighting_breath_handler(void);
+static void lighting_breath_quick_handler(void);
+static void lighting_alert_handler(void);
+static void lighting_stable_handler(void);
+static void lighting_pwm_handler(uint16_t pwm_R, uint16_t pwm_G, uint16_t pwm_B);
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-void Lighting_InitLedStruct(T_LED_VAR *led)
-{
-    led->change_flag = true;
-    led->pwm_enable_flag = true;
-    led->breath_timer = 0;
-    led->breath_dir = LED_DIR_BRIGHT;
-    led->breath_speed = 0;
-    led->PWM_duty = LED_OFF;
-    led->timer_count = 0;
-    led->blink_count = 0;
-}
 void Lighting_HandlerTask(void)
 {
     printf("run Lighting_HandlerTask\n");
-    if(TaskScheduler_AddTask(Lighting_HandlerTask, 1, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    if(LIGHTING_CHANGE_FLAG == LIGHTING_CHANGE_TRUE)
     {
-        printf("add lighting task fail\n");
+        breath_val = 0;
+        illum_val = 0;
+        TaskScheduler_RemoveTask(lighting_illum_handler);
+        TaskScheduler_RemoveTask(lighting_breath_handler);
+        TaskScheduler_RemoveTask(lighting_breath_quick_handler);
+        TaskScheduler_RemoveTask(lighting_alert_handler);
+        TaskScheduler_RemoveTask(lighting_stable_handler);
+        LIGHTING_CHANGE_FLAG = LIGHTING_CHANGE_FALSE;
     }
+    switch (LIGHTING_MODE)
+    {
+        case ILLUM:
+            if(TaskScheduler_AddTask(lighting_illum_handler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+            {
+                printf("add lighting_illum_handler_task fail\n");
+            }
+            break;
+        case BREATH:
+            if(TaskScheduler_AddTask(lighting_breath_handler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+            {
+                printf("add lighting_breath_handler_task fail\n");
+            }
+            break;
+        case BREATH_QUICKLY:
+            if(TaskScheduler_AddTask(lighting_breath_quick_handler, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+            {
+                printf("add lighting_breath_quick_handler_task fail\n");
+            }
+            break;
+        case BLINK:
+            if(TaskScheduler_AddTask(lighting_alert_handler, 500, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+            {
+                printf("add lighting_alert_handler_task fail\n");
+            }
+            break;
+        case STABLE:
+            if(TaskScheduler_AddTask(lighting_stable_handler, 5000, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+            {
+                printf("add lighting_stable_handler_task fail\n");
+            }
+            break;
+        default:
+            break;
+    }   
+    
 }
 
 void Lighting_LEDNonPWMSetting(uint8_t rgb, confirm_state state)
 {
-    pwm_flag = 0;
+    pwm_flag = false;
     confirm_state enable = (confirm_state)!state;
     
     gpio_init_type gpio_initstructure;
@@ -85,25 +129,135 @@ void Lighting_LEDNonPWMSetting(uint8_t rgb, confirm_state state)
         break;
     }
 }
-void Lighting_QueueHandler(void)
+/*************************************************************************************************
+ *                                STATIC FUNCTION DEFINITIONS                                    *
+ *************************************************************************************************/
+static void lighting_illum_handler(void)
 {
-    //TaskScheduler_RemoveTask
-}
-void Lighting_BreathHandler(void)
-{
-    // breath handler
-    if(pwm_flag == 0)
+  static uint16_t illum_reg;
+    illum_val += breath_interval;
+    if(illum_val == illum_hold_bright)
     {
-        // re-init timer3 for pwm
-        Timer3_Init();
-        pwm_flag = 1;
+      illum_val = 0;
+      illum_reg = illum_val;
     }
-
-    if(TaskScheduler_AddTask(Lighting_BreathHandler, 1, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    else if((illum_val >= illum_rising) && (illum_val < illum_hold_bright))
+    {
+      illum_reg = light_max;
+    }
+    else if((illum_val >= illum_hold_dark) && (illum_val < illum_rising))
+    {
+      illum_reg = illum_rising - illum_val;
+    }
+    else if((illum_val >= illum_falling) && (illum_val < illum_hold_dark))
+    {
+      illum_reg = light_min;
+    }
+    else if(illum_val < illum_falling)
+    {
+      illum_reg = illum_val;
+    }
+    lighting_pwm_handler(illum_reg, illum_reg, illum_reg);
+    if(TaskScheduler_AddTask(lighting_illum_handler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
         printf("add lighting task fail\n");
     }
 }
-/*************************************************************************************************
- *                                STATIC FUNCTION DEFINITIONS                                    *
- *************************************************************************************************/
+static void lighting_breath_handler(void)
+{
+  static uint16_t breath_reg;
+  breath_val += breath_interval;
+  if(breath_val < breath_falling)
+  {
+    breath_reg = breath_val;
+  }
+  else if((breath_val >= breath_falling) && (breath_val < breath_rising))
+  {
+    breath_reg = breath_rising - breath_val;
+  }
+  else
+  {
+    breath_val = light_max;
+    breath_reg = breath_val;
+  }
+  lighting_pwm_handler(breath_reg, breath_reg, breath_reg);
+  if(TaskScheduler_AddTask(lighting_breath_handler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+  {
+      printf("add lighting task fail\n");
+  }
+}
+static void lighting_breath_quick_handler(void)
+{
+  static uint16_t breath_reg;
+  breath_val += breath_interval;
+  if(breath_val < breath_falling)
+  {
+    breath_reg = breath_val;
+  }
+  else if((breath_val >= breath_falling) && (breath_val < breath_rising))
+  {
+    breath_reg = breath_rising - breath_val;
+  }
+  else
+  {
+    breath_val = light_max;
+    breath_reg = breath_val;
+  }
+  lighting_pwm_handler(breath_reg, breath_reg, breath_reg);
+  if(TaskScheduler_AddTask(lighting_breath_quick_handler, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+  {
+      printf("add lighting task fail\n");
+  }
+}
+static void lighting_alert_handler(void)
+{
+  static uint16_t alert_val;
+  static uint16_t alert_reg;
+  if(alert_val < light_on)
+  {
+    alert_val += 1;
+    alert_reg = light_max;
+  }
+  else
+  {
+    alert_val = 0;
+    alert_reg = light_min;
+  }
+  lighting_pwm_handler(alert_reg, alert_reg, alert_reg);
+  if(TaskScheduler_AddTask(lighting_alert_handler, 500, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+  {
+      printf("add lighting task fail\n");
+  }
+}
+static void lighting_stable_handler(void)
+{
+  static uint16_t stable_val;
+  static uint16_t stable_reg;
+  if(stable_val < light_on)
+  {
+    stable_val += 1;
+    stable_reg = light_max;
+  }
+  else
+  {
+    stable_val = 0;
+    stable_reg = light_min;
+  }
+  lighting_pwm_handler(stable_reg, stable_reg, stable_reg);
+  if(TaskScheduler_AddTask(lighting_stable_handler, 5000, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+  {
+      printf("add lighting task fail\n");
+  }
+}
+static void lighting_pwm_handler(uint16_t pwm_R, uint16_t pwm_G, uint16_t pwm_B)
+{
+    if(pwm_flag == false)
+    {
+        // re-init timer3 for pwm
+        Timer3_Init();
+        pwm_flag = true;
+    }
+    tmr_channel_value_set(TMR3, TMR_SELECT_CHANNEL_1, pwm_R);
+    tmr_channel_value_set(TMR3, TMR_SELECT_CHANNEL_2, pwm_G);
+    tmr_channel_value_set(TMR3, TMR_SELECT_CHANNEL_3, pwm_B);
+}

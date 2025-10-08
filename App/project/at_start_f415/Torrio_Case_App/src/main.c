@@ -95,10 +95,6 @@ int main(void)
   {
     printf("add sy8809 task fail\n");
   }
-  if (TaskScheduler_AddTask(Lighting_HandlerTask, 1, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
-  {
-    printf("add lighting task fail\n");
-  }
 
   printf("main loop start\n");
   while (1)

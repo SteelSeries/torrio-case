@@ -42,6 +42,7 @@ static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_O
 static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static Command_Status_t handle_lighting_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -58,6 +59,7 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_CUSTOM_OP, .read = Command_HandleNoop, .write = handle_debug_command},
         {.op = DEBUG_SY8809_OP, .read = handle_sy8809_debug_read_command, .write = handle_sy8809_debug_write_command},
         {.op = DEBUG_LEDRGB_OP, .read = Command_HandleNoop, .write = handle_LEDRGB_debug_command},
+        {.op = DEBUG_LIGHTING_OP, .read = Command_HandleNoop, .write = handle_lighting_debug_command},
 };
 
 /*************************************************************************************************
@@ -192,3 +194,14 @@ static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_C
     Lighting_LEDNonPWMSetting(command[1], (confirm_state)command[2]);
     return COMMAND_STATUS_SUCCESS;
 }
+static Command_Status_t handle_lighting_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+{
+    LIGHTING_CHANGE_FLAG = LIGHTING_CHANGE_TRUE;
+    if(TaskScheduler_AddTask(Lighting_HandlerTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        printf("add lighting task fail\n");
+    }
+    LIGHTING_MODE = command[1];
+    return COMMAND_STATUS_SUCCESS;
+}
+
