@@ -46,6 +46,8 @@ static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetSerialNumber(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -71,7 +73,7 @@ static const cmd_handler_t handler_table[] =
 
         // factory
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
-        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = HandleNoop, .write = HandleNoop},
+        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
 };
 
 /*************************************************************************************************
@@ -315,10 +317,89 @@ static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN])
 
     if (is_ret == true)
     {
-        uint8_t buff[13] = {0x00};
+        uint8_t buff[2] = {0x00};
         buff[0] = FAC_SERIAL_OP;
         buff[1] = FLASH_WRITE_ERRORS;
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN])
+{
+    Command_Target_t target = (Command_Target_t)command[1];
+    FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
+
+    uint8_t buff[4] = {0x00};
+    buff[0] = FAC_MODEL_COLOR_SPIN_OP | COMMAND_READ_FLAG;
+    buff[1] = (uint8_t)target;
+
+    if (target > COMMAND_TARGET_RIGHT_BUD)
+    {
+        buff[2] = FLASH_WRITE_ERRORS;
+        buff[3] = FLASH_WRITE_ERRORS;
+    }
+    else
+    {
+        switch (target)
+        {
+        case COMMAND_TARGET_CASE:
+        {
+            buff[2] = data->model;
+            buff[3] = data->color;
+            break;
+        }
+
+        case COMMAND_TARGET_LEFT_BUD:
+        {
+            // TODO: UART communication to lift bud write color spin and model.
+            break;
+        }
+
+        case COMMAND_TARGET_RIGHT_BUD:
+        {
+            // TODO: UART communication to lift bud write color spin and model.
+            break;
+        }
+        }
+    }
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN])
+{
+    Command_Target_t target = (Command_Target_t)command[1];
+    if (target > COMMAND_TARGET_RIGHT_BUD)
+    {
+        uint8_t buff[2] = {0x00};
+        buff[0] = FAC_MODEL_COLOR_SPIN_OP;
+        buff[1] = FLASH_WRITE_ERRORS;
+        custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    }
+    else
+    {
+
+        switch (target)
+        {
+        case COMMAND_TARGET_CASE:
+        {
+            FileSystem_UpdateColorSpinAndModel(command[2], command[3]);
+            break;
+        }
+
+        case COMMAND_TARGET_LEFT_BUD:
+        {
+            // TODO: UART communication to lift bud write color spin and model.
+            break;
+        }
+
+        case COMMAND_TARGET_RIGHT_BUD:
+        {
+            // TODO: UART communication to lift bud write color spin and model.
+            break;
+        }
+        }
     }
     return COMMAND_STATUS_SUCCESS;
 }
