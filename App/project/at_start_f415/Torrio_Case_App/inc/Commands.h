@@ -27,6 +27,10 @@
 #define INTERNAL_USB_SUSPEND_OP     0x0CU // USB entered suspend mode. Lower power usage
 #define INTERNAL_USB_RESUME_OP      0x0DU // after suspension, resume from device received
 
+// factory settings
+#define FAC_SERIAL_OP               0x13 // factory settings
+#define FAC_MODEL_COLOR_SPIN_OP     0x6D // factory settings
+
 
 #define NO_OP                       0x00U // command module
 
@@ -52,19 +56,10 @@ typedef enum
 
 typedef enum
 {
-    RECOVERY_MODE_APPLICATION = 0,
-    RECOVERY_MODE_BOOTLOADER,
-    RECOVERY_MODE_NUM_MODES
-} Recovery_Mode_t;
-
-typedef enum
-{
-    FILE_ID_LOCAL = 0,
-    FILE_ID_PERIPHERAL,
-    FILE_ID_NUM_MODES
-} File_Id_t;
-
-
+    COMMAND_TARGET_CASE = 0,
+    COMMAND_TARGET_LEFT_BUD,
+    COMMAND_TARGET_RIGHT_BUD
+} Command_Target_t;
 
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *

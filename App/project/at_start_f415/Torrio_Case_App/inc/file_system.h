@@ -36,6 +36,16 @@ typedef enum
     DUAL_IMAGE_FLAG_ERROR = 0x00    /* (Optional) Copy failed */
 } FileSystem_DualImageFlag_t;
 
+typedef enum
+{
+    UPDATE_FIELD_MODEL,
+    UPDATE_FIELD_COLOR,
+    UPDATE_FIELD_SHIPPING_FLAG,
+    UPDATE_FIELD_DUAL_IMAGE_FLAG,
+    UPDATE_FIELD_SERIAL_NUMBER,
+    UPDATE_FIELD_RESERVED
+} FileSystem_UserDataUpdateField_t;
+
 typedef struct __attribute__((packed))
 {
     uint8_t model;                // 0x08003800
@@ -55,3 +65,4 @@ typedef struct __attribute__((packed))
 void FileSystem_MarkDualImageReadyToMigrate(void);
 const FileSystem_UserData_t *FileSystem_GetUserData(void);
 void FileSystem_CheckImageCopyFlag(void);
+void FileSystem_UpdateSerialNumber(const uint8_t *new_serial);

@@ -98,7 +98,19 @@ Step 6: APP clears dual_image_copy_flag
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
+typedef enum
+{
+    RECOVERY_MODE_APPLICATION = 0,
+    RECOVERY_MODE_BOOTLOADER,
+    RECOVERY_MODE_NUM_MODES
+} AppFwUpdate_RecoveryMode_t;
 
+typedef enum
+{
+    FILE_ID_LOCAL = 0,
+    FILE_ID_PERIPHERAL,
+    FILE_ID_NUM_MODES
+} AppFwUpdate_FileId_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
