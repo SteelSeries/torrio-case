@@ -45,6 +45,27 @@ typedef struct __attribute__((packed))
     uint8_t serial_number[18];    // 0x08003804 ~ 0x08003C16
     uint8_t reserved;
 } FileSystem_UserData_t;
+
+typedef enum
+{
+    UPDATE_FIELD_NONE = 0,
+    UPDATE_FIELD_MODEL = 0x01,
+    UPDATE_FIELD_COLOR = 0x02,
+    UPDATE_FIELD_SHIPPING_FLAG = 0x04,
+    UPDATE_FIELD_DUAL_IMAGE_FLAG = 0x08,
+    UPDATE_FIELD_SERIAL_NUMBER = 0x10,
+} FileSystem_UserDataUpdateField_t;
+
+typedef struct
+{
+    uint32_t field_mask;
+    uint8_t model;
+    uint8_t color;
+    uint8_t shipping_flag;
+    uint8_t dual_image_copy_flag;
+    uint8_t serial_number[18];
+    uint8_t reserved;
+} FileSystem_UserDataUpdate_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -52,6 +73,8 @@ typedef struct __attribute__((packed))
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void FileSystem_MarkDualImageReadyToMigrate(void);
 const FileSystem_UserData_t *FileSystem_GetUserData(void);
+void FileSystem_UpdateSerialNumber(const uint8_t *new_serial);
+void FileSystem_UpdateColorSpinAndModel(const uint8_t model_value, const uint8_t color_value);
+void FileSystem_MarkDualImageReadyToMigrate(void);
 void FileSystem_CheckImageCopyFlag(void);

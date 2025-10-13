@@ -24,19 +24,43 @@ static const FileSystem_UserData_t *user_data = (const FileSystem_UserData_t *)U
  *************************************************************************************************/
 static error_status EraseFlashRegion(uint32_t start_addr, uint32_t end_addr);
 static error_status WriteFlashProcess(uint32_t address, const uint8_t *data, size_t in_len);
-static void MarkDualImageCopyFlag(FileSystem_DualImageFlag_t copy_flag);
+static void UpdateUserData(const FileSystem_UserDataUpdate_t *update);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-void FileSystem_MarkDualImageReadyToMigrate(void)
-{
-    MarkDualImageCopyFlag(DUAL_IMAGE_FLAG_REQUEST);
-}
-
 const FileSystem_UserData_t *FileSystem_GetUserData(void)
 {
     return user_data;
+}
+
+void FileSystem_UpdateSerialNumber(const uint8_t *new_serial)
+{
+    if (new_serial != NULL)
+    {
+        FileSystem_UserDataUpdate_t update = {0};
+        update.field_mask = UPDATE_FIELD_SERIAL_NUMBER;
+        update.dual_image_copy_flag = (uint8_t)DUAL_IMAGE_FLAG_REQUEST;
+        memcpy(update.serial_number, new_serial, sizeof(update.serial_number));
+        UpdateUserData(&update);
+    }
+}
+
+void FileSystem_UpdateColorSpinAndModel(const uint8_t model_value, const uint8_t color_value)
+{
+    FileSystem_UserDataUpdate_t update = {0};
+    update.field_mask = UPDATE_FIELD_COLOR | UPDATE_FIELD_MODEL;
+    update.model = model_value;
+    update.color = color_value;
+    UpdateUserData(&update);
+}
+
+void FileSystem_MarkDualImageReadyToMigrate(void)
+{
+    FileSystem_UserDataUpdate_t update = {0};
+    update.field_mask = UPDATE_FIELD_DUAL_IMAGE_FLAG;
+    update.dual_image_copy_flag = (uint8_t)DUAL_IMAGE_FLAG_REQUEST;
+    UpdateUserData(&update);
 }
 
 void FileSystem_CheckImageCopyFlag(void)
@@ -44,7 +68,11 @@ void FileSystem_CheckImageCopyFlag(void)
     if (user_data->dual_image_copy_flag == DUAL_IMAGE_FLAG_REQUEST)
     {
         printf("Clear dual image copy flag\n");
-        MarkDualImageCopyFlag(DUAL_IMAGE_FLAG_NONE);
+        FileSystem_UserDataUpdate_t update = {0};
+        update.field_mask = UPDATE_FIELD_DUAL_IMAGE_FLAG;
+        update.dual_image_copy_flag = (uint8_t)DUAL_IMAGE_FLAG_NONE;
+        UpdateUserData(&update);
+
         printf("Dual Image CopyFlg : %02X\n", user_data->dual_image_copy_flag);
     }
 }
@@ -52,13 +80,43 @@ void FileSystem_CheckImageCopyFlag(void)
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-static void MarkDualImageCopyFlag(FileSystem_DualImageFlag_t copy_flag)
+static void UpdateUserData(const FileSystem_UserDataUpdate_t *update)
 {
+    if (update == NULL || update->field_mask == UPDATE_FIELD_NONE)
+    {
+        return;
+    }
     FileSystem_UserData_t user_data_ram = {0};
+
     memcpy(&user_data_ram, (const void *)USER_DATA_START_ADDRESS, sizeof(FileSystem_UserData_t));
-    user_data_ram.dual_image_copy_flag = (uint8_t)copy_flag;
+
+    if (update->field_mask & UPDATE_FIELD_MODEL)
+    {
+        user_data_ram.model = update->model;
+    }
+
+    if (update->field_mask & UPDATE_FIELD_COLOR)
+    {
+        user_data_ram.color = update->color;
+    }
+
+    if (update->field_mask & UPDATE_FIELD_SHIPPING_FLAG)
+    {
+        user_data_ram.shipping_flag = update->shipping_flag;
+    }
+
+    if (update->field_mask & UPDATE_FIELD_DUAL_IMAGE_FLAG)
+    {
+        user_data_ram.dual_image_copy_flag = update->dual_image_copy_flag;
+    }
+
+    if (update->field_mask & UPDATE_FIELD_SERIAL_NUMBER)
+    {
+        memcpy(user_data_ram.serial_number, update->serial_number, sizeof(user_data_ram.serial_number));
+    }
+
     EraseFlashRegion(USER_DATA_START_ADDRESS, USER_DATA_END_ADDRESS);
-    WriteFlashProcess(USER_DATA_START_ADDRESS, (uint8_t *)&user_data_ram, sizeof(FileSystem_UserData_t));
+    WriteFlashProcess(USER_DATA_START_ADDRESS, (uint8_t *)&user_data_ram, sizeof(user_data_ram));
 }
 
 static error_status EraseFlashRegion(uint32_t start_addr, uint32_t end_addr)

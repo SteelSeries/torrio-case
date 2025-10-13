@@ -1,31 +1,31 @@
-"C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\middlewares\usb_drivers\src\usbd_sdr.c"
+"C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\middlewares\usb_drivers\src\usbd_sdr.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -funsigned-char
 -MD
 -MF
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\Torrio_Case_App\BrowseInfo\usbd_drivers\usbd_sdr.pbi.dep
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\Torrio_Case_App\BrowseInfo\usbd_drivers\usbd_sdr.pbi.dep
 -o
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\Torrio_Case_App\BrowseInfo\usbd_drivers\usbd_sdr.pbi
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\Torrio_Case_App\BrowseInfo\usbd_drivers\usbd_sdr.pbi
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\middlewares\usb_drivers\src
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\middlewares\usb_drivers\src
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\libraries\drivers\inc\
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\libraries\drivers\inc
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\libraries\cmsis\cm4\core_support\
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\libraries\cmsis\cm4\core_support
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\libraries\cmsis\cm4\device_support\
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\libraries\cmsis\cm4\device_support
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\inc\
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\inc
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\at32f415_board\
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\at32f415_board
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\middlewares\usbd_class\custom_hid\
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\middlewares\usbd_class\custom_hid
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc\
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\middlewares\usb_drivers\inc
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\middlewares\i2c_application_library\
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\iar_v8.2\..\..\..\..\middlewares\i2c_application_library
 -I
 C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\inc\c\aarch32
 -I
@@ -33,21 +33,21 @@ C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\inc
 -I
 C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\inc\c
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\libraries\drivers\inc
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\libraries\drivers\inc
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\libraries\cmsis\cm4\core_support
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\libraries\cmsis\cm4\core_support
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\libraries\cmsis\cm4\device_support
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\libraries\cmsis\cm4\device_support
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\inc
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at_start_f415\Torrio_Case_App\inc
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\project\at32f415_board
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\project\at32f415_board
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\middlewares\usbd_class\custom_hid
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\middlewares\usbd_class\custom_hid
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\middlewares\usb_drivers\inc
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\middlewares\usb_drivers\inc
 -I
-C:\Users\yuyu\Documents\souce code\SteelSeries\Torrio_Case_gitIserver\App\middlewares\i2c_application_library
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\App\middlewares\i2c_application_library
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
