@@ -15,9 +15,9 @@
 #define RESET_OP                    0x01U // recovery module
 
 // For firmware/file update
-#define ERASE_FILE_OP               0x02U // HCFS
-#define FILE_ACCESS_OP              0x03U // HCFS
-#define FILE_CRC32_OP               0x04U // HCFS
+#define ERASE_FILE_OP               0x02U 
+#define FILE_ACCESS_OP              0x03U
+#define FILE_CRC32_OP               0x04U
 
 // debug
 #define DEBUG_CUSTOM_OP             0x08U // each application implements it as they see fit
@@ -35,6 +35,10 @@
 
 #define COMMAND_READ_FLAG           0x80U
 
+#define FLASH_WRITE_ERRORS          0x03U
+#define FLASH_OPERATION_SUCCESS     0x00U
+
+#define USB_RECEIVE_LEN             1024U
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -65,8 +69,7 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
-extern bool SS_RESET_FLAG;
-extern uint8_t gCurrentMode;
+
 
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *

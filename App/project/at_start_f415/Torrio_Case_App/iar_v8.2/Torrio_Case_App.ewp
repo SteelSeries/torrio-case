@@ -277,7 +277,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>11111110</state>
+                    <state>10010100</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -360,7 +360,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>3</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -369,7 +369,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>3</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -833,7 +833,7 @@
                 </option>
                 <option>
                     <name>FillerEnd</name>
-                    <state>0x0801FFFF</state>
+                    <state>0x08011FFF</state>
                 </option>
                 <option>
                     <name>CrcSize</name>
@@ -1187,6 +1187,9 @@
             <name>$PROJ_DIR$\..\src\adc.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\at32f415_clock.c</name>
         </file>
         <file>
@@ -1194,6 +1197,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\Commands.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\file_system.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\i2c1.c</name>

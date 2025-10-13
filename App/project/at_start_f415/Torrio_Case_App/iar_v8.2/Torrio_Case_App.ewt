@@ -1543,6 +1543,9 @@
             <name>$PROJ_DIR$\..\src\adc.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\at32f415_clock.c</name>
         </file>
         <file>
@@ -1550,6 +1553,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\Commands.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\file_system.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\i2c1.c</name>

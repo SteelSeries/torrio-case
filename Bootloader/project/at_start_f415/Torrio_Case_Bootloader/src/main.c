@@ -7,6 +7,7 @@
 #include "custom_hid_desc.h"
 #include "usb.h"
 #include "command.h"
+#include "file_system.h"
 #include "bootloader.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -39,13 +40,17 @@ int main(void)
 
   printf("Bootloader start!!!\n");
 
-  if (Bootloader_CheckBackDoor() == FALSE)
+
+  if (FileSystem_CheckImageCopyFlag() == SUCCESS)
   {
-    if (Bootloader_CheckAppCodeComplete())
+    if (Bootloader_CheckBackDoor() == FALSE)
     {
-      if (gCurrentMode != BOOTLOADER_MODE)
+      if (Bootloader_CheckAppCodeComplete())
       {
-        Bootloader_JumpToApp();
+        if (gCurrentMode != BOOTLOADER_MODE)
+        {
+          Bootloader_JumpToApp();
+        }
       }
     }
   }

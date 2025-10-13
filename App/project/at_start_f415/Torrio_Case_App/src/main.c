@@ -16,6 +16,8 @@
 #include "init_pinout.h"
 #include "adc.h"
 #include "timer4.h"
+#include "app_fw_update.h"
+#include "file_system.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -49,12 +51,31 @@ int main(void)
 
   crm_clocks_freq_get(&crm_clocks_freq_struct);
 
+  FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
+
   printf("APP Start!!!\n");
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
   print_clock("AHB", crm_clocks_freq_struct.ahb_freq);
   print_clock("APB2", crm_clocks_freq_struct.apb2_freq);
   print_clock("APB1", crm_clocks_freq_struct.apb1_freq);
   print_clock("ADC", crm_clocks_freq_struct.adc_freq);
+
+  printf("===== User Data Debug Info =====\n");
+  printf("Model              : %02X\n", data->model);
+  printf("Color              : %02X\n", data->color);
+  printf("Shipping Flag      : %02X\n", data->shipping_flag);
+  printf("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
+
+  printf("Serial Number      : ");
+  for (uint8_t i = 0; i < sizeof(data->serial_number); i++)
+  {
+    printf("%02X ", data->serial_number[i]); // HEX 輸出
+  }
+  printf("\n");
+
+  printf("Reserved           : %02X\n", data->reserved);
+  printf("================================\n");
+  FileSystem_CheckImageCopyFlag();
 
   InitPinout_Init();
 
@@ -109,11 +130,10 @@ int main(void)
         // printf("system wakeup\n");
       }
     }
-
-    if (SS_RESET_FLAG)
+    if (AppFwUpdata_GetResetFlag())
     {
       printf("system reset\n");
-      SS_RESET_FLAG = false;
+      AppFwUpdata_SetResetFlag(false);
       delay_ms(500);
       usbd_disconnect(&otg_core_struct.dev);
       delay_ms(500);

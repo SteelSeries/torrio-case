@@ -25,15 +25,15 @@ static uint16_t gFW_FirstBinLen = 0;
 static uint8_t Read_flash_data[READ_FLASH_BUFFER_LEN];
 static uint32_t Read_flash_address = 0;
 static uint8_t Read_flashAdrss_tab[4] = {0};
-static bool crc_used_flag = false;
 static uint32_t sum_crc32;
 static uint8_t crc_data[BUFFER_LEN];
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
-static uint16_t ReadFlashHalfWord(uint32_t faddr);
-static void ReadFlash(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead);
 static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc);
+static error_status EraseDualImageFlashProcess(void);
+static void ReadFlash(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead);
+static uint16_t ReadFlashHalfWord(uint32_t faddr);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -64,19 +64,9 @@ void Bootloader_BackDoorGpioInit(void)
 
 error_status Bootloader_FlashErase(void)
 {
-    flash_unlock();
-    flash_flag_clear(FLASH_PRGMERR_FLAG);
-    for (i = (ERASE_FLASH_END_ADDRESS - 1024); i >= APP_FLASH_START_ADDRESS; i -= 1024)
-    {
-        flash_status_type status = flash_sector_erase(i);
-        if (status != FLASH_OPERATE_DONE)
-        {
-            return ERROR;
-        }
-    }
-    flash_lock();
-    return SUCCESS;
+    return EraseDualImageFlashProcess();
 }
+
 error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
 {
     uint8_t buffer[IN_MAXPACKET_SIZE];
@@ -130,19 +120,19 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
             return ERROR;
         }
         FW_Updateing_destAdrss += 4;
-        if (FW_Updateing_destAdrss >= ERASE_FLASH_END_ADDRESS) // if this address of last page to break the program.
+        if (FW_Updateing_destAdrss >= APP_FLASH_END_ADDRESS) // if this address of last page to break the program.
         {
             break;
         }
     }
 
-    if (FW_Updateing_destAdrss >= ERASE_FLASH_END_ADDRESS) // if this address of last page to break the program.
+    if (FW_Updateing_destAdrss >= APP_FLASH_END_ADDRESS) // if this address of last page to break the program.
     {
-        for (i = 0; i < LAST_CRC_INDES; ++i)
+        for (i = 0; i < gFW_BinLen; ++i)
         {
             crc_data[i] = buffer[i + 9]; // include CRC of binary last 4 bytes
         }
-        sum_crc32 = Crc32Compute(crc_data, LAST_CRC_INDES - 4, &sum_crc32); // No need last 4 bytes for CRC
+        sum_crc32 = Crc32Compute(crc_data, gFW_BinLen - 4, &sum_crc32); // No need last 4 bytes for CRC
     }
     else
     {
@@ -155,25 +145,9 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
     flash_lock();
     return SUCCESS;
 }
-error_status Bootloader_CmdCrcCheckHandler(uint8_t *buff)
+
+void Bootloader_CmdCrcCheckHandler(uint8_t *buff)
 {
-    if (crc_used_flag == false)
-    {
-        ReadFlash(APP_CRC_FLASH_START_ADDRESS, Read_flash_data, 4);
-
-        for (int i = 0; i < 4; ++i)
-        {
-            crc_data[i] = Read_flash_data[i];
-        }
-
-        sum_crc32 = (uint32_t)Read_flash_data[0] + ((uint32_t)Read_flash_data[1] << 8) + ((uint32_t)Read_flash_data[2] << 16) + ((uint32_t)Read_flash_data[3] << 24);
-
-        crc_data[LAST_CRC_INDES - 4] = Read_flash_data[0];
-        crc_data[LAST_CRC_INDES - 3] = Read_flash_data[1];
-        crc_data[LAST_CRC_INDES - 2] = Read_flash_data[2];
-        crc_data[LAST_CRC_INDES - 1] = Read_flash_data[3];
-    }
-
     buff[1] = FLASH_OPERATION_SUCCESS;
     buff[2] = crc_data[LAST_CRC_INDES - 4];
     buff[3] = crc_data[LAST_CRC_INDES - 3];
@@ -183,13 +157,21 @@ error_status Bootloader_CmdCrcCheckHandler(uint8_t *buff)
     buff[7] = (sum_crc32 >> 8);
     buff[8] = (sum_crc32 >> 16);
     buff[9] = (sum_crc32 >> 24);
-    return SUCCESS;
+    for (uint8_t i = 2; i < 6; i++)
+    {
+        if (buff[i] != buff[i + 4])
+        {
+            printf("CRC check fail\n");
+            EraseDualImageFlashProcess();
+        }
+    }
 }
 error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
 {
     uint8_t command[IN_MAXPACKET_SIZE];
-    memcpy(command, in, IN_MAXPACKET_SIZE);
     uint16_t Read_Flash_len = (command[4] << 8) + command[3];
+    
+    memcpy(command, in, IN_MAXPACKET_SIZE);
 
     for (int i = 0; i < 4; ++i)
     {
@@ -201,7 +183,7 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[2] << 16);
     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[3] << 24);
 
-    if ((Read_flash_address >= BOOTPATCH_FLASH_START_ADDRESS) && (Read_flash_address <= BOOTPATCH_FLASH_END_ADDRESS)) // 0x2004000 - 0x202FFFF = boot_patch (176K)
+    if ((Read_flash_address >= FLASH_BASE) && (Read_flash_address <= DUAL_IMG_END_ADDRESS))
     {
         buff[1] = FLASH_WRITE_ERRORS;
     }
@@ -244,7 +226,7 @@ bool Bootloader_CheckAppCodeComplete(void)
 {
     uint8_t FLASH_ReadCRC[4] = {0};
     uint8_t null_count = 0;
-    ReadFlash(ERASE_FLASH_END_ADDRESS - 4, FLASH_ReadCRC, 4);
+    ReadFlash(APP_FLASH_END_ADDRESS - 4, FLASH_ReadCRC, 4);
     for (uint8_t i = 0; i < 4; i++)
     {
         if (FLASH_ReadCRC[i] == 0Xff)
@@ -272,12 +254,6 @@ static uint16_t ReadFlashHalfWord(uint32_t faddr)
     return *(vu8 *)faddr;
 }
 
-/**
- * @brief Read the data of the specified length from the specified address
- * @param ReadAddr starting address
- * @param pBuffer data pointer
- * @param NumToRead half-word (16-bit) number
- */
 static void ReadFlash(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead)
 {
     for (uint16_t i = 0; i < NumToRead; i++)
@@ -286,11 +262,68 @@ static void ReadFlash(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead)
         ReadAddr += 1;                            // shift 1 byte
     }
 }
+
+static error_status EraseDualImageFlashProcess(void)
+{
+    flash_status_type status = FLASH_OPERATE_DONE;
+    uint32_t start_sector, end_sector;
+    uint32_t sector;
+
+    if ((APP_FLASH_START_ADDRESS < FLASH_BASE) || (APP_FLASH_START_ADDRESS % SECTOR_SIZE) ||
+        (APP_FLASH_END_ADDRESS > (FLASH_BASE + 128U * 1024U)) ||
+        (APP_FLASH_END_ADDRESS <= APP_FLASH_START_ADDRESS))
+    {
+        return ERROR;
+    }
+
+    start_sector = ((APP_FLASH_START_ADDRESS - FLASH_BASE) / SECTOR_SIZE);
+    end_sector = ((APP_FLASH_END_ADDRESS - FLASH_BASE) / SECTOR_SIZE);
+
+    flash_unlock();
+
+    status = flash_operation_wait_for(ERASE_TIMEOUT);
+    if ((status == FLASH_PROGRAM_ERROR) || (status == FLASH_EPP_ERROR))
+    {
+        flash_flag_clear(FLASH_PRGMERR_FLAG | FLASH_EPPERR_FLAG);
+    }
+    else if (status == FLASH_OPERATE_TIMEOUT)
+    {
+        flash_lock();
+        return ERROR;
+    }
+
+    for (sector = end_sector - 1; sector >= start_sector; sector--)
+    {
+        uint32_t addr = FLASH_BASE + sector * SECTOR_SIZE;
+
+        status = flash_sector_erase(addr);
+        if (status != FLASH_OPERATE_DONE)
+        {
+            flash_lock();
+            return ERROR;
+        }
+
+        status = flash_operation_wait_for(ERASE_TIMEOUT);
+        if ((status == FLASH_PROGRAM_ERROR) || (status == FLASH_EPP_ERROR))
+        {
+            flash_flag_clear(FLASH_PRGMERR_FLAG | FLASH_EPPERR_FLAG);
+            flash_lock();
+            return ERROR;
+        }
+        else if (status == FLASH_OPERATE_TIMEOUT)
+        {
+            flash_lock();
+            return ERROR;
+        }
+    }
+    /* Lock flash after operation */
+    flash_lock();
+    return SUCCESS;
+}
+
 static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc)
 {
     uint32_t crc;
-
-    crc_used_flag = true;
 
     crc = (p_crc == NULL) ? 0xFFFFFFFF : ~(*p_crc);
     for (uint32_t i = 0; i < size; i++)

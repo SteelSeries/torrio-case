@@ -14,8 +14,16 @@ cd iar_v8.2
 cd Torrio_Case_App
 cd Exe
 
-srec_cat.exe Torrio_Case_App.bin -binary -crop 0x00000000 0x1BFFC -fill 0xFF 0x00000000 0x1BFFC -crc32-l-e 0x1BFFC -o Torrio_Case_App.bin -binary
+
+srec_cat.exe -generate 0x00000 0xE000 --constant 0xFF -o Flash_Base_56KB.bin -binary
+
+srec_cat.exe Torrio_Case_App.bin -binary -crop 0x00000000 0xDFFC -fill 0xFF 0x00000000 0xDFFC -crc32-l-e 0xDFFC -o Torrio_Case_App.bin -binary
+
 srec_cat.exe Torrio_Case_Bootloader.bin -binary Torrio_Case_App.bin -binary -offset 0x4000 -o Torrio_Artery_Image.bin --binary
+
+srec_cat.exe Torrio_Artery_Image.bin -binary Flash_Base_56KB.bin -binary -offset 0x12000 -o Torrio_Artery_Image.bin --binary
+
+del Flash_Base_56KB.bin
 del Torrio_Case_Bootloader.bin
 
 for /f "usebackq delims=" %%t in (`powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd-HH-mm-ss'"`) do set "TIMESTAMP=%%t"
@@ -39,3 +47,6 @@ echo.
 echo Done. Packed files are in: "%CD%\%FOLDERNAME%"
 
 endlocal
+
+cd ..
+cd ..

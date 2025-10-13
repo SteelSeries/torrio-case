@@ -68,6 +68,24 @@ TaskScheduler_TaskStatus_t TaskScheduler_AddTask(void (*func)(void),
                                                  TaskScheduler_RunMode_t runMode,
                                                  TaskScheduler_StartMode_t startMode)
 {
+
+    // TODO: Add safety check for interval_ticks maximum value
+    //
+    // To prevent potential overflow from MS_TO_TICKS(interval_ticks),
+    // especially when interval_ticks is too large, we define a maximum
+    // allowed interval in milliseconds (MAX_INTERVAL_MS).
+    //
+    // This protects against generating an excessively large tick count,
+    // which could cause incorrect scheduling behavior or overflow when
+    // stored in a uint32_t.
+    //
+    // MAX_INTERVAL_MS is currently set to 429,496 ms (~4.97 days), which
+    // corresponds to the maximum safe value for a uint32_t tick counter
+    // based on the current TIME_BASE_US setting (100 us per tick).
+    //
+    // Error code TASK_INVALID_INTERVAL is returned when the user tries
+    // to add a task with an interval exceeding this limit.
+    
     if (numTasks >= MAX_TASKS)
     {
         return TASK_LIST_FULL;
