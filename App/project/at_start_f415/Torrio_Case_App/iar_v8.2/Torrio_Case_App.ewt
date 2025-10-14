@@ -1546,9 +1546,6 @@
             <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\at32f415_clock.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\src\at32f415_int.c</name>
         </file>
         <file>
@@ -1580,6 +1577,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\system_clock.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\task_scheduler.c</name>

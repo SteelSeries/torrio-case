@@ -2,7 +2,6 @@
  *                                         INCLUDES                                              *
  *************************************************************************************************/
 #include "at32f415_board.h"
-#include "at32f415_clock.h"
 #include "custom_hid_class.h"
 #include "custom_hid_desc.h"
 #include "usb.h"
@@ -18,6 +17,7 @@
 #include "timer4.h"
 #include "app_fw_update.h"
 #include "file_system.h"
+#include "system_clock.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -44,11 +44,13 @@ int main(void)
   crm_clocks_freq_type crm_clocks_freq_struct = {0};
 
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
-
-  system_clock_config();
-
+  
+  InitPinout_Init();
+  
+  SystemClock_ClockConfigSwitch();
+  
   at32_board_init();
-
+  
   crm_clocks_freq_get(&crm_clocks_freq_struct);
 
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
@@ -69,15 +71,13 @@ int main(void)
   printf("Serial Number      : ");
   for (uint8_t i = 0; i < sizeof(data->serial_number); i++)
   {
-    printf("%02X ", data->serial_number[i]); // HEX 輸出
+    printf("%02X ", data->serial_number[i]);
   }
   printf("\n");
 
-  printf("Reserved           : %02X\n", data->reserved);
   printf("================================\n");
-  FileSystem_CheckImageCopyFlag();
 
-  InitPinout_Init();
+  FileSystem_CheckImageCopyFlag();
 
 #ifdef USB_LOW_POWER_WAKUP
   Usb_LowPowerWakeupConfig();
