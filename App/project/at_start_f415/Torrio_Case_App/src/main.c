@@ -52,57 +52,65 @@ int main(void)
 
   at32_board_init();
 
+  // ==============================debug message==============================
   crm_clocks_freq_get(&crm_clocks_freq_struct);
-
+  
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
-
+  
   printf("APP Start!!!\n");
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
   print_clock("AHB", crm_clocks_freq_struct.ahb_freq);
   print_clock("APB2", crm_clocks_freq_struct.apb2_freq);
   print_clock("APB1", crm_clocks_freq_struct.apb1_freq);
   print_clock("ADC", crm_clocks_freq_struct.adc_freq);
-
+  
   printf("===== User Data Debug Info =====\n");
   printf("Model              : %02X\n", data->model);
   printf("Color              : %02X\n", data->color);
   printf("Shipping Flag      : %02X\n", data->shipping_flag);
   printf("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
-
+  
   printf("Serial Number      : ");
   for (uint8_t i = 0; i < sizeof(data->serial_number); i++)
   {
     printf("%02X ", data->serial_number[i]);
   }
   printf("\n");
-
+  
   printf("================================\n");
+  // ==============================debug message==============================
 
   FileSystem_CheckImageCopyFlag();
 
+  if (Usb_GetUsbDetectState() == USB_PLUG)
+  {
+    printf("system setup USB detect\n");
 #ifdef USB_LOW_POWER_WAKUP
-  Usb_LowPowerWakeupConfig();
+    Usb_LowPowerWakeupConfig();
 #endif
 
-  /* enable otgfs clock */
-  crm_periph_clock_enable(OTG_CLOCK, TRUE);
+    /* enable otgfs clock */
+    crm_periph_clock_enable(OTG_CLOCK, TRUE);
 
-  /* select usb 48m clcok source */
-  Usb_Clock48mSelect(USB_CLK_HEXT);
+    /* select usb 48m clcok source */
+    Usb_Clock48mSelect(USB_CLK_HEXT);
 
-  /* enable otgfs irq */
-  nvic_irq_enable(OTG_IRQ, 0, 0);
+    /* enable otgfs irq */
+    nvic_irq_enable(OTG_IRQ, 0, 0);
 
-  /* init usb */
-  usbd_init(&otg_core_struct,
-            USB_FULL_SPEED_CORE_ID,
-            USB_ID,
-            &custom_hid_class_handler,
-            &custom_hid_desc_handler);
+    /* init usb */
+    usbd_init(&otg_core_struct,
+              USB_FULL_SPEED_CORE_ID,
+              USB_ID,
+              &custom_hid_class_handler,
+              &custom_hid_desc_handler);
+  }
+  else
+  {
+    Timer5_Init();
+  }
 
   Timer2_Init();
-
-  Timer5_Init();
 
   Timer4_Init();
 
@@ -125,7 +133,7 @@ int main(void)
   {
     TaskScheduler_Run();
 
-    if (Usb_ReadyStateGet() != USBD_RESET_EVENT)
+    if (Usb_GetUsbDetectState() == USB_UNPLUG)
     {
       sleepTime = TaskScheduler_GetTimeUntilNextTask();
       if (sleepTime > 0)

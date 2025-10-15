@@ -54,13 +54,6 @@ Lid_State_t Lid_GetState(void)
 void Lid_StatusCheckTask(void)
 {
   static bool is_debounce_check = false;
-  static uint16_t debug_count = 0;
-  if (debug_count > 100)
-  {
-    debug_count = 0;
-    printf("%d Lid check\n", Timer2_GetTick());
-  }
-  debug_count++;
 
   lid_state = (Lid_State_t)gpio_input_data_bit_read(user_hardware_settings.lid_gpio_port, user_hardware_settings.lid_gpio_pin);
 
