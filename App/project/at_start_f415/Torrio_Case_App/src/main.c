@@ -57,7 +57,7 @@ int main(void)
 
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
 
-  printf("APP Start!!!\n");
+  printf("\n\n\nAPP Start!!!\n");
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
   print_clock("AHB", crm_clocks_freq_struct.ahb_freq);
   print_clock("APB2", crm_clocks_freq_struct.apb2_freq);

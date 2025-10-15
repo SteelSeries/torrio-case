@@ -256,7 +256,7 @@
             <IarPane-34099>
                 <expressions>
                     <item>user_data_ram</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

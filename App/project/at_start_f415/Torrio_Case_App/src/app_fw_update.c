@@ -10,6 +10,7 @@
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
+#define NULL_FLASH_DATA 0xFFFFFFFF
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -232,11 +233,15 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     FW_Updateing_destAdrss += DUAL_IMG_START_ADDRESS;
     for (i = 0; i < (UPDATE_DATA_LEN / 4); ++i)
     {
-        if (flash_word_program(FW_Updateing_destAdrss, FW_UPDATE_Buffer[i]) != FLASH_OPERATE_DONE)
+        if (FW_UPDATE_Buffer[i] != NULL_FLASH_DATA)
         {
-            flash_lock();
-            return ERROR;
+            if (flash_word_program(FW_Updateing_destAdrss, FW_UPDATE_Buffer[i]) != FLASH_OPERATE_DONE)
+            {
+                flash_lock();
+                return ERROR;
+            }
         }
+
         if (FW_UPDATE_Buffer[i] != *(uint32_t *)FW_Updateing_destAdrss)
         {
             flash_lock();

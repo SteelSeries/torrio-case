@@ -8,6 +8,7 @@
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define IN_MAXPACKET_SIZE 1024
+#define NULL_FLASH_DATA 0xFFFFFFFF
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -107,10 +108,14 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
     FW_Updateing_destAdrss += APP_FLASH_START_ADDRESS;
     for (i = 0; i < (BUFFER_LEN / 4); ++i)
     {
-        if (flash_word_program(FW_Updateing_destAdrss, FW_UPDATE_Buffer[i]) != FLASH_OPERATE_DONE)
+        if (FW_UPDATE_Buffer[i] != NULL_FLASH_DATA)
         {
-            return ERROR;
+            if (flash_word_program(FW_Updateing_destAdrss, FW_UPDATE_Buffer[i]) != FLASH_OPERATE_DONE)
+            {
+                return ERROR;
+            }
         }
+        
         if (FW_UPDATE_Buffer[i] != *(uint32_t *)FW_Updateing_destAdrss)
         {
             return ERROR;
