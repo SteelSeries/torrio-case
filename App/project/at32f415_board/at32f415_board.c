@@ -205,14 +205,18 @@ void at32_board_init()
   /* configure button in at_start board */
   // at32_button_init();
 
-  if (Lid_GetState() != LID_OPEN)
-  {
-    uart_print_init(256000);
-  }
-  else
-  {
-    uart_print_init(921600);
-  }
+  /**
+   * 1. This function initializes the UART peripheral and configures
+   *    the corresponding TX pin.
+   * 2. The chosen baudrate (e.g., 2,000,000) is compatible with
+   *    system clock frequencies of 8 MHz, 24 MHz, and 144 MHz,
+   *    ensuring accurate or acceptable baud rate generation with
+   *    minimal error based on the formula:
+   *      baudrate = fPCLK / USART_BAUDR
+   *    This allows reliable high-speed communication across these
+   *    system clock configurations.
+   */
+  uart_print_init(2000000);
 
   // clkout_config();
 }

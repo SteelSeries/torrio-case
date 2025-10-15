@@ -18,6 +18,7 @@
 #include "app_fw_update.h"
 #include "file_system.h"
 #include "system_clock.h"
+#include "lid.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -44,13 +45,13 @@ int main(void)
   crm_clocks_freq_type crm_clocks_freq_struct = {0};
 
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
-  
+
   InitPinout_Init();
-  
+
   SystemClock_ClockConfigSwitch();
-  
+
   at32_board_init();
-  
+
   crm_clocks_freq_get(&crm_clocks_freq_struct);
 
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
@@ -114,6 +115,11 @@ int main(void)
     printf("add sy8809 task fail\n");
   }
 
+  if (TaskScheduler_AddTask(Lid_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add lid check task fail\n");
+  }
+
   printf("main loop start\n");
   while (1)
   {
@@ -130,6 +136,7 @@ int main(void)
         // printf("system wakeup\n");
       }
     }
+
     if (AppFwUpdata_GetResetFlag())
     {
       printf("system reset\n");

@@ -44,22 +44,18 @@ void Bootloader_BackDoorGpioInit(void)
 
     /* enable the button clock */
     crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
-    crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
 
     /* set default parameter */
     gpio_default_para_init(&gpio_init_struct);
 
     /* configure button pin as input with pull-up/pull-down */
     gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_OPEN_DRAIN;
     gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
-    gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+    gpio_init_struct.gpio_pull = GPIO_PULL_UP;
 
-    gpio_init_struct.gpio_pins = GPIO_PINS_3;
+    gpio_init_struct.gpio_pins = GPIO_PINS_10;
     gpio_init(GPIOC, &gpio_init_struct);
-
-    gpio_init_struct.gpio_pins = GPIO_PINS_1;
-    gpio_init(GPIOB, &gpio_init_struct);
 }
 
 error_status Bootloader_FlashErase(void)
@@ -149,10 +145,10 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
 void Bootloader_CmdCrcCheckHandler(uint8_t *buff)
 {
     buff[1] = FLASH_OPERATION_SUCCESS;
-    buff[2] = crc_data[LAST_CRC_INDES - 4];
-    buff[3] = crc_data[LAST_CRC_INDES - 3];
-    buff[4] = crc_data[LAST_CRC_INDES - 2];
-    buff[5] = crc_data[LAST_CRC_INDES - 1];
+    buff[2] = crc_data[gFW_BinLen - 4];
+    buff[3] = crc_data[gFW_BinLen - 3];
+    buff[4] = crc_data[gFW_BinLen - 2];
+    buff[5] = crc_data[gFW_BinLen - 1];
     buff[6] = sum_crc32;
     buff[7] = (sum_crc32 >> 8);
     buff[8] = (sum_crc32 >> 16);
@@ -170,7 +166,7 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
 {
     uint8_t command[IN_MAXPACKET_SIZE];
     uint16_t Read_Flash_len = (command[4] << 8) + command[3];
-    
+
     memcpy(command, in, IN_MAXPACKET_SIZE);
 
     for (int i = 0; i < 4; ++i)
@@ -201,7 +197,13 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
 
 bool Bootloader_CheckBackDoor(void)
 {
-    // todo: check back door state.
+    if (gpio_input_data_bit_read(GPIOC, GPIO_PINS_10) == RESET)
+    {
+        printf("back door enter\n");
+        return true;
+    }
+    // todo: check back door state, and change GPIO to PC15.
+    printf("back door exit\n");
     return false;
 }
 
@@ -237,10 +239,12 @@ bool Bootloader_CheckAppCodeComplete(void)
 
     if (null_count == 4)
     {
+        printf("CRC fail\n");
         return false;
     }
     else
     {
+        printf("CRC pass\n");
         return true;
     }
 }

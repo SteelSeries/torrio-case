@@ -34,3 +34,4 @@ typedef enum
  *************************************************************************************************/
 void Lid_GpioConfigHardware(const Lid_HardwareSettings_t *hardware_settings);
 Lid_State_t Lid_GetState(void);
+void Lid_StatusCheckTask(void);
