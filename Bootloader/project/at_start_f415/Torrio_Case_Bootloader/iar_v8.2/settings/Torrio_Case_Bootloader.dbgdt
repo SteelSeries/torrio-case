@@ -240,7 +240,7 @@
                     <item>FLASH_ReadCRC</item>
                     <item>gCurrentMode</item>
                     <item>FLASH_ReadCRC</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

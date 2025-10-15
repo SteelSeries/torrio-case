@@ -40,7 +40,6 @@ int main(void)
 
   printf("Bootloader start!!!\n");
 
-
   if (FileSystem_CheckImageCopyFlag() == SUCCESS)
   {
     if (Bootloader_CheckBackDoor() == FALSE)
@@ -49,6 +48,7 @@ int main(void)
       {
         if (gCurrentMode != BOOTLOADER_MODE)
         {
+          printf("jump to app\n");
           Bootloader_JumpToApp();
         }
       }

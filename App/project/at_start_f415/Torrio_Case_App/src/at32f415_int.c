@@ -165,12 +165,12 @@ void TMR5_GLOBAL_IRQHandler(void)
  * @param  none
  * @retval none
  */
-void EXINT0_IRQHandler(void)
+void EXINT4_IRQHandler(void)
 {
-  if (exint_interrupt_flag_get(EXINT_LINE_0) != RESET)
+  if (exint_interrupt_flag_get(EXINT_LINE_4) != RESET)
   {
     Sy8809_ReadIrqState();
-    exint_flag_clear(EXINT_LINE_0);
+    exint_flag_clear(EXINT_LINE_4);
   }
 }
 

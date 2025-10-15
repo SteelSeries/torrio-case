@@ -353,10 +353,10 @@ void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_setting
     exint_default_para_init(&exint_init_struct);
     exint_init_struct.line_enable = TRUE;
     exint_init_struct.line_mode = EXINT_LINE_INTERRUPT;
-    exint_init_struct.line_select = EXINT_LINE_0;
+    exint_init_struct.line_select = EXINT_LINE_4;
     exint_init_struct.line_polarity = EXINT_TRIGGER_FALLING_EDGE;
     exint_init(&exint_init_struct);
-    nvic_irq_enable(EXINT0_IRQn, 1, 0);
+    nvic_irq_enable(EXINT4_IRQn, 1, 0);
 }
 
 void Sy8809_ReadIrqState(void)

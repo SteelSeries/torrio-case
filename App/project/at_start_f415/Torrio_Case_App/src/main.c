@@ -2,7 +2,6 @@
  *                                         INCLUDES                                              *
  *************************************************************************************************/
 #include "at32f415_board.h"
-#include "at32f415_clock.h"
 #include "custom_hid_class.h"
 #include "custom_hid_desc.h"
 #include "usb.h"
@@ -18,6 +17,8 @@
 #include "timer4.h"
 #include "app_fw_update.h"
 #include "file_system.h"
+#include "system_clock.h"
+#include "lid.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -45,10 +46,13 @@ int main(void)
 
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
-  system_clock_config();
+  InitPinout_Init();
+
+  SystemClock_ClockConfigSwitch();
 
   at32_board_init();
 
+  // ==============================debug message==============================
   crm_clocks_freq_get(&crm_clocks_freq_struct);
 
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
@@ -69,39 +73,44 @@ int main(void)
   printf("Serial Number      : ");
   for (uint8_t i = 0; i < sizeof(data->serial_number); i++)
   {
-    printf("%02X ", data->serial_number[i]); // HEX 輸出
+    printf("%02X ", data->serial_number[i]);
   }
   printf("\n");
 
-  printf("Reserved           : %02X\n", data->reserved);
   printf("================================\n");
+  // ==============================debug message==============================
+
   FileSystem_CheckImageCopyFlag();
 
-  InitPinout_Init();
-
+  if (Usb_GetUsbDetectState() == USB_PLUG)
+  {
+    printf("system setup USB detect\n");
 #ifdef USB_LOW_POWER_WAKUP
-  Usb_LowPowerWakeupConfig();
+    Usb_LowPowerWakeupConfig();
 #endif
 
-  /* enable otgfs clock */
-  crm_periph_clock_enable(OTG_CLOCK, TRUE);
+    /* enable otgfs clock */
+    crm_periph_clock_enable(OTG_CLOCK, TRUE);
 
-  /* select usb 48m clcok source */
-  Usb_Clock48mSelect(USB_CLK_HEXT);
+    /* select usb 48m clcok source */
+    Usb_Clock48mSelect(USB_CLK_HEXT);
 
-  /* enable otgfs irq */
-  nvic_irq_enable(OTG_IRQ, 0, 0);
+    /* enable otgfs irq */
+    nvic_irq_enable(OTG_IRQ, 0, 0);
 
-  /* init usb */
-  usbd_init(&otg_core_struct,
-            USB_FULL_SPEED_CORE_ID,
-            USB_ID,
-            &custom_hid_class_handler,
-            &custom_hid_desc_handler);
+    /* init usb */
+    usbd_init(&otg_core_struct,
+              USB_FULL_SPEED_CORE_ID,
+              USB_ID,
+              &custom_hid_class_handler,
+              &custom_hid_desc_handler);
+  }
+  else
+  {
+    Timer5_Init();
+  }
 
   Timer2_Init();
-
-  Timer5_Init();
 
   Timer4_Init();
 
@@ -114,12 +123,22 @@ int main(void)
     printf("add sy8809 task fail\n");
   }
 
+  if (TaskScheduler_AddTask(Lid_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add lid check task fail\n");
+  }
+
+  if (TaskScheduler_AddTask(Usb_StatusCheckTask, 50, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add USB check task fail\n");
+  }
+
   printf("main loop start\n");
   while (1)
   {
     TaskScheduler_Run();
 
-    if (Usb_ReadyStateGet() != USBD_RESET_EVENT)
+    if (Usb_FirstSetupUsbState() == USB_UNPLUG)
     {
       sleepTime = TaskScheduler_GetTimeUntilNextTask();
       if (sleepTime > 0)
@@ -130,6 +149,7 @@ int main(void)
         // printf("system wakeup\n");
       }
     }
+
     if (AppFwUpdata_GetResetFlag())
     {
       printf("system reset\n");

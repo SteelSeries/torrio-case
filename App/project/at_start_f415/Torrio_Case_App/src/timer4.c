@@ -29,8 +29,8 @@ void Timer4_Init(void)
     gpio_init_type gpio_initstructure;
     crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
     gpio_default_para_init(&gpio_initstructure);
-    gpio_initstructure.gpio_mode = GPIO_MODE_MUX;
-    gpio_initstructure.gpio_pins = GPIO_PINS_9;
+    gpio_initstructure.gpio_mode = GPIO_MODE_OUTPUT;
+    gpio_initstructure.gpio_pins = GPIO_PINS_9 | GPIO_PINS_8;
     gpio_initstructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
     gpio_initstructure.gpio_pull = GPIO_PULL_NONE;
     gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
@@ -42,13 +42,39 @@ void Timer4_Init(void)
 
     crm_periph_clock_enable(CRM_TMR4_PERIPH_CLOCK, TRUE);
 
-    // System clock is 144 MHz
-    // Prescaler value is 9 → actual division is (9 + 1) = 10
-    // Timer clock after prescaler: 144,000,000 / 10 = 14,400,000 Hz
-    // Auto-reload value:
-    // (144,000,000 / 10) / 1000 = 14,400 → ARR = 14,400 - 1 = 14399
-    // Timer will generate an update event every 14,400 counts → 1ms interval (1000 Hz)
-    tmr_base_init(TMR4, 9, (crm_clocks_freq_struct.sclk_freq / 10000 - 1));
+    /*
+     * Determine actual timer clock frequency.
+     * Timer4 is on APB1. Per timer clock rules:
+     * - If APB1 prescaler == 1 → TMR_CLK = APB1
+     * - If APB1 prescaler > 1  → TMR_CLK = APB1 × 2
+     */
+    uint32_t pclk1 = crm_clocks_freq_struct.apb1_freq;
+    uint32_t tmr_clk;
+
+    if (CRM->cfg_bit.apb1div > 0)
+    {
+        tmr_clk = pclk1 * 2;
+    }
+    else
+    {
+        tmr_clk = pclk1;
+    }
+
+    /*
+     * Goal: Generate an update event (overflow) every 1ms → 1 kHz
+     *
+     * Strategy:
+     * - Set prescaler to divide TMR_CLK to 10 kHz → 1 tick = 100 us
+     * - Set auto-reload (ARR) = 10 (so 10 ticks = 1 ms)
+     *
+     * Timer frequency after prescaler = tmr_clk / (PSC + 1)
+     * Target: 10 kHz → PSC = (tmr_clk / 10000) - 1
+     * ARR = 10 - 1 = 9
+     */
+    uint16_t prescaler = (tmr_clk / 10000) - 1;
+    uint16_t arr = 10 - 1; // 1 ms interval
+
+    tmr_base_init(TMR4, arr, prescaler);
     tmr_cnt_dir_set(TMR4, TMR_COUNT_UP);
     tmr_clock_source_div_set(TMR4, TMR_CLOCK_DIV1);
 
