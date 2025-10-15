@@ -48,7 +48,7 @@ void Lid_GpioConfigHardware(const Lid_HardwareSettings_t *hardware_settings)
 
 Lid_State_t Lid_GetState(void)
 {
-  return lid_state;
+  return pre_lid_state;
 }
 
 void Lid_StatusCheckTask(void)

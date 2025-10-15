@@ -54,29 +54,29 @@ int main(void)
 
   // ==============================debug message==============================
   crm_clocks_freq_get(&crm_clocks_freq_struct);
-  
+
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
-  
+
   printf("APP Start!!!\n");
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
   print_clock("AHB", crm_clocks_freq_struct.ahb_freq);
   print_clock("APB2", crm_clocks_freq_struct.apb2_freq);
   print_clock("APB1", crm_clocks_freq_struct.apb1_freq);
   print_clock("ADC", crm_clocks_freq_struct.adc_freq);
-  
+
   printf("===== User Data Debug Info =====\n");
   printf("Model              : %02X\n", data->model);
   printf("Color              : %02X\n", data->color);
   printf("Shipping Flag      : %02X\n", data->shipping_flag);
   printf("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
-  
+
   printf("Serial Number      : ");
   for (uint8_t i = 0; i < sizeof(data->serial_number); i++)
   {
     printf("%02X ", data->serial_number[i]);
   }
   printf("\n");
-  
+
   printf("================================\n");
   // ==============================debug message==============================
 
@@ -128,12 +128,17 @@ int main(void)
     printf("add lid check task fail\n");
   }
 
+  if (TaskScheduler_AddTask(Usb_StatusCheckTask, 50, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add USB check task fail\n");
+  }
+
   printf("main loop start\n");
   while (1)
   {
     TaskScheduler_Run();
 
-    if (Usb_GetUsbDetectState() == USB_UNPLUG)
+    if (Usb_FirstSetupUsbState() == USB_UNPLUG)
     {
       sleepTime = TaskScheduler_GetTimeUntilNextTask();
       if (sleepTime > 0)
