@@ -52,6 +52,8 @@ int main(void)
 
   at32_board_init();
 
+  PowerControl_Init();
+
   // ==============================debug message==============================
   crm_clocks_freq_get(&crm_clocks_freq_struct);
 
@@ -116,7 +118,6 @@ int main(void)
 
   Adc_Init();
 
-  PowerControl_Init();
 
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {

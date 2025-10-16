@@ -3,6 +3,9 @@
  *************************************************************************************************/
 #include "lid.h"
 #include "task_scheduler.h"
+#include "system_state_manager.h"
+#include "task_scheduler.h"
+#include "usb.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -70,6 +73,16 @@ void Lid_StatusCheckTask(void)
     {
       pre_lid_state = lid_state;
       printf("Lid state changed to: %s\n", lid_state == LID_OPEN ? "OPEN" : "CLOSED");
+      if (pre_lid_state == LID_CLOSE)
+      {
+        if (Usb_FirstSetupUsbState() == USB_UNPLUG)
+        {
+          if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+          {
+            printf("add enter standby task fail\n");
+          }
+        }
+      }
     }
     is_debounce_check = false;
   }

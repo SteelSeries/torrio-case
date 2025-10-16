@@ -2,7 +2,8 @@
  *                                         INCLUDES                                              *
  *************************************************************************************************/
 #include "usb.h"
-#include "app_fw_update.h"
+#include "task_scheduler.h"
+#include "system_state_manager.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -103,7 +104,10 @@ void Usb_StatusCheckTask(void)
       printf("USB state changed to: %s\n", usb_detect_state == USB_PLUG ? "PLUG" : "UNPLUG");
       if (pre_usb_detect_state == USB_UNPLUG)
       {
-        AppFwUpdata_SetResetFlag(true);
+        if (TaskScheduler_AddTask(SystemStateManager_SystemResetCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+        {
+          printf("add system reset task fail\n");
+        }
       }
     }
     is_debounce_check = false;
