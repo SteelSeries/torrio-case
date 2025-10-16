@@ -20,7 +20,5 @@
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void PowerControl_EnterSleep(void);
-void PowerControl_Init(void);
-void PowerControl_EnterStandby(void);
-
+void SystemStateManager_EnterStandbyModeCheck(void);
+void SystemStateManager_SystemResetCheck(void);

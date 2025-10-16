@@ -1,10 +1,12 @@
 /*************************************************************************************************
  *                                         INCLUDES                                              *
  *************************************************************************************************/
-#include "power_control.h"
+#include "wdt.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
+#define WDT_RLD_MAX_VALUE 0x0FFF // Max reload value for 12-bit WDT_RLD register
+
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -20,53 +22,47 @@
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-void PowerControl_Init(void)
+void Wdt_Init(void)
 {
-    /* enable pwc clock */
-    crm_periph_clock_enable(CRM_PWC_PERIPH_CLOCK, TRUE);
-
-    if (pwc_flag_get(PWC_STANDBY_FLAG) != RESET)
+    if (crm_flag_get(CRM_WDT_RESET_FLAG) != RESET)
     {
-        /* wakeup from standby */
-        pwc_flag_clear(PWC_STANDBY_FLAG);
+        /* reset from wdt */
+        crm_flag_clear(CRM_WDT_RESET_FLAG);
     }
 
-    if (pwc_flag_get(PWC_WAKEUP_FLAG) != RESET)
-    {
-        /* wakeup event occurs */
-        pwc_flag_clear(PWC_WAKEUP_FLAG);
-    }
+    /* disable register write protection */
+    wdt_register_write_enable(TRUE);
+
+    /* set the wdt divider value */
+    wdt_divider_set(WDT_CLK_DIV_256);
+
+    /* set reload value
+
+     timeout = reload_value * (divider / lick_freq )
+
+     lick_freq    = 40000 Hz
+     divider      = 256
+     reload_value = 0xFFF(Max Value)
+
+     timeout = 0xFFF * (256 / 40000 ) = 26214.4ms
+    */
+    wdt_reload_value_set(WDT_RLD_MAX_VALUE);
+
+    /* reload wdt counter */
+    wdt_counter_reload();
 }
 
-void PowerControl_EnterSleep(void)
+void Wdt_Enable(void)
 {
-    __IO uint32_t index = 0;
-    __IO uint32_t systick_index = 0;
-
-    /* save systick register configuration */
-    systick_index = SysTick->CTRL;
-    systick_index &= ~((uint32_t)0xFFFFFFFE);
-
-    /* disable systick */
-    SysTick->CTRL &= (uint32_t)0xFFFFFFFE;
-
-    /* enter sleep mode */
-    pwc_sleep_mode_enter(PWC_SLEEP_ENTER_WFI);
-
-    /* restore systick register configuration */
-    {
-        uint32_t tmp = SysTick->CTRL;
-        tmp |= systick_index;
-        SysTick->CTRL = tmp;
-    }
+    /* enable wdt */
+    wdt_enable();
+    printf("set wdt enable\n");
 }
 
-void PowerControl_EnterStandby(void)
+void Wdt_CountReset(void)
 {
-    pwc_wakeup_pin_enable(PWC_WAKEUP_PIN_1, TRUE);
-    pwc_standby_mode_enter();
+    wdt_counter_reload();
 }
-
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/

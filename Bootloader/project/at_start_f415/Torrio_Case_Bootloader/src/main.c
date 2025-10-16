@@ -38,7 +38,7 @@ int main(void)
 
   Bootloader_BackDoorGpioInit();
 
-  printf("Bootloader start!!!\n");
+  printf("\n\n\nBootloader start!!!\n");
 
   if (FileSystem_CheckImageCopyFlag() == SUCCESS)
   {

@@ -1582,6 +1582,9 @@
             <name>$PROJ_DIR$\..\src\system_clock.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\system_state_manager.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
         </file>
         <file>
@@ -1598,6 +1601,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\version.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\wdt.c</name>
         </file>
     </group>
 </project>

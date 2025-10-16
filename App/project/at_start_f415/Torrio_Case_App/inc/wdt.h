@@ -20,7 +20,6 @@
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void PowerControl_EnterSleep(void);
-void PowerControl_Init(void);
-void PowerControl_EnterStandby(void);
-
+void Wdt_Init(void);
+void Wdt_Enable(void);
+void Wdt_CountReset(void);

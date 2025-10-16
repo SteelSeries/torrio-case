@@ -8,6 +8,7 @@
 #include "timer2.h"
 #include "usb.h"
 #include "lid.h"
+#include "system_state_manager.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -494,6 +495,17 @@ static void ReadNtcProcess(void)
     if (TaskScheduler_AddTask(StartWorkTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
         printf("add sy8809 read vbat task fail\n");
+    }
+
+    if (Lid_GetState() == LID_CLOSE)
+    {
+        if (Usb_FirstSetupUsbState() == USB_UNPLUG)
+        {
+            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add enter standby task fail\n");
+            }
+        }
     }
 }
 
