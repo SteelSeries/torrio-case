@@ -1246,5 +1246,8 @@
         <file>
             <name>$PROJ_DIR$\..\src\version.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\wdt.c</name>
+        </file>
     </group>
 </project>

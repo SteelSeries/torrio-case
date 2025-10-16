@@ -19,6 +19,7 @@
 #include "file_system.h"
 #include "system_clock.h"
 #include "lid.h"
+#include "wdt.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -54,6 +55,8 @@ int main(void)
 
   PowerControl_Init();
 
+  Wdt_Init();
+
   // ==============================debug message==============================
   crm_clocks_freq_get(&crm_clocks_freq_struct);
 
@@ -81,6 +84,7 @@ int main(void)
 
   printf("================================\n");
   // ==============================debug message==============================
+  Wdt_Enable();
 
   FileSystem_CheckImageCopyFlag();
 
@@ -118,7 +122,6 @@ int main(void)
 
   Adc_Init();
 
-
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
     printf("add sy8809 task fail\n");
@@ -138,6 +141,8 @@ int main(void)
   while (1)
   {
     TaskScheduler_Run();
+
+    Wdt_CountReset();
 
     if (Usb_FirstSetupUsbState() == USB_UNPLUG)
     {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>5</fileVersion>
-    <fileChecksum>2892475705</fileChecksum>
+    <fileChecksum>97864348</fileChecksum>
     <configuration>
         <name>Torrio_Case_App</name>
         <outputs>
@@ -191,6 +191,9 @@
             <file>$PROJ_DIR$\..\inc\system_state_manager.h</file>
             <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\system_state_manager.o</file>
             <file>$PROJ_DIR$\..\src\system_state_manager.c</file>
+            <file>$PROJ_DIR$\..\src\wdt.c</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\wdt.o</file>
+            <file>$PROJ_DIR$\..\inc\wdt.h</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\startup\iar\startup_at32f415.s</name>
@@ -437,7 +440,7 @@
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 36 89 18 102 66 88 37 76 137 77 141 78 81 68 115 21 90 23 111 62 25 136 113 45 67 126 17 32 140 105 143 57 91 147 22 50 28 106 96 24 119 117 128 74 43 142 72 54 133 93 184 86 71 27 59 47 92</file>
+                    <file> 36 89 18 102 66 88 37 76 137 77 141 78 81 68 115 21 90 23 111 62 25 136 113 45 67 126 17 32 140 105 143 57 91 147 22 50 28 106 96 24 119 117 128 74 43 142 72 54 133 93 184 86 71 27 59 47 92 187</file>
                 </tool>
             </inputs>
         </file>
@@ -461,7 +464,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 35 121 31 100 87 63 41 120 94 95 97 65 60 55 116 34 40 79 73 130 44 58 132 108 70 144 110 103 33 135 82 109 83 134 101 15 64 38 84 80 104 138 52 85 61 30 42 16 69 49 29 48 56 39 129 124</file>
+                    <file> 35 121 31 100 87 63 41 120 94 95 97 65 60 55 116 34 40 79 73 130 44 58 132 108 70 144 110 103 33 135 82 109 83 134 101 15 64 38 84 80 104 138 52 85 61 30 42 16 69 49 29 48 183 56 39 129 124</file>
                 </tool>
             </inputs>
         </file>
@@ -491,7 +494,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 35 121 31 87 63 41 120 95 97 65 60 55 116 34 40 79 73 130 44 58 132 108 70 144 110 103 33 135 82 109 83 134 101 15 64 38 84 80 104 138 52 85 61 131 122 30 112 125 53 42 107 69 49 46 123 29 48 127 56 39 176 98 129 124</file>
+                    <file> 35 121 31 87 63 41 120 95 97 65 60 55 116 34 40 79 73 130 44 58 132 108 70 144 110 103 33 135 82 109 83 134 101 15 64 38 84 80 104 138 52 85 61 131 122 30 112 125 53 42 107 69 49 46 123 29 48 127 56 39 176 98 129 124 188</file>
                 </tool>
             </inputs>
         </file>
@@ -1002,6 +1005,21 @@
                 <tool>
                     <name>ICCARM</name>
                     <file> 35 121 31 87 63 41 120 95 97 65 60 55 116 34 40 79 73 130 44 58 132 108 70 144 110 103 33 135 82 109 83 134 101 15 64 38 84 80 104 138 30 53 42 123 183</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\wdt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 187</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 35 121 31 87 63 41 120 95 97 65 60 55 116 34 40 79 73 130 44 58 132 108 70 144 110 103 33 135 82 109 83 134 101 15 64 38 84 80 104 138 30 42 188</file>
                 </tool>
             </inputs>
         </file>
