@@ -366,14 +366,9 @@ void Sy8809_ReadIrqState(void)
     charge_irq_flag = true;
 }
 
-void Sy8809_SetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp)
+const Sy8809_ChargeStatus_t *Sy8809_GetChargeIcStatusInfo(void)
 {
-    memcpy(&ChargeIcStatusInfo, ChargeIcStatusInfoTemp, sizeof(Sy8809_ChargeStatus_t));
-}
-
-void Sy8809_GetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp)
-{
-    memcpy(ChargeIcStatusInfoTemp, &ChargeIcStatusInfo, sizeof(Sy8809_ChargeStatus_t));
+    return &ChargeIcStatusInfo;
 }
 
 i2c_status_type Sy8809_DebugRegWrite(const uint8_t reg, const uint8_t value)

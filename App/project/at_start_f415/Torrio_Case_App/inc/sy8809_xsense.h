@@ -51,6 +51,12 @@ typedef enum
     ENXSENSE_DISABLED = 0x00,
     ENXSENSE_ENABLED = 0x40,
 } Sy8809Xsense_XsenseConfig_EnXsense_t;
+
+typedef struct
+{
+    bool is_command_read;
+    Sy8809Xsense_OutputItem_t Pending;
+} Sy8809Xsense_XsenseRead_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -59,5 +65,5 @@ typedef enum
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void Sy8809Xsense_TrigXsenseConv(void);
-void Sy8809Xsense_SetPendingXsense(Sy8809Xsense_OutputItem_t Pending);
+void Sy8809Xsense_SetPendingXsense(Sy8809Xsense_XsenseRead_t Pending_temp);
 void Sy8809Xsense_ReadXsenseProcess(void);

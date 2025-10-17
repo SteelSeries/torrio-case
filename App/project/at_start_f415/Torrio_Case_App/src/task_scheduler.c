@@ -11,6 +11,20 @@
 #define TIME_BASE_US 100U                                  // Tick duration in microseconds (100us per tick)
 #define MS_TO_TICKS(ms) ((ms) * 1000 / TIME_BASE_US)       // Convert milliseconds to ticks
 #define SEC_TO_TICKS(sec) ((sec) * 1000000 / TIME_BASE_US) // Convert seconds to ticks
+
+// UINT32_MAX is the maximum value for a 32-bit unsigned integer (4294967295)
+// TIME_BASE_US represents the time base in microseconds per tick (here, 100 us)
+//
+// The conversion macro MS_TO_TICKS(interval_ms) calculates:
+//   (interval_ms * 1000) / TIME_BASE_US
+// To avoid overflow, interval_ms * 1000 must not exceed UINT32_MAX * TIME_BASE_US
+//
+// Therefore, the maximum safe interval in milliseconds is:
+//   (UINT32_MAX / 1000) * TIME_BASE_US
+//
+// This ensures the converted tick count fits within a 32-bit unsigned integer,
+// preventing overflow and incorrect scheduling behavior.
+#define MAX_INTERVAL_MS ((UINT32_MAX / 1000) * TIME_BASE_US)
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -64,28 +78,15 @@ void TaskScheduler_Run(void)
 }
 
 TaskScheduler_TaskStatus_t TaskScheduler_AddTask(void (*func)(void),
-                                                 uint16_t interval_ticks,
+                                                 uint32_t interval_ticks,
                                                  TaskScheduler_RunMode_t runMode,
                                                  TaskScheduler_StartMode_t startMode)
 {
+    if (interval_ticks > MAX_INTERVAL_MS)
+    {
+        return TASK_INVALID_INTERVAL;
+    }
 
-    // TODO: Add safety check for interval_ticks maximum value
-    //
-    // To prevent potential overflow from MS_TO_TICKS(interval_ticks),
-    // especially when interval_ticks is too large, we define a maximum
-    // allowed interval in milliseconds (MAX_INTERVAL_MS).
-    //
-    // This protects against generating an excessively large tick count,
-    // which could cause incorrect scheduling behavior or overflow when
-    // stored in a uint32_t.
-    //
-    // MAX_INTERVAL_MS is currently set to 429,496 ms (~4.97 days), which
-    // corresponds to the maximum safe value for a uint32_t tick counter
-    // based on the current TIME_BASE_US setting (100 us per tick).
-    //
-    // Error code TASK_INVALID_INTERVAL is returned when the user tries
-    // to add a task with an interval exceeding this limit.
-    
     if (numTasks >= MAX_TASKS)
     {
         return TASK_LIST_FULL;
