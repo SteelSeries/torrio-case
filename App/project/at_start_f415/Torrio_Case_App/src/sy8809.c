@@ -9,6 +9,7 @@
 #include "usb.h"
 #include "lid.h"
 #include "system_state_manager.h"
+#include "custom_hid_class.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -373,6 +374,16 @@ void Sy8809_SetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp)
 void Sy8809_GetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp)
 {
     memcpy(ChargeIcStatusInfoTemp, &ChargeIcStatusInfo, sizeof(Sy8809_ChargeStatus_t));
+}
+
+i2c_status_type Sy8809_DebugRegWrite(const uint8_t reg, const uint8_t value)
+{
+    return I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS, reg, value);
+}
+
+void Sy8809_DebugRegRead(const uint8_t reg, uint8_t *buff)
+{
+    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, reg, buff);
 }
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
