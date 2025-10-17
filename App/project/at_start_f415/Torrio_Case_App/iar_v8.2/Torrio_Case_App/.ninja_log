@@ -176,3 +176,97 @@
 906	966	7823754399767326	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
 975	1024	7823754400364252	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
 1031	2279	0	Post-build command	f2a0cf1cac7e6110
+20	671	7823784277035043	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/at32f415_int.o	44f8134b2c788259
+3	751	7823784277781192	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/usbd_class/custom_hid_class.o	98665f7c84a7e375
+34	825	7823784278544782	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/app_fw_update.o	eb38d464f41aa881
+45	868	7823784278960852	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/i2c1.o	1f8ffcc6e0bd5770
+71	996	7823784280312579	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/init_pinout.o	f0461c5185800574
+55	1054	7823784280633884	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/Commands.o	f7fc1c7abb2f93a
+96	1148	7823784281830900	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809_xsense.o	8290f36a34c98a6c
+698	1211	7823784282458256	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/main.o	618675854bf4095d
+83	1256	7823784282910670	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809.o	5185ed4b15394836
+1273	2231	7823784292755410	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out_nochecksum	bdfa08ebf73be60a
+2306	2358	7823784294060095	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
+2367	2412	7823784294588699	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
+2418	3858	0	Post-build command	f2a0cf1cac7e6110
+3	489	7823791412740300	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809_xsense.o	8290f36a34c98a6c
+506	692	7823791414835717	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out_nochecksum	bdfa08ebf73be60a
+767	813	7823791416073830	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
+818	859	7823791416541597	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
+867	1887	0	Post-build command	f2a0cf1cac7e6110
+2	471	7823798456713382	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809_xsense.o	8290f36a34c98a6c
+486	651	7823798458566958	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out_nochecksum	bdfa08ebf73be60a
+725	771	7823798459797028	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
+777	818	7823798460262681	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
+823	1942	0	Post-build command	f2a0cf1cac7e6110
+2	1458	0	Post-build command	f2a0cf1cac7e6110
+3	130	7823842952701402	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/cmsis/startup_at32f415.o	8438e64cec58b5ee
+42	1023	7823842961702460	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_crc.o	1a73d36a2b37eecb
+30	1118	7823842962655763	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/bsp/at32f415_board.o	1288c88b95534031
+16	1174	7823842962944871	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/cmsis/system_at32f415.o	a1fbcc2fb6b6c038
+78	1375	7823842965196414	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_cmp.o	2314d275e74c7503
+1043	1417	7823842965398138	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_debug.o	e5abb573422013ad
+64	1489	7823842965862526	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_adc.o	695f0b159eeaab31
+53	1596	7823842966836056	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_can.o	d3957d48fdb939fd
+97	1659	7823842967620428	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_crm.o	70d42fa9341fb4af
+138	1690	7823842968019353	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/usbd_drivers/usbd_core.o	6cef89d5470aa625
+1137	1815	7823842969595358	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_ertc.o	553e5cbf937c4407
+1192	1870	7823842969964338	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_flash.o	61440c4935184045
+1445	1900	7823842970249336	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_exint.o	55078aade4be7828
+1402	1955	7823842970494980	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_dma.o	11aa9f1202b5cfde
+1555	2101	7823842972491185	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_sdio.o	423c74569d2ce3d5
+1681	2163	7823842973029066	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_gpio.o	623f4c710bc92cde
+1617	2189	7823842972826204	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_i2c.o	51b9c2a6aa004768
+1716	2224	7823842972913652	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_pwc.o	4e027a3737a9b67e
+1836	2278	7823842973638152	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_misc.o	10f915493b575add
+1972	2426	7823842975736072	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_wdt.o	e520c756673cbc57
+1890	2479	7823842975988594	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_usb.o	18df1f117523492f
+1919	2539	7823842976539319	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_spi.o	3195871b031b811d
+2120	2606	7823842977522081	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_usart.o	d50c6c7599abf776
+2214	2657	7823842977911680	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/usbd_class/custom_hid_desc.o	3222c846e8557389
+2246	2807	7823842979528855	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/usbd_class/custom_hid_class.o	98665f7c84a7e375
+2181	2839	7823842979687054	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_tmr.o	cecd905de35c2a38
+2441	2895	7823842979991451	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/usbd_drivers/usb_core.o	e1ffce93152493e
+2499	2956	7823842980781297	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/firmware/at32f415_wwdt.o	da4b9f9cd80c0b0b
+2563	3064	7823842982077305	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/at32f415_int.o	44f8134b2c788259
+2684	3170	7823842983203110	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/adc.o	447a519fc869e1e2
+2623	3233	7823842983693656	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/usbd_drivers/usbd_int.o	84739e7f621704d
+2829	3299	7823842984386968	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/app_fw_update.o	eb38d464f41aa881
+2299	3331	7823842984184775	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/i2c_application_library/i2c_application.o	41124d8f300ec399
+2859	3387	7823842985216889	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/usbd_drivers/usbd_sdr.o	cabb33b6bb986f51
+2975	3443	7823842985810749	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/i2c1.o	1f8ffcc6e0bd5770
+2918	3567	7823842987124616	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/Commands.o	f7fc1c7abb2f93a
+3084	3631	7823842987420696	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/lid.o	8e7d0c568518aeee
+3195	3658	7823842987533653	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/lighting.o	1a675ecf3e98477
+3321	3756	7823842988972393	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/init_pinout.o	f0461c5185800574
+3258	3819	7823842989445496	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/file_system.o	b197ca1d8b6ec5b6
+3408	3923	7823842990704041	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/system_clock.o	98a3babea7c2e07c
+3353	3957	7823842990871916	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/main.o	618675854bf4095d
+3463	4024	7823842991649233	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809_xsense.o	8290f36a34c98a6c
+3584	4057	7823842991848320	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/system_state_manager.o	15c863df3c5b255c
+3681	4156	7823842993055873	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/power_control.o	bd12aec1954c1e18
+3779	4251	7823842993929939	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/wdt.o	5c180de69e8c79ec
+3837	4292	7823842994255844	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/timer2.o	f605a570c427ee0e
+3978	4371	7823842995167200	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/timer5.o	9e3a2cab6ba50b44
+3947	4390	7823842995345236	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/usb.o	55532670fce0e893
+3649	4427	7823842995463983	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809.o	5185ed4b15394836
+4077	4464	7823842996088694	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/timer4.o	46aa9144ab261ae7
+4048	4479	7823842995927120	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/task_scheduler.o	1186fbf995bc69fd
+4175	4565	7823842997169722	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/version.o	65e8fe6737236b50
+4582	4875	7823843000310308	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out_nochecksum	bdfa08ebf73be60a
+4944	4988	7823843001474805	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
+4994	5039	7823843001975065	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
+5043	6153	0	Post-build command	f2a0cf1cac7e6110
+14	237	7823844218351572	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/version.o	65e8fe6737236b50
+3	300	7823844219000954	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/Commands.o	f7fc1c7abb2f93a
+313	476	7823844220797244	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out_nochecksum	bdfa08ebf73be60a
+539	581	7823844221878737	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
+586	629	7823844222347076	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
+635	1734	0	Post-build command	f2a0cf1cac7e6110
+24	730	7823846882755660	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/version.o	65e8fe6737236b50
+13	755	7823846882900971	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809_xsense.o	8290f36a34c98a6c
+3	807	7823846883016232	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/Commands.o	f7fc1c7abb2f93a
+832	1047	7823846886027723	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out_nochecksum	bdfa08ebf73be60a
+1127	1185	7823846887428737	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
+1192	1241	7823846888010220	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
+1248	2501	0	Post-build command	f2a0cf1cac7e6110

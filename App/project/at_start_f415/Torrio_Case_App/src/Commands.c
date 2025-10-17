@@ -42,6 +42,7 @@ static Command_Status_t RecoveryAndReset(const uint8_t command[USB_RECEIVE_LEN])
 static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t Sy8809DebugRegReadCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t Sy8809DebugRegWriteCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN]);
@@ -71,6 +72,7 @@ static const cmd_handler_t handler_table[] =
         // debug
         {.op = DEBUG_CUSTOM_OP, .read = HandleNoop, .write = DebugCommand},
         {.op = DEBUG_SY8809_OP, .read = Sy8809DebugRegReadCommand, .write = Sy8809DebugRegWriteCommand},
+        {.op = DEBUG_SY8809_XSENSE_OP, .read = Sy8809DebugXsenserReadCommand, .write = HandleNoop},
 
         // factory
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
@@ -208,6 +210,19 @@ static Command_Status_t Sy8809DebugRegWriteCommand(const uint8_t command[USB_REC
 {
     uint8_t buff[] = {DEBUG_SY8809_OP, Sy8809_DebugRegWrite(command[1], command[2])};
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_RECEIVE_LEN])
+{
+    if ((command[1] >= SY8809_XSENSE_NTC) && (command[1] <= SY8809_XSENSE_VBIN))
+    {
+        Sy8809Xsense_SetPendingXsense((Sy8809Xsense_OutputItem_t)command[1]);
+        if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+        {
+            printf("add sy8809 trig xsense conv task fail\n");
+        }
+    }
     return COMMAND_STATUS_SUCCESS;
 }
 

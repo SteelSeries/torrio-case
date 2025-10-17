@@ -8,6 +8,7 @@
 #include "sy8809.h"
 #include "adc.h"
 #include "custom_hid_class.h"
+#include "Commands.h"
 #include "usb.h"
 
 /*************************************************************************************************
@@ -80,20 +81,19 @@ void Sy8809Xsense_ReadXsenseProcess(void)
     printf("[%s]\n", __func__);
     uint16_t adc_voltage_mv = 0;
     uint16_t adc_raw = 0;
-    uint8_t usb_report_buff[4] = {0x00};
-    Adc_GetAvgRawAndVoltage(&adc_voltage_mv, &adc_raw);
+    uint8_t usb_report_buff[5] = {0x00};
+    Adc_GetAvgRawAndVoltage(&adc_raw, &adc_voltage_mv);
 
     switch (pending_xsense)
     {
     case SY8809_XSENSE_VBAT:
     {
         // Todo: check battery level and conversion to percentage.
-        usb_report_buff[0] = (uint8_t)(adc_raw >> 8);
+        usb_report_buff[0] = DEBUG_SY8809_XSENSE_OP | COMMAND_READ_FLAG;
         usb_report_buff[1] = (uint8_t)adc_raw;
-        usb_report_buff[2] = (uint8_t)(adc_voltage_mv >> 8);
+        usb_report_buff[2] = (uint8_t)(adc_raw >> 8);
         usb_report_buff[3] = (uint8_t)adc_voltage_mv;
-
-        custom_hid_class_send_report(&otg_core_struct.dev, usb_report_buff, sizeof(usb_report_buff));
+        usb_report_buff[4] = (uint8_t)(adc_voltage_mv >> 8);
         break;
     }
 
@@ -104,15 +104,16 @@ void Sy8809Xsense_ReadXsenseProcess(void)
     case SY8809_XSENSE_IVIN:
     case SY8809_XSENSE_VBIN:
     {
-        usb_report_buff[0] = (uint8_t)(adc_raw >> 8);
+        usb_report_buff[0] = DEBUG_SY8809_XSENSE_OP | COMMAND_READ_FLAG;
         usb_report_buff[1] = (uint8_t)adc_raw;
-        usb_report_buff[2] = (uint8_t)(adc_voltage_mv >> 8);
+        usb_report_buff[2] = (uint8_t)(adc_raw >> 8);
         usb_report_buff[3] = (uint8_t)adc_voltage_mv;
+        usb_report_buff[4] = (uint8_t)(adc_voltage_mv >> 8);
 
-        custom_hid_class_send_report(&otg_core_struct.dev, usb_report_buff, sizeof(usb_report_buff));
         break;
     }
     }
+    custom_hid_class_send_report(&otg_core_struct.dev, usb_report_buff, sizeof(usb_report_buff));
 
     if (TaskScheduler_AddTask(XsenseClear, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
