@@ -10,7 +10,9 @@
 #include "lid.h"
 #include "system_state_manager.h"
 #include "custom_hid_class.h"
+#include "battery.h"
 #include <string.h>
+
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -507,11 +509,16 @@ static void ReadNtcProcess(void)
     {
         if (Usb_FirstSetupUsbState() == USB_UNPLUG)
         {
-            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
                 printf("add enter standby task fail\n");
             }
         }
+    }
+
+    if (TaskScheduler_AddTask(Battery_UpdateStatusTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        printf("add battery status update task fail\n");
     }
 }
 

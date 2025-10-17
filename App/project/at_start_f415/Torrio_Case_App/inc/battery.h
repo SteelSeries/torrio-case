@@ -22,3 +22,4 @@
  *************************************************************************************************/
 void Battery_UpdateBatteryStatus(uint16_t vbat_voltage);
 uint8_t Battery_GetBatteryPercent(void);
+void Battery_UpdateStatusTask(void);

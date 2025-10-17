@@ -111,23 +111,20 @@ void Sy8809Xsense_ReadXsenseProcess(void)
     {
     case SY8809_XSENSE_VBAT:
     {
-        // if (is_xsense_pending_command_read == true)
-        // {
-        //     is_xsense_pending_command_read = false;
-        //     usb_report_buff[0] = DEBUG_SY8809_XSENSE_OP | COMMAND_READ_FLAG;
-        //     usb_report_buff[1] = (uint8_t)adc_raw;
-        //     usb_report_buff[2] = (uint8_t)(adc_raw >> 8);
-        //     usb_report_buff[3] = (uint8_t)adc_voltage_mv;
-        //     usb_report_buff[4] = (uint8_t)(adc_voltage_mv >> 8);
-        //     custom_hid_class_send_report(&otg_core_struct.dev, usb_report_buff, sizeof(usb_report_buff));
-        // }
-        // else
-        // {
-        Battery_UpdateBatteryStatus(adc_voltage_mv);
-        usb_report_buff[0] = Battery_GetBatteryPercent();
-        custom_hid_class_send_report(&otg_core_struct.dev, usb_report_buff, sizeof(usb_report_buff));
-
-        // }
+        if (is_xsense_pending_command_read == true)
+        {
+            is_xsense_pending_command_read = false;
+            usb_report_buff[0] = DEBUG_SY8809_XSENSE_OP | COMMAND_READ_FLAG;
+            usb_report_buff[1] = (uint8_t)adc_raw;
+            usb_report_buff[2] = (uint8_t)(adc_raw >> 8);
+            usb_report_buff[3] = (uint8_t)adc_voltage_mv;
+            usb_report_buff[4] = (uint8_t)(adc_voltage_mv >> 8);
+            custom_hid_class_send_report(&otg_core_struct.dev, usb_report_buff, sizeof(usb_report_buff));
+        }
+        else
+        {
+            Battery_UpdateBatteryStatus(adc_voltage_mv);
+        }
         break;
     }
 

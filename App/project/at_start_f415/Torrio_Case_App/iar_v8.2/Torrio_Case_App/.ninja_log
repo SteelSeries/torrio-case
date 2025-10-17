@@ -315,3 +315,15 @@
 1717	1784	7823954564130614	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
 1794	1864	7823954564870578	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
 1876	3606	0	Post-build command	f2a0cf1cac7e6110
+3	780	7823971016618237	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/battery.o	848fb3a18ff43076
+28	1053	7823971019360473	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809_xsense.o	8290f36a34c98a6c
+16	1139	7823971020177692	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/sy8809.o	5185ed4b15394836
+1170	1461	7823971023522050	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out_nochecksum	d4527838c96fc054
+1559	1620	7823971025149037	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
+1629	1688	7823971025830546	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
+1694	3132	0	Post-build command	f2a0cf1cac7e6110
+3	279	7823972409828940	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Obj/user/battery.o	848fb3a18ff43076
+298	549	7823972412567869	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out_nochecksum	d4527838c96fc054
+624	674	7823972413831784	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.out	d756a01c21fd179d
+680	730	7823972414404663	C:/Users/timmy.tien/Documents/Torrio_Case_gitIserver/App/project/at_start_f415/Torrio_Case_App/iar_v8.2/Torrio_Case_App/Exe/Torrio_Case_App.bin	e4e7b5b85f1af325
+735	2002	0	Post-build command	f2a0cf1cac7e6110
