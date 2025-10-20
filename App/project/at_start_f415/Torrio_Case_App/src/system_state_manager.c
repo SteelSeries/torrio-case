@@ -9,6 +9,8 @@
 #include "battery.h"
 #include "Commands.h"
 #include "sy8809.h"
+#include "lid.h"
+#include "task_scheduler.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -52,6 +54,31 @@ void SystemStateManager_ReadBatteryAndNtcHandle(void)
     // Todo: need add buds battery and NTC data.
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
+
+void SystemStateManager_SystemStartWork(void)
+{
+    if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        printf("add sy8809 read vbat task fail\n");
+    }
+
+    if (Lid_GetState() == LID_CLOSE)
+    {
+        if (Usb_FirstSetupUsbState() == USB_UNPLUG)
+        {
+            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add enter standby task fail\n");
+            }
+        }
+    }
+
+    if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        printf("add battery status update task fail\n");
+    }
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/

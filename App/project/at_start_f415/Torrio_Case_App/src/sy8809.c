@@ -278,7 +278,6 @@ static void ConfigBudDetectResistPin(confirm_state enable);
 static void StartChipModeCheck(void);
 static void FirstReadVbatProcess(void);
 static void ReadNtcProcess(void);
-static void StartWorkTask(void);
 static void UpdateTableByPowerSource(void);
 static void UpdateStatusRegisters(void);
 static void CheckNtcOverTempe(void);
@@ -382,6 +381,21 @@ i2c_status_type Sy8809_DebugRegWrite(const uint8_t reg, const uint8_t value)
 void Sy8809_DebugRegRead(const uint8_t reg, uint8_t *buff)
 {
     I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, reg, buff);
+}
+
+void Sy8809_StartWorkTask(void)
+{
+    if (charge_irq_flag == true)
+    {
+        printf("charge_irq_flag detected \n");
+        charge_irq_flag = false;
+        UpdateTableByPowerSource();
+    }
+
+    if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        printf("add sy8809 working task fail\n");
+    }
 }
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
@@ -521,41 +535,13 @@ static void ReadNtcProcess(void)
 {
     printf("[%s]\n", __func__);
 
-    // Todo: read NTC Process
-    if (TaskScheduler_AddTask(StartWorkTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
-    {
-        printf("add sy8809 read vbat task fail\n");
-    }
+    UpdateStatusRegisters();
 
-    if (Lid_GetState() == LID_CLOSE)
-    {
-        if (Usb_FirstSetupUsbState() == USB_UNPLUG)
-        {
-            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
-            {
-                printf("add enter standby task fail\n");
-            }
-        }
-    }
+    CheckNtcOverTempe();
 
-    if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    if (TaskScheduler_AddTask(SystemStateManager_SystemStartWork, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-        printf("add battery status update task fail\n");
-    }
-}
-
-static void StartWorkTask(void)
-{
-    if (charge_irq_flag == true)
-    {
-        printf("charge_irq_flag detected \n");
-        charge_irq_flag = false;
-        UpdateTableByPowerSource();
-    }
-
-    if (TaskScheduler_AddTask(StartWorkTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
-    {
-        printf("add sy8809 working task fail\n");
+        printf("add system start work task fail\n");
     }
 }
 
@@ -618,6 +604,10 @@ static void UpdateStatusRegisters(void)
     for (size_t i = 0; i < sizeof(sy8809_debug_read_reg_table); i++)
     {
         I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff);
+        if ((i % 10) == 0)
+        {
+            printf("\n");
+        }
         printf("%02X:%02X ", sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff[0]);
     }
     printf("\n");
@@ -634,7 +624,8 @@ static void CheckNtcOverTempe(void)
         if ((Lid_GetState() == LID_OPEN) &&
             (Usb_GetUsbDetectState() == USB_UNPLUG))
         {
-            // Todo: over tempetrue system enter suspend state.
+            printf("NTC over temptrue enter standby mode\n");
+            SystemStateManager_EnterStandbyModeCheck();
         }
     }
     else
