@@ -194,15 +194,6 @@ static Command_Status_t Sy8809DebugRegReadCommand(const uint8_t command[USB_RECE
     Sy8809_DebugRegRead(command[1], reg_ret_buff);
     uint8_t buff[] = {DEBUG_SY8809_OP | COMMAND_READ_FLAG, reg_ret_buff[0]};
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
-
-    // if ((command[1] >= SY8809_XSENSE_NTC) && (command[1] <= SY8809_XSENSE_VBIN))
-    // {
-    //     Sy8809Xsense_SetPendingXsense((Sy8809Xsense_OutputItem_t)command[1]);
-    //     if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
-    //     {
-    //         printf("add sy8809 trig xsense conv task fail\n");
-    //     }
-    // }
     return COMMAND_STATUS_SUCCESS;
 }
 
@@ -217,7 +208,10 @@ static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_
 {
     if ((command[1] >= SY8809_XSENSE_NTC) && (command[1] <= SY8809_XSENSE_VBIN))
     {
-        Sy8809Xsense_SetPendingXsense((Sy8809Xsense_OutputItem_t)command[1]);
+        Sy8809Xsense_XsenseRead_t Pending_temp = {0};
+        Pending_temp.is_command_read = true;
+        Pending_temp.Pending = (Sy8809Xsense_OutputItem_t)command[1];
+        Sy8809Xsense_SetPendingXsense(Pending_temp);
         if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
             printf("add sy8809 trig xsense conv task fail\n");

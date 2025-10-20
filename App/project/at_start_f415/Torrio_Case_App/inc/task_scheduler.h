@@ -30,6 +30,7 @@ typedef enum
     TASK_LIST_FULL,        // Task list is full
     TASK_ALREADY_EXISTS,   // Task already exists, not added again
     TASK_REMOVE_NOT_FOUND, // Task not found in the list
+    TASK_INVALID_INTERVAL, // Interval value is invalid (too large or out of range)
 } TaskScheduler_TaskStatus_t;
 
 /*************************************************************************************************
@@ -42,7 +43,7 @@ typedef enum
 void TaskScheduler_Run(void);
 TaskScheduler_TaskStatus_t TaskScheduler_RemoveTask(void (*func)(void));
 TaskScheduler_TaskStatus_t TaskScheduler_AddTask(void (*func)(void),
-                                                 uint16_t interval_ticks,
+                                                 uint32_t interval_ticks,
                                                  TaskScheduler_RunMode_t runMode,
                                                  TaskScheduler_StartMode_t startMode);
 uint32_t TaskScheduler_GetTimeUntilNextTask(void);

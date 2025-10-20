@@ -10,7 +10,10 @@
 #include "lid.h"
 #include "system_state_manager.h"
 #include "custom_hid_class.h"
+#include "battery.h"
+#include "sy8809_xsense.h"
 #include <string.h>
+
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -273,7 +276,7 @@ static bool match_table(const uint8_t tbl[][2], const uint8_t *read_values);
 static void DetectCurrentTable(void);
 static void ConfigBudDetectResistPin(confirm_state enable);
 static void StartChipModeCheck(void);
-static void ReadVbatProcess(void);
+static void FirstReadVbatProcess(void);
 static void ReadNtcProcess(void);
 static void StartWorkTask(void);
 static void UpdateTableByPowerSource(void);
@@ -366,14 +369,9 @@ void Sy8809_ReadIrqState(void)
     charge_irq_flag = true;
 }
 
-void Sy8809_SetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp)
+const Sy8809_ChargeStatus_t *Sy8809_GetChargeIcStatusInfo(void)
 {
-    memcpy(&ChargeIcStatusInfo, ChargeIcStatusInfoTemp, sizeof(Sy8809_ChargeStatus_t));
-}
-
-void Sy8809_GetChargeIcStatusInfo(Sy8809_ChargeStatus_t *ChargeIcStatusInfoTemp)
-{
-    memcpy(ChargeIcStatusInfoTemp, &ChargeIcStatusInfo, sizeof(Sy8809_ChargeStatus_t));
+    return &ChargeIcStatusInfo;
 }
 
 i2c_status_type Sy8809_DebugRegWrite(const uint8_t reg, const uint8_t value)
@@ -466,14 +464,14 @@ static void StartChipModeCheck(void)
             (Usb_GetUsbDetectState() == USB_PLUG))
         {
             SettingRegTable5H();
-            if (TaskScheduler_AddTask(ReadVbatProcess, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+            if (TaskScheduler_AddTask(FirstReadVbatProcess, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
             {
                 printf("add sy8809 delay 100ms read vbat task fail\n");
             }
         }
         else
         {
-            if (TaskScheduler_AddTask(ReadVbatProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            if (TaskScheduler_AddTask(FirstReadVbatProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
                 printf("add sy8809 read vbat task fail\n");
             }
@@ -489,15 +487,36 @@ static void StartChipModeCheck(void)
     }
 }
 
-static void ReadVbatProcess(void)
+static void FirstReadVbatProcess(void)
 {
-    printf("[%s]\n", __func__);
-    // Todo: read vbat Process
-    if (TaskScheduler_AddTask(ReadNtcProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    static bool first_set_read_vbat = false;
+
+    if (Battery_GetBatteryPercent() == BATTERY_UNKNOWN_LEVEL)
     {
-        printf("add sy8809 read vbat task fail\n");
+        if (first_set_read_vbat == false)
+        {
+            printf("[%s]\n", __func__);
+            first_set_read_vbat = true;
+            if (TaskScheduler_AddTask(Sy8809Xsense_FirstXsenseConvVbat, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add sy8809 trig xsense conv task fail\n");
+            }
+        }
+
+        if (TaskScheduler_AddTask(FirstReadVbatProcess, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+        {
+            printf("add sy8809 read vbat task fail\n");
+        }
+    }
+    else
+    {
+        if (TaskScheduler_AddTask(ReadNtcProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+        {
+            printf("add sy8809 read vbat task fail\n");
+        }
     }
 }
+
 static void ReadNtcProcess(void)
 {
     printf("[%s]\n", __func__);
@@ -512,11 +531,16 @@ static void ReadNtcProcess(void)
     {
         if (Usb_FirstSetupUsbState() == USB_UNPLUG)
         {
-            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
                 printf("add enter standby task fail\n");
             }
         }
+    }
+
+    if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        printf("add battery status update task fail\n");
     }
 }
 
