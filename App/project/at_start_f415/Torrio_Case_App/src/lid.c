@@ -72,14 +72,14 @@ void Lid_StatusCheckTask(void)
     if (lid_state != pre_lid_state)
     {
       pre_lid_state = lid_state;
-      printf("Lid state changed to: %s\n", lid_state == LID_OPEN ? "OPEN" : "CLOSED");
+      DEBUG_PRINT("Lid state changed to: %s\n", lid_state == LID_OPEN ? "OPEN" : "CLOSED");
       if (pre_lid_state == LID_CLOSE)
       {
         if (Usb_FirstSetupUsbState() == USB_UNPLUG)
         {
           if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
           {
-            printf("add enter standby task fail\n");
+            DEBUG_PRINT("add enter standby task fail\n");
           }
         }
       }
