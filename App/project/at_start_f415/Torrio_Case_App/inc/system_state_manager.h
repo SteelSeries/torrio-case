@@ -22,3 +22,4 @@
  *************************************************************************************************/
 void SystemStateManager_EnterStandbyModeCheck(void);
 void SystemStateManager_SystemResetCheck(void);
+void SystemStateManager_ReadBatteryAndNtcHandle(void);

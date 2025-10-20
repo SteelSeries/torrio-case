@@ -10,6 +10,7 @@
 #include "app_fw_update.h"
 #include "file_system.h"
 #include "sy8809.h"
+#include "system_state_manager.h"
 #include <stdio.h>
 #include <string.h>
 /*************************************************************************************************
@@ -50,6 +51,7 @@ static Command_Status_t GetSerialNumber(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -77,6 +79,7 @@ static const cmd_handler_t handler_table[] =
         // factory
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
         {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
+        {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
 };
 
 /*************************************************************************************************
@@ -264,9 +267,6 @@ static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN])
             {
                 printf("add CRC check task fail\n");
             }
-            // uint8_t buff[10] = {0x00};
-            // AppFwUpdate_CmdCrcCheckHandler(buff);
-            // custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -416,6 +416,15 @@ static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIV
             break;
         }
         }
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN])
+{
+    if (TaskScheduler_AddTask(SystemStateManager_ReadBatteryAndNtcHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        printf("add read battery and NTC task fail\n");
     }
     return COMMAND_STATUS_SUCCESS;
 }

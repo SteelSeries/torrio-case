@@ -28,10 +28,12 @@
 #define INTERNAL_USB_SUSPEND_OP     0x0CU // USB entered suspend mode. Lower power usage
 #define INTERNAL_USB_RESUME_OP      0x0DU // after suspension, resume from device received
 
+// factory
+#define FAC_GET_BATTERY_AND_NTC     0x72 // factory settings
+
 // factory settings
 #define FAC_SERIAL_OP               0x13 // factory settings
 #define FAC_MODEL_COLOR_SPIN_OP     0x6D // factory settings
-
 
 #define NO_OP                       0x00U // command module
 
