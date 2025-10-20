@@ -75,7 +75,7 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_CUSTOM_OP, .read = HandleNoop, .write = DebugCommand},
         {.op = DEBUG_SY8809_OP, .read = Sy8809DebugRegReadCommand, .write = Sy8809DebugRegWriteCommand},
         {.op = DEBUG_SY8809_XSENSE_OP, .read = Sy8809DebugXsenserReadCommand, .write = HandleNoop},
-	{.op = DEBUG_LEDRGB_OP, .read = HandleNoop, .write = handle_LEDRGB_debug_command},
+	    {.op = DEBUG_LEDRGB_OP, .read = HandleNoop, .write = handle_LEDRGB_debug_command},
 
         // factory
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
@@ -434,7 +434,14 @@ static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_C
         Lighting_LEDOnOffSetting(command[2], command[3], command[4]);
         break;
     }
-
+    case Left_Earbud:
+    {
+        break;                   
+    }
+    case Right_Earbud:
+    {
+        break;                   
+    }
     default:
         break;
     }
