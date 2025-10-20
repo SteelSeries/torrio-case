@@ -32,7 +32,7 @@
  *************************************************************************************************/
 void SystemStateManager_EnterStandbyModeCheck(void)
 {
-    printf("enter standby\n");
+    DEBUG_PRINT("enter standby\n");
     PowerControl_EnterStandby();
 }
 
@@ -59,7 +59,7 @@ void SystemStateManager_SystemStartWork(void)
 {
     if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-        printf("add sy8809 read vbat task fail\n");
+        DEBUG_PRINT("add sy8809 read vbat task fail\n");
     }
 
     if (Lid_GetState() == LID_CLOSE)
@@ -68,14 +68,14 @@ void SystemStateManager_SystemStartWork(void)
         {
             if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                printf("add enter standby task fail\n");
+                DEBUG_PRINT("add enter standby task fail\n");
             }
         }
     }
 
     if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
-        printf("add battery status update task fail\n");
+        DEBUG_PRINT("add battery status update task fail\n");
     }
 }
 

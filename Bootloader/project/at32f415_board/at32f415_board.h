@@ -98,6 +98,12 @@ typedef enum
 #define USER_BUTTON_PORT                 GPIOA
 #define USER_BUTTON_CRM_CLK              CRM_GPIOA_PERIPH_CLOCK
 
+#ifdef DEBUG
+#define DEBUG_PRINT(...) printf(__VA_ARGS__)
+#else
+#define DEBUG_PRINT(...) ((void)0)
+#endif
+
 /**
   * @}
   */

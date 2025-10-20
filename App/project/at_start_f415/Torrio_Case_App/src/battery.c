@@ -44,11 +44,11 @@ void Battery_UpdateStatusTask(void)
     Sy8809Xsense_SetPendingXsense(Pending_temp);
     if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-        printf("add sy8809 trig xsense conv task fail\n");
+        DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
     }
     if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
-        printf("add battery status update task fail\n");
+        DEBUG_PRINT("add battery status update task fail\n");
     }
 }
 
@@ -67,8 +67,8 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
     uint16_t Case_VBAT_percent = 0;
     adc_convert_to_voltage = vbat_voltage * 4;
-    printf("battery calculate start\n");
-    printf("Voltage:%d\n", adc_convert_to_voltage);
+    DEBUG_PRINT("battery calculate start\n");
+    DEBUG_PRINT("Voltage:%d\n", adc_convert_to_voltage);
     if (((charge_status->check_reg_state.reg_0x12 & SY8809_0X12_CASE_BATT_CHARGE_COMPLETE) == SY8809_0X12_CASE_BATT_CHARGE_COMPLETE) &&
         (Usb_GetUsbDetectState() == USB_PLUG))
     // ((Usb_GetUsbDetectState() == USB_PLUG) || (QI_Charge_state == QI_CONTACT)))
@@ -135,7 +135,7 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
             }
         }
     }
-    printf("percent:%d\n", pre_Case_VBAT_percent);
+    DEBUG_PRINT("percent:%d\n", pre_Case_VBAT_percent);
 }
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *

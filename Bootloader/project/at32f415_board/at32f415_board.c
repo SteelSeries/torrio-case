@@ -79,10 +79,12 @@ static __IO uint32_t fac_ms;
  #endif
 #endif
 
+#ifdef DEBUG
 #if defined (__GNUC__) && !defined (__clang__)
   #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
   #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif
 #endif
 
 /**
@@ -90,6 +92,7 @@ static __IO uint32_t fac_ms;
   * @param  none
   * @retval none
   */
+#ifdef DEBUG
 PUTCHAR_PROTOTYPE
 {
 #if !defined (__GNUC__) || defined (__clang__)
@@ -100,7 +103,9 @@ PUTCHAR_PROTOTYPE
   while(usart_flag_get(PRINT_UART, USART_TDC_FLAG) == RESET);
   return ch;
 }
+#endif
 
+#ifdef DEBUG
 #if (defined (__GNUC__) && !defined (__clang__)) || (defined (__ICCARM__))
 #if defined (__GNUC__) && !defined (__clang__)
 int _write(int fd, char *pbuffer, int size)
@@ -120,12 +125,14 @@ int __write(int fd, char *pbuffer, int size)
   return size;
 }
 #endif
+#endif
 
 /**
   * @brief  initialize uart
   * @param  baudrate: uart baudrate
   * @retval none
   */
+#ifdef DEBUG
 void uart_print_init(uint32_t baudrate)
 {
   gpio_init_type gpio_init_struct;
@@ -153,6 +160,7 @@ void uart_print_init(uint32_t baudrate)
   usart_transmitter_enable(PRINT_UART, TRUE);
   usart_enable(PRINT_UART, TRUE);
 }
+#endif
 
 /**
   * @brief  board initialize interface init led and button
@@ -171,7 +179,9 @@ void at32_board_init()
   // at32_led_off(LED2);
   // at32_led_off(LED3);
   // at32_led_off(LED4);
+#ifdef DEBUG
   uart_print_init(2000000);
+#endif
 
   /* configure button in at_start board */
   // at32_button_init();

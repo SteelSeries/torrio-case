@@ -217,7 +217,7 @@ static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_
         Sy8809Xsense_SetPendingXsense(Pending_temp);
         if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
-            printf("add sy8809 trig xsense conv task fail\n");
+            DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -231,7 +231,7 @@ static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN])
         {
             if (TaskScheduler_AddTask(AppFwUpdate_CmdEraseHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                printf("add fw update erase task fail\n");
+                DEBUG_PRINT("add fw update erase task fail\n");
             }
         }
     }
@@ -249,7 +249,7 @@ static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN])
             AppFwUpdata_UsbReceiveData(Temp_buffer, USB_RECEIVE_LEN);
             if (TaskScheduler_AddTask(AppFwUpdate_CmdWriteFlashHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                printf("add fw update write task fail\n");
+                DEBUG_PRINT("add fw update write task fail\n");
             }
         }
     }
@@ -265,7 +265,7 @@ static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN])
 
             if (TaskScheduler_AddTask(AppFwUpdate_CmdCrcCheckHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                printf("add CRC check task fail\n");
+                DEBUG_PRINT("add CRC check task fail\n");
             }
         }
     }
@@ -424,7 +424,7 @@ static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEI
 {
     if (TaskScheduler_AddTask(SystemStateManager_ReadBatteryAndNtcHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-        printf("add read battery and NTC task fail\n");
+        DEBUG_PRINT("add read battery and NTC task fail\n");
     }
     return COMMAND_STATUS_SUCCESS;
 }
