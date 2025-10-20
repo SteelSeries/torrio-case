@@ -93,6 +93,21 @@ void Sy8809Xsense_TrigXsenseConv(void)
     }
 }
 
+void Sy8809Xsense_FirstXsenseConvVbat(void)
+{
+    printf("[%s]start\n", __func__);
+
+    pending_xsense = SY8809_XSENSE_VBAT;
+    is_xsense_pending_command_read = false;
+    ConfigXsenseOutput(pending_xsense);
+
+    // Since the device is not charging in this state, it's sufficient to wait 200ms before triggering the ADC to sample VBAT
+    if (TaskScheduler_AddTask(Timer4_AdcTrigStart, WAIT_8809_XSENSE_STABLE_TIMER, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        printf("add adc trig task fail\n");
+    }
+}
+
 void Sy8809Xsense_SetPendingXsense(Sy8809Xsense_XsenseRead_t Pending_temp)
 {
     pending_xsense = Pending_temp.Pending;
@@ -328,7 +343,6 @@ static void SetXsenseOutputVbin(void)
     I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_VIN_DIV8));
-    ;
 }
 
 static void SetXsenseReset(void)

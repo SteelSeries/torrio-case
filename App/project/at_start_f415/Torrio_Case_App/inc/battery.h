@@ -8,7 +8,10 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-
+#define BATTERY_UNKNOWN_LEVEL 0xFFU
+// Delay interval for battery status update task in milliseconds.
+// This task runs every 120 seconds to read and update battery level.
+#define BATTERY_TASK_UPDATE_INTERVAL_MS 120000U
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/

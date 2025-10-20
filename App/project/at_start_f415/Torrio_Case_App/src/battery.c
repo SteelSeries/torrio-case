@@ -13,9 +13,6 @@
 #define CASE_MAX_VBAT 4340
 #define CASE_MIN_VBAT 3500
 #define SY8809_0X12_CASE_BATT_CHARGE_COMPLETE 0x03
-// Delay interval for battery status update task in milliseconds.
-// This task runs every 120 seconds to read and update battery level.
-#define BATTERY_TASK_UPDATE_INTERVAL_MS 120000U
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -30,7 +27,7 @@ static const uint16_t battery_voltage_table[] = {3510, 3590, 3610, 3630, 3650,
                                                  3800, 3840, 3880, 3920, 3980,
                                                  4030, 4080, 4140, 4200, 4250,
                                                  CASE_MAX_VBAT};
-static uint8_t pre_Case_VBAT_percent = 0;
+static uint8_t pre_Case_VBAT_percent = BATTERY_UNKNOWN_LEVEL;
 
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
@@ -105,18 +102,28 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
             Case_VBAT_percent = 1;
         }
 
-        if (Usb_GetUsbDetectState() == USB_PLUG)
+        // Handle first-time initialization case
+        if (pre_Case_VBAT_percent == BATTERY_UNKNOWN_LEVEL)
         {
-            // The battery always increases when charging
-            if ((Case_VBAT_percent > pre_Case_VBAT_percent) && ((Case_VBAT_percent - pre_Case_VBAT_percent) < 127))
+            // On first boot, allow pre_Case_VBAT_percent to be set regardless of USB state
+            pre_Case_VBAT_percent = Case_VBAT_percent;
+        }
+        else if (Usb_GetUsbDetectState() == USB_PLUG)
+        {
+            // Battery should only increase while charging
+            // Only update if the new percentage is greater and within a valid change range
+            if ((Case_VBAT_percent > pre_Case_VBAT_percent) &&
+                ((Case_VBAT_percent - pre_Case_VBAT_percent) < 127))
             {
                 pre_Case_VBAT_percent = Case_VBAT_percent;
             }
         }
         else
         {
-            // The battery will always decrease when not charging.
-            if ((pre_Case_VBAT_percent > Case_VBAT_percent) && ((pre_Case_VBAT_percent - Case_VBAT_percent) < 127))
+            // Battery should only decrease while discharging
+            // Only update if the new percentage is lower and within a valid change range
+            if ((pre_Case_VBAT_percent > Case_VBAT_percent) &&
+                ((pre_Case_VBAT_percent - Case_VBAT_percent) < 127))
             {
                 pre_Case_VBAT_percent = Case_VBAT_percent;
             }

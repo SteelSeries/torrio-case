@@ -195,7 +195,7 @@ void DMA1_Channel1_IRQHandler(void)
     dma_flag_clear(DMA1_FDT1_FLAG);
     Timer4_AdcTrigStop();
 
-    if (TaskScheduler_AddTask(Sy8809Xsense_ReadXsenseProcess, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    if (TaskScheduler_AddTask(Sy8809Xsense_ReadXsenseProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
       printf("add ReadXsenseProcess task fail\n");
     }

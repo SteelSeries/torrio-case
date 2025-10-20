@@ -67,3 +67,4 @@ typedef struct
 void Sy8809Xsense_TrigXsenseConv(void);
 void Sy8809Xsense_SetPendingXsense(Sy8809Xsense_XsenseRead_t Pending_temp);
 void Sy8809Xsense_ReadXsenseProcess(void);
+void Sy8809Xsense_FirstXsenseConvVbat(void);
