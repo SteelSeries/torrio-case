@@ -12,6 +12,7 @@
 #include "sy8809.h"
 #include <stdio.h>
 #include <string.h>
+#include "lighting.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -74,7 +75,7 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_CUSTOM_OP, .read = HandleNoop, .write = DebugCommand},
         {.op = DEBUG_SY8809_OP, .read = Sy8809DebugRegReadCommand, .write = Sy8809DebugRegWriteCommand},
         {.op = DEBUG_SY8809_XSENSE_OP, .read = Sy8809DebugXsenserReadCommand, .write = HandleNoop},
-		{.op = DEBUG_LEDRGB_OP, .read = Command_HandleNoop, .write = handle_LEDRGB_debug_command},
+	{.op = DEBUG_LEDRGB_OP, .read = HandleNoop, .write = handle_LEDRGB_debug_command},
 
         // factory
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},

@@ -69,13 +69,6 @@ typedef enum
     Left_Earbud,
     Right_Earbud
 } Chip_Select_t;
-
-typedef enum
-{
-    AT32F415 = 0,
-    Left_Earbud,
-    Right_Earbud
-} Chip_Select_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/

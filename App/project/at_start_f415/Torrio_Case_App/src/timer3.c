@@ -28,9 +28,9 @@ void Pwm_GpioConfigHardware(const Pwm_HardwareSettings_t *hardware_settings)
 
     memcpy(&user_hardware_settings, hardware_settings, sizeof(Pwm_HardwareSettings_t));
 
-    uint16_t ch1_val = 333;
-    uint16_t ch2_val = 249;
-    uint16_t ch3_val = 166;
+    uint16_t ch1_val = 666;
+    uint16_t ch2_val = 666;
+    uint16_t ch3_val = 666;
     uint16_t div_value = 0;
     /*===========Timer3 PIN================*/
     gpio_init_type gpio_init_struct;
