@@ -12,7 +12,21 @@
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
+typedef struct
+{
+    gpio_type *pwm_r_gpio_port;
+    uint32_t pwm_r_gpio_pin;
+    crm_periph_clock_type pwm_r_gpio_crm_clk;
 
+    gpio_type *pwm_g_gpio_port;
+    uint32_t pwm_g_gpio_pin;
+    crm_periph_clock_type pwm_g_gpio_crm_clk;
+
+    gpio_type *pwm_b_gpio_port;
+    uint32_t pwm_b_gpio_pin;
+    crm_periph_clock_type pwm_b_gpio_crm_clk;
+
+} Pwm_HardwareSettings_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -20,4 +34,4 @@
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Timer3_Init(void);
+void Pwm_GpioConfigHardware(const Pwm_HardwareSettings_t *hardware_settings);

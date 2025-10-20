@@ -42,7 +42,7 @@ static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_O
 static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
-static Command_Status_t handle_lighting_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static void handle_lighting_debug_command(uint8_t command);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -59,7 +59,6 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_CUSTOM_OP, .read = Command_HandleNoop, .write = handle_debug_command},
         {.op = DEBUG_SY8809_OP, .read = handle_sy8809_debug_read_command, .write = handle_sy8809_debug_write_command},
         {.op = DEBUG_LEDRGB_OP, .read = Command_HandleNoop, .write = handle_LEDRGB_debug_command},
-        {.op = DEBUG_LIGHTING_OP, .read = Command_HandleNoop, .write = handle_lighting_debug_command},
 };
 
 /*************************************************************************************************
@@ -162,6 +161,7 @@ static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_O
     {
     case 0x01:
     {
+        handle_lighting_debug_command(command[2]);
         break;
     }
 
@@ -191,17 +191,29 @@ static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[
 }
 static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
 {
-    Lighting_LEDNonPWMSetting(command[1], (confirm_state)command[2]);
+    uint8_t buff = 0x00;
+    switch (command[1])
+    {
+    case AT32F415:
+    {
+        Lighting_LEDOnOffSetting(command[2], command[3], command[4]);
+        break;
+    }
+
+    default:
+        break;
+    }
+    buff = DEBUG_LEDRGB_OP;
+    custom_hid_class_send_report(&otg_core_struct.dev, &buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }
-static Command_Status_t handle_lighting_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+
+static void handle_lighting_debug_command(uint8_t command)
 {
-    LIGHTING_CHANGE_FLAG = LIGHTING_CHANGE_TRUE;
+    Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
+    Lighting_Mode = command;
     if(TaskScheduler_AddTask(Lighting_HandlerTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
         printf("add lighting task fail\n");
     }
-    LIGHTING_MODE = command[1];
-    return COMMAND_STATUS_SUCCESS;
 }
-

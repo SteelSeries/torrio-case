@@ -4,10 +4,10 @@
         <JetConnSerialNo>AT-Link-EZ CMSIS-DAP:E4BA2D210040272A05973402</JetConnSerialNo>
         <JetConnFoundProbes>AT-Link-EZ CMSIS-DAP:E4BA2D210040272A05973402:AT-Link-EZ(WinUSB) CMSIS-DAP:E4BA2D210040272A05973402:</JetConnFoundProbes>
         <PrevWtdReset>Connect during reset</PrevWtdReset>
+        <OnlineReset>Software</OnlineReset>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>0</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
-        <OnlineReset>Software</OnlineReset>
     </Jet>
     <PlDriver>
         <FirstRun>0</FirstRun>
@@ -46,7 +46,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>3628828216</Checksum>
+        <Checksum>4221066964</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -89,6 +89,10 @@
         <EventLSU>0</EventLSU>
         <EventSLEEP>0</EventSLEEP>
     </SWOTraceWindow>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>
@@ -96,10 +100,6 @@
         <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\sy8809.c}.298.38" 0 0 1 "" 0 "" 0</Bp0>
         <Count>1</Count>
     </Breakpoints2>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>

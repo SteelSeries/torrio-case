@@ -85,8 +85,6 @@ int main(void)
 
   Timer4_Init();
 
-  Timer3_Init();
-
   Adc_Init();
 
   PowerControl_Init();

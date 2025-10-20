@@ -8,9 +8,6 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-#define LED_R_PIN GPIO_PINS_6                // PA6
-#define LED_G_PIN GPIO_PINS_7                // PA7
-#define LED_B_PIN GPIO_PINS_0                // PB0
 #define LIGHTING_CHANGE_FALSE                 0x00U
 #define LIGHTING_CHANGE_TRUE                  0x01U
 /*************************************************************************************************
@@ -41,10 +38,10 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
-extern uint8_t LIGHTING_CHANGE_FLAG;
-extern uint8_t LIGHTING_MODE;
+extern uint8_t Lighting_Change_Flag;
+extern uint8_t Lighting_Mode;
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void Lighting_HandlerTask(void);
-void Lighting_LEDNonPWMSetting(uint8_t rgb, confirm_state state);
+void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);

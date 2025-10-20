@@ -22,7 +22,7 @@
 // debug
 #define DEBUG_CUSTOM_OP             0x08U // each application implements it as they see fit
 #define DEBUG_SY8809_OP             0x09U 
-#define DEBUG_LEDRGB_OP             0x0AU
+#define DEBUG_LEDRGB_OP             0x72U
 #define DEBUG_LIGHTING_OP           0x0BU
 
 // internal - we can reuse those as USB APIs for Artery
@@ -62,7 +62,12 @@ typedef enum
     FILE_ID_NUM_MODES
 } File_Id_t;
 
-
+typedef enum
+{
+    AT32F415 = 0,
+    Left_Earbud,
+    Right_Earbud
+} Chip_Select_t;
 
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
