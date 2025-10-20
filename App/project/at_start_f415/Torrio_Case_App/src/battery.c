@@ -28,6 +28,7 @@ static const uint16_t battery_voltage_table[] = {3510, 3590, 3610, 3630, 3650,
                                                  4030, 4080, 4140, 4200, 4250,
                                                  CASE_MAX_VBAT};
 static uint8_t pre_Case_VBAT_percent = BATTERY_UNKNOWN_LEVEL;
+static uint16_t adc_convert_to_voltage = 0;
 
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
@@ -56,13 +57,18 @@ uint8_t Battery_GetBatteryPercent(void)
     return pre_Case_VBAT_percent;
 }
 
+uint16_t Battery_GetBatteryVoltage(void)
+{
+    return adc_convert_to_voltage;
+}
+
 void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
 {
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
     uint16_t Case_VBAT_percent = 0;
-    uint16_t ADC_convert_to_Voltage = vbat_voltage * 4;
+    adc_convert_to_voltage = vbat_voltage * 4;
     printf("battery calculate start\n");
-    printf("Voltage:%d\n", ADC_convert_to_Voltage);
+    printf("Voltage:%d\n", adc_convert_to_voltage);
     if (((charge_status->check_reg_state.reg_0x12 & SY8809_0X12_CASE_BATT_CHARGE_COMPLETE) == SY8809_0X12_CASE_BATT_CHARGE_COMPLETE) &&
         (Usb_GetUsbDetectState() == USB_PLUG))
     // ((Usb_GetUsbDetectState() == USB_PLUG) || (QI_Charge_state == QI_CONTACT)))
@@ -73,11 +79,11 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
     }
     else
     {
-        if (ADC_convert_to_Voltage <= CASE_MIN_VBAT)
+        if (adc_convert_to_voltage <= CASE_MIN_VBAT)
         {
             Case_VBAT_percent = 0;
         }
-        else if (ADC_convert_to_Voltage >= CASE_MAX_VBAT)
+        else if (adc_convert_to_voltage >= CASE_MAX_VBAT)
         {
             Case_VBAT_percent = 100;
         }
@@ -85,10 +91,10 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
         {
             for (uint8_t i = 0; i < (sizeof(battery_voltage_table) / sizeof(battery_voltage_table[0]) - 1); i++)
             {
-                if (ADC_convert_to_Voltage >= battery_voltage_table[i] && ADC_convert_to_Voltage <= battery_voltage_table[i + 1])
+                if (adc_convert_to_voltage >= battery_voltage_table[i] && adc_convert_to_voltage <= battery_voltage_table[i + 1])
                 {
                     uint16_t diff = battery_voltage_table[i + 1] - battery_voltage_table[i];
-                    uint16_t offset = ADC_convert_to_Voltage - battery_voltage_table[i];
+                    uint16_t offset = adc_convert_to_voltage - battery_voltage_table[i];
                     uint16_t percent_in_block = (offset * 100) / diff; // 0~100%
                     percent_in_block = (percent_in_block * 5) / 100;   // scale to 0~5%
                     Case_VBAT_percent = percent_in_block + (i * 5);

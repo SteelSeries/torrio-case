@@ -42,3 +42,4 @@ void Sy8809_ReadIrqState(void);
 const Sy8809_ChargeStatus_t *Sy8809_GetChargeIcStatusInfo(void);
 i2c_status_type Sy8809_DebugRegWrite(const uint8_t reg, const uint8_t value);
 void Sy8809_DebugRegRead(const uint8_t reg, uint8_t *buff);
+void Sy8809_StartWorkTask(void);
