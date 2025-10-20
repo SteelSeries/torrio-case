@@ -49,3 +49,5 @@ void Usb_ReadyStateSet(usbd_event_type usb_state);
 usbd_event_type Usb_ReadyStateGet(void);
 void Usb_GpioConfigHardware(const Usb_HardwareSettings_t *hardware_settings);
 Usb_DetectConnectState_t Usb_GetUsbDetectState(void);
+void Usb_StatusCheckTask(void);
+Usb_DetectConnectState_t Usb_FirstSetupUsbState(void);

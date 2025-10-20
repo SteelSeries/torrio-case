@@ -22,4 +22,5 @@
  *************************************************************************************************/
 void PowerControl_EnterSleep(void);
 void PowerControl_Init(void);
+void PowerControl_EnterStandby(void);
 

@@ -2,7 +2,6 @@
  *                                         INCLUDES                                              *
  *************************************************************************************************/
 #include "at32f415_board.h"
-#include "at32f415_clock.h"
 #include "custom_hid_class.h"
 #include "custom_hid_desc.h"
 #include "usb.h"
@@ -16,7 +15,11 @@
 #include "init_pinout.h"
 #include "adc.h"
 #include "timer4.h"
-#include "timer3.h"
+#include "app_fw_update.h"
+#include "file_system.h"
+#include "system_clock.h"
+#include "lid.h"
+#include "wdt.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -44,54 +47,94 @@ int main(void)
 
   nvic_priority_group_config(NVIC_PRIORITY_GROUP_4);
 
-  system_clock_config();
+  InitPinout_Init();
+
+  SystemClock_ClockConfigSwitch();
 
   at32_board_init();
 
+  PowerControl_Init();
+
+  Wdt_Init();
+
+  // ==============================debug message==============================
   crm_clocks_freq_get(&crm_clocks_freq_struct);
 
-  printf("APP Start!!!\n");
+  FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
+
+  printf("\n\n\nAPP Start!!!\n");
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
   print_clock("AHB", crm_clocks_freq_struct.ahb_freq);
   print_clock("APB2", crm_clocks_freq_struct.apb2_freq);
   print_clock("APB1", crm_clocks_freq_struct.apb1_freq);
   print_clock("ADC", crm_clocks_freq_struct.adc_freq);
 
-  InitPinout_Init();
+  printf("===== User Data Debug Info =====\n");
+  printf("Model              : %02X\n", data->model);
+  printf("Color              : %02X\n", data->color);
+  printf("Shipping Flag      : %02X\n", data->shipping_flag);
+  printf("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
 
+  printf("Serial Number      : ");
+  for (uint8_t i = 0; i < sizeof(data->serial_number); i++)
+  {
+    printf("%02X ", data->serial_number[i]);
+  }
+  printf("\n");
+
+  printf("================================\n");
+  // ==============================debug message==============================
+  Wdt_Enable();
+
+  FileSystem_CheckImageCopyFlag();
+
+  if (Usb_GetUsbDetectState() == USB_PLUG)
+  {
+    printf("system setup USB detect\n");
 #ifdef USB_LOW_POWER_WAKUP
-  Usb_LowPowerWakeupConfig();
+    Usb_LowPowerWakeupConfig();
 #endif
 
-  /* enable otgfs clock */
-  crm_periph_clock_enable(OTG_CLOCK, TRUE);
+    /* enable otgfs clock */
+    crm_periph_clock_enable(OTG_CLOCK, TRUE);
 
-  /* select usb 48m clcok source */
-  Usb_Clock48mSelect(USB_CLK_HEXT);
+    /* select usb 48m clcok source */
+    Usb_Clock48mSelect(USB_CLK_HEXT);
 
-  /* enable otgfs irq */
-  nvic_irq_enable(OTG_IRQ, 0, 0);
+    /* enable otgfs irq */
+    nvic_irq_enable(OTG_IRQ, 0, 0);
 
-  /* init usb */
-  usbd_init(&otg_core_struct,
-            USB_FULL_SPEED_CORE_ID,
-            USB_ID,
-            &custom_hid_class_handler,
-            &custom_hid_desc_handler);
+    /* init usb */
+    usbd_init(&otg_core_struct,
+              USB_FULL_SPEED_CORE_ID,
+              USB_ID,
+              &custom_hid_class_handler,
+              &custom_hid_desc_handler);
+  }
+  else
+  {
+    Timer5_Init();
+  }
 
   Timer2_Init();
-
-  Timer5_Init();
 
   Timer4_Init();
 
   Adc_Init();
 
-  PowerControl_Init();
-
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
     printf("add sy8809 task fail\n");
+  }
+
+  if (TaskScheduler_AddTask(Lid_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add lid check task fail\n");
+  }
+
+  if (TaskScheduler_AddTask(Usb_StatusCheckTask, 50, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add USB check task fail\n");
   }
 
   printf("main loop start\n");
@@ -99,7 +142,9 @@ int main(void)
   {
     TaskScheduler_Run();
 
-    if (Usb_ReadyStateGet() != USBD_RESET_EVENT)
+    Wdt_CountReset();
+
+    if (Usb_FirstSetupUsbState() == USB_UNPLUG)
     {
       sleepTime = TaskScheduler_GetTimeUntilNextTask();
       if (sleepTime > 0)
@@ -111,10 +156,10 @@ int main(void)
       }
     }
 
-    if (SS_RESET_FLAG)
+    if (AppFwUpdata_GetResetFlag())
     {
       printf("system reset\n");
-      SS_RESET_FLAG = false;
+      AppFwUpdata_SetResetFlag(false);
       delay_ms(500);
       usbd_disconnect(&otg_core_struct.dev);
       delay_ms(500);

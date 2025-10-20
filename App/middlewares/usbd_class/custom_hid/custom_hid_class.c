@@ -392,7 +392,7 @@ usb_sts_type custom_hid_class_send_report(void *udev, uint8_t *report, uint16_t 
   */
 static void usb_hid_buf_process(void *udev, uint8_t *report, uint16_t len)
 {
-  Commands_HandleUsbCommand(report, len);
+  Commands_HandleUsbCommand(report, USB_RECEIVE_LEN);
 }
 
 /**

@@ -1546,6 +1546,9 @@
             <name>$PROJ_DIR$\..\src\command.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\file_system.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\main.c</name>
         </file>
         <file>

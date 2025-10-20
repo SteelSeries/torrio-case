@@ -61,9 +61,9 @@ static const Sy8809_HardwareSettings_t sy8809_config =
 
 static const Usb_HardwareSettings_t usb_config =
     {
-        .usb_detect_gpio_port = I2C1_SDA_GPIO_PORT,
-        .usb_detect_gpio_pin = I2C1_SDA_PIN,
-        .usb_detect_gpio_crm_clk = I2C1_SDA_GPIO_CLK,
+        .usb_detect_gpio_port = USB_DET_GPIO,
+        .usb_detect_gpio_pin = USB_DET_PIN,
+        .usb_detect_gpio_crm_clk = USB_DET_CRM_CLK,
 
         .usb_otg_pin_sof_gpio_port = BUD_DETECT_RESIST_SWITCH_GPIO,
         .usb_otg_pin_sof_gpio_pin = BUD_DETECT_RESIST_SWITCH_PIN,

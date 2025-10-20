@@ -2,6 +2,8 @@
  *                                         INCLUDES                                              *
  *************************************************************************************************/
 #include "usb.h"
+#include "task_scheduler.h"
+#include "system_state_manager.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -21,6 +23,8 @@ otg_core_type otg_core_struct;
 static usbd_event_type usb_ready = USBD_NOP_EVENT;
 static Usb_HardwareSettings_t user_hardware_settings = {0};
 static Usb_DetectConnectState_t usb_detect_state = USB_UNKNOW;
+static Usb_DetectConnectState_t pre_usb_detect_state = USB_UNKNOW;
+static Usb_DetectConnectState_t FirstSetupUsbState = USB_UNKNOW;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -64,12 +68,50 @@ void Usb_GpioConfigHardware(const Usb_HardwareSettings_t *hardware_settings)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
   gpio_init(user_hardware_settings.usb_detect_gpio_port, &gpio_init_struct);
+  usb_detect_state = (Usb_DetectConnectState_t)gpio_input_data_bit_read(user_hardware_settings.usb_detect_gpio_port, user_hardware_settings.usb_detect_gpio_pin);
+  pre_usb_detect_state = usb_detect_state;
+  FirstSetupUsbState = usb_detect_state;
 }
 
 Usb_DetectConnectState_t Usb_GetUsbDetectState(void)
 {
+  return pre_usb_detect_state;
+}
+
+Usb_DetectConnectState_t Usb_FirstSetupUsbState(void)
+{
+  return FirstSetupUsbState;
+}
+
+void Usb_StatusCheckTask(void)
+{
+  gpio_bits_toggle(GPIOB, GPIO_PINS_9);
+  static bool is_debounce_check = false;
   usb_detect_state = (Usb_DetectConnectState_t)gpio_input_data_bit_read(user_hardware_settings.usb_detect_gpio_port, user_hardware_settings.usb_detect_gpio_pin);
-  return usb_detect_state;
+
+  if (is_debounce_check == false)
+  {
+    if (usb_detect_state != pre_usb_detect_state)
+    {
+      is_debounce_check = true;
+    }
+  }
+  else
+  {
+    if (usb_detect_state != pre_usb_detect_state)
+    {
+      pre_usb_detect_state = usb_detect_state;
+      printf("USB state changed to: %s\n", usb_detect_state == USB_PLUG ? "PLUG" : "UNPLUG");
+      if (pre_usb_detect_state == USB_UNPLUG)
+      {
+        if (TaskScheduler_AddTask(SystemStateManager_SystemResetCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+        {
+          printf("add system reset task fail\n");
+        }
+      }
+    }
+    is_debounce_check = false;
+  }
 }
 
 void Usb_ReadyStateSet(usbd_event_type usb_state)

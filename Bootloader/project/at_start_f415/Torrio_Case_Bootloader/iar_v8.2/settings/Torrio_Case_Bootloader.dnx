@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <settings>
     <Jet>
+        <JetConnSerialNo>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07</JetConnSerialNo>
+        <JetConnFoundProbes>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07:AT-Link-Plus(WinUSB) CMSIS-DAP:ECA81400004001210C156C07:</JetConnFoundProbes>
         <PrevWtdReset>Connect during reset</PrevWtdReset>
         <OnlineReset>Software</OnlineReset>
-        <JetConnSerialNo>AT-Link-EZ CMSIS-DAP:E4BA2D210040272A05973402</JetConnSerialNo>
-        <JetConnFoundProbes>AT-Link-EZ CMSIS-DAP:E4BA2D210040272A05973402:AT-Link-EZ(WinUSB) CMSIS-DAP:E4BA2D210040272A05973402:</JetConnFoundProbes>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>0</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
@@ -14,7 +14,7 @@
         <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xB_v2.ddf</MemConfigValue>
     </PlDriver>
     <DebugChecksum>
-        <Checksum>1146565427</Checksum>
+        <Checksum>3108854648</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -40,8 +40,8 @@
     <SWOManager>
         <SamplingDivider>8192</SamplingDivider>
         <OverrideClock>0</OverrideClock>
-        <CpuClock>1684107116</CpuClock>
-        <SwoClock>1935438437</SwoClock>
+        <CpuClock>1464151629</CpuClock>
+        <SwoClock>1313426478</SwoClock>
         <DataLogMode>0</DataLogMode>
         <ItmPortsEnabled>63</ItmPortsEnabled>
         <ItmTermIOPorts>1</ItmTermIOPorts>
@@ -97,8 +97,7 @@
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints2>
-        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\main.c}.48.9" 0 0 1 "" 0 "" 0</Bp0>
-        <Count>1</Count>
+        <Count>0</Count>
     </Breakpoints2>
     <Aliases>
         <Count>0</Count>

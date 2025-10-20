@@ -1543,13 +1543,19 @@
             <name>$PROJ_DIR$\..\src\adc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\at32f415_clock.c</name>
+            <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\at32f415_int.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\battery.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\Commands.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\file_system.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\i2c1.c</name>
@@ -1576,6 +1582,12 @@
             <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\system_clock.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\system_state_manager.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
         </file>
         <file>
@@ -1595,6 +1607,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\version.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\wdt.c</name>
         </file>
     </group>
 </project>

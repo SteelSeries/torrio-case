@@ -5,20 +5,23 @@
 #include "custom_hid_class.h"
 #include "usb.h"
 #include "version.h"
-#include "lighting.h"
 #include "task_scheduler.h"
 #include "sy8809_xsense.h"
+#include "app_fw_update.h"
+#include "file_system.h"
+#include "sy8809.h"
 #include <stdio.h>
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define NUM_COMMANDS (sizeof(handler_table) / sizeof(handler_table[0]))
+#define WRITE_SERIAL_NUMBER_KEY 0xAA551133U
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
 // define how command handlers look like
-typedef Command_Status_t (*Command_Handler_t)(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+typedef Command_Status_t (*Command_Handler_t)(const uint8_t command[USB_RECEIVE_LEN]);
 
 typedef struct
 {
@@ -29,36 +32,53 @@ typedef struct
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-__root __no_init uint8_t gCurrentMode @0x20000000;
-bool SS_RESET_FLAG = false;
 
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
-static Command_Status_t Command_HandleNoop(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
-static Command_Status_t CommandVersion_ReadVersion(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
-static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
-static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
-static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
-static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static Command_Status_t HandleNoop(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t ReadVersion(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t RecoveryAndReset(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t Sy8809DebugRegReadCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t Sy8809DebugRegWriteCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t GetSerialNumber(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static void handle_lighting_debug_command(uint8_t command);
-
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-static uint8_t buffer[USBD_CUSTOM_OUT_MAXPACKET_SIZE] = {0};
+static uint8_t buffer[USB_RECEIVE_LEN] = {0};
 static const cmd_handler_t handler_table[] =
     {
-        {.op = NO_OP, .read = Command_HandleNoop, .write = Command_HandleNoop},
+        {.op = NO_OP, .read = HandleNoop, .write = HandleNoop},
         // mcu control
-        {.op = RESET_OP, .read = Command_HandleNoop, .write = CommandRecovery_Reset},
+        {.op = RESET_OP, .read = HandleNoop, .write = RecoveryAndReset},
+
+        // file/firmware update
+        {.op = ERASE_FILE_OP, .read = HandleNoop, .write = EraseFile},
+        {.op = FILE_ACCESS_OP, .read = HandleNoop, .write = WriteFile},
+        {.op = FILE_CRC32_OP, .read = Crc32File, .write = HandleNoop},
+
         // info
-        {.op = VERSION_OP, .read = CommandVersion_ReadVersion, .write = Command_HandleNoop},
+        {.op = VERSION_OP, .read = ReadVersion, .write = HandleNoop},
+
         // debug
-        {.op = DEBUG_CUSTOM_OP, .read = Command_HandleNoop, .write = handle_debug_command},
-        {.op = DEBUG_SY8809_OP, .read = handle_sy8809_debug_read_command, .write = handle_sy8809_debug_write_command},
-        {.op = DEBUG_LEDRGB_OP, .read = Command_HandleNoop, .write = handle_LEDRGB_debug_command},
+        {.op = DEBUG_CUSTOM_OP, .read = HandleNoop, .write = DebugCommand},
+        {.op = DEBUG_SY8809_OP, .read = Sy8809DebugRegReadCommand, .write = Sy8809DebugRegWriteCommand},
+        {.op = DEBUG_SY8809_XSENSE_OP, .read = Sy8809DebugXsenserReadCommand, .write = HandleNoop},
+		{.op = DEBUG_LEDRGB_OP, .read = Command_HandleNoop, .write = handle_LEDRGB_debug_command},
+
+        // factory
+        {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
+        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
 };
 
 /*************************************************************************************************
@@ -102,12 +122,12 @@ void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
 
-static Command_Status_t Command_HandleNoop(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+static Command_Status_t HandleNoop(const uint8_t command[USB_RECEIVE_LEN])
 {
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t CommandVersion_ReadVersion(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+static Command_Status_t ReadVersion(const uint8_t command[USB_RECEIVE_LEN])
 {
     uint8_t buff[13] = {0x00};
     uint8_t temp_buff[12] = {0};
@@ -118,7 +138,7 @@ static Command_Status_t CommandVersion_ReadVersion(const uint8_t command[USBD_CU
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+static Command_Status_t RecoveryAndReset(const uint8_t command[USB_RECEIVE_LEN])
 {
     if (command[1] < RECOVERY_MODE_NUM_MODES)
     {
@@ -126,8 +146,8 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
         {
             if (command[2] == FILE_ID_LOCAL)
             {
-                SS_RESET_FLAG = true;
-                gCurrentMode = BOOTLOADER_MODE;
+                AppFwUpdata_SetResetFlag(true);
+                AppFwUpdata_SetCurrentMode(BOOTLOADER_MODE);
             }
             else if (command[2] == FILE_ID_PERIPHERAL)
             {
@@ -138,8 +158,8 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
         {
             if (command[2] == FILE_ID_LOCAL)
             {
-                SS_RESET_FLAG = true;
-                gCurrentMode = NORMAL_MODE;
+                AppFwUpdata_SetResetFlag(true);
+                AppFwUpdata_SetCurrentMode(NORMAL_MODE);
             }
             else if (command[2] == FILE_ID_PERIPHERAL)
             {
@@ -149,13 +169,13 @@ static Command_Status_t CommandRecovery_Reset(const uint8_t command[USBD_CUSTOM_
     }
     else
     {
-        SS_RESET_FLAG = true;
-        gCurrentMode = NORMAL_MODE;
+        AppFwUpdata_SetResetFlag(true);
+        AppFwUpdata_SetCurrentMode(NORMAL_MODE);
     }
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
 {
     switch (command[1])
     {
@@ -171,11 +191,30 @@ static Command_Status_t handle_debug_command(const uint8_t command[USBD_CUSTOM_O
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+static Command_Status_t Sy8809DebugRegReadCommand(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint8_t reg_ret_buff[1] = {0};
+    Sy8809_DebugRegRead(command[1], reg_ret_buff);
+    uint8_t buff[] = {DEBUG_SY8809_OP | COMMAND_READ_FLAG, reg_ret_buff[0]};
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t Sy8809DebugRegWriteCommand(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint8_t buff[] = {DEBUG_SY8809_OP, Sy8809_DebugRegWrite(command[1], command[2])};
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_RECEIVE_LEN])
 {
     if ((command[1] >= SY8809_XSENSE_NTC) && (command[1] <= SY8809_XSENSE_VBIN))
     {
-        Sy8809Xsense_SetPendingXsense((Sy8809Xsense_OutputItem_t)command[1]);
+        Sy8809Xsense_XsenseRead_t Pending_temp = {0};
+        Pending_temp.is_command_read = true;
+        Pending_temp.Pending = (Sy8809Xsense_OutputItem_t)command[1];
+        Sy8809Xsense_SetPendingXsense(Pending_temp);
         if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
             printf("add sy8809 trig xsense conv task fail\n");
@@ -184,11 +223,206 @@ static Command_Status_t handle_sy8809_debug_read_command(const uint8_t command[U
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t handle_sy8809_debug_write_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN])
 {
-    // Todo: sy8809 write function.
+    if (command[1] < FILE_ID_NUM_MODES)
+    {
+        if (command[1] == FILE_ID_LOCAL)
+        {
+            if (TaskScheduler_AddTask(AppFwUpdate_CmdEraseHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add fw update erase task fail\n");
+            }
+        }
+    }
     return COMMAND_STATUS_SUCCESS;
 }
+
+static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint8_t Temp_buffer[USB_RECEIVE_LEN] = {0};
+    if (command[1] < FILE_ID_NUM_MODES)
+    {
+        if (command[1] == FILE_ID_LOCAL)
+        {
+            memcpy(Temp_buffer, command, USB_RECEIVE_LEN);
+            AppFwUpdata_UsbReceiveData(Temp_buffer, USB_RECEIVE_LEN);
+            if (TaskScheduler_AddTask(AppFwUpdate_CmdWriteFlashHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add fw update write task fail\n");
+            }
+        }
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN])
+{
+    if (command[1] < FILE_ID_NUM_MODES)
+    {
+        if (command[1] == FILE_ID_LOCAL)
+        {
+
+            if (TaskScheduler_AddTask(AppFwUpdate_CmdCrcCheckHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                printf("add CRC check task fail\n");
+            }
+            // uint8_t buff[10] = {0x00};
+            // AppFwUpdate_CmdCrcCheckHandler(buff);
+            // custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+        }
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t GetSerialNumber(const uint8_t command[USB_RECEIVE_LEN])
+{
+    FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
+    uint8_t buff[58] = {0x00};
+    buff[0] = FAC_SERIAL_OP | COMMAND_READ_FLAG;
+    memcpy(&buff[1], data->serial_number, sizeof(data->serial_number));
+    // TODO: need get buds serial number.
+    // left 20~38, right 39~57.
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint32_t key = ((uint32_t)command[2] << 24) |
+                   ((uint32_t)command[3] << 16) |
+                   ((uint32_t)command[4] << 8) |
+                   ((uint32_t)command[5]);
+    bool is_ret = false;
+
+    if (key != WRITE_SERIAL_NUMBER_KEY)
+    {
+        is_ret = true;
+    }
+    else
+    {
+        Command_Target_t target = (Command_Target_t)command[1];
+        if (target > COMMAND_TARGET_RIGHT_BUD)
+        {
+            is_ret = true;
+        }
+        else
+        {
+
+            switch (target)
+            {
+            case COMMAND_TARGET_CASE:
+            {
+                uint8_t new_serial[18] = {0};
+                memcpy(new_serial, &command[6], sizeof(new_serial));
+                FileSystem_UpdateSerialNumber(new_serial);
+                break;
+            }
+
+            case COMMAND_TARGET_LEFT_BUD:
+            {
+                // TODO: UART communication to lift bud write serial number.
+                break;
+            }
+
+            case COMMAND_TARGET_RIGHT_BUD:
+            {
+                // TODO: UART communication to lift bud write serial number.
+                break;
+            }
+            }
+        }
+    }
+
+    if (is_ret == true)
+    {
+        uint8_t buff[2] = {0x00};
+        buff[0] = FAC_SERIAL_OP;
+        buff[1] = FLASH_WRITE_ERRORS;
+        custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN])
+{
+    Command_Target_t target = (Command_Target_t)command[1];
+    FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
+
+    uint8_t buff[4] = {0x00};
+    buff[0] = FAC_MODEL_COLOR_SPIN_OP | COMMAND_READ_FLAG;
+    buff[1] = (uint8_t)target;
+
+    if (target > COMMAND_TARGET_RIGHT_BUD)
+    {
+        buff[2] = FLASH_WRITE_ERRORS;
+        buff[3] = FLASH_WRITE_ERRORS;
+    }
+    else
+    {
+        switch (target)
+        {
+        case COMMAND_TARGET_CASE:
+        {
+            buff[2] = data->model;
+            buff[3] = data->color;
+            break;
+        }
+
+        case COMMAND_TARGET_LEFT_BUD:
+        {
+            // TODO: UART communication to lift bud write color spin and model.
+            break;
+        }
+
+        case COMMAND_TARGET_RIGHT_BUD:
+        {
+            // TODO: UART communication to lift bud write color spin and model.
+            break;
+        }
+        }
+    }
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN])
+{
+    Command_Target_t target = (Command_Target_t)command[1];
+    if (target > COMMAND_TARGET_RIGHT_BUD)
+    {
+        uint8_t buff[2] = {0x00};
+        buff[0] = FAC_MODEL_COLOR_SPIN_OP;
+        buff[1] = FLASH_WRITE_ERRORS;
+        custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    }
+    else
+    {
+
+        switch (target)
+        {
+        case COMMAND_TARGET_CASE:
+        {
+            FileSystem_UpdateColorSpinAndModel(command[2], command[3]);
+            break;
+        }
+
+        case COMMAND_TARGET_LEFT_BUD:
+        {
+            // TODO: UART communication to lift bud write color spin and model.
+            break;
+        }
+
+        case COMMAND_TARGET_RIGHT_BUD:
+        {
+            // TODO: UART communication to lift bud write color spin and model.
+            break;
+        }
+        }
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
 static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
 {
     uint8_t buff = 0x00;
@@ -217,3 +451,4 @@ static void handle_lighting_debug_command(uint8_t command)
         printf("add lighting task fail\n");
     }
 }
+

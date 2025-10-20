@@ -171,7 +171,7 @@ void at32_board_init()
   // at32_led_off(LED2);
   // at32_led_off(LED3);
   // at32_led_off(LED4);
-  uart_print_init(921600);
+  uart_print_init(2000000);
 
   /* configure button in at_start board */
   // at32_button_init();
