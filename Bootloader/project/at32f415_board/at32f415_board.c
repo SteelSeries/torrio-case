@@ -155,6 +155,16 @@ void uart_print_init(uint32_t baudrate)
   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
   gpio_init(PRINT_UART_TX_GPIO, &gpio_init_struct);
 
+#ifdef SCALA_BOARD
+  /* configure the uart Rx pin float */
+  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  gpio_init_struct.gpio_mode = GPIO_MODE_ANALOG;
+  gpio_init_struct.gpio_pins = PRINT_UART_RX_PIN;
+  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+  gpio_init(PRINT_UART_TX_GPIO, &gpio_init_struct);
+#endif
+
   /* configure uart param */
   usart_init(PRINT_UART, baudrate, USART_DATA_8BITS, USART_STOP_1_BIT);
   usart_transmitter_enable(PRINT_UART, TRUE);

@@ -397,6 +397,27 @@ void Sy8809_StartWorkTask(void)
         DEBUG_PRINT("add sy8809 working task fail\n");
     }
 }
+
+void Sy8809_ChargeStatusSet(Sy8809_ChargeControl_t status)
+{
+    static uint8_t sy8809_0x22_chgconfig_temp = 0x00;
+    if (status == SY8809_CHARGE_STOP)
+    {
+        uint8_t sy8809_reg_rx_buff[1] = {0};
+        I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x22, sy8809_reg_rx_buff);
+        sy8809_0x22_chgconfig_temp = sy8809_reg_rx_buff[1];
+
+        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                      SY8809_REG_0x22,
+                      0x00);
+    }
+    else
+    {
+        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                      SY8809_REG_0x22,
+                      sy8809_0x22_chgconfig_temp);
+    }
+}
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -429,10 +450,10 @@ static void DetectCurrentTable(void)
     }
 
     DEBUG_PRINT("8809 read: 22:%02X 26:%02X 27:%02X 36:%02X\n",
-           read_values[0],
-           read_values[1],
-           read_values[2],
-           read_values[3]);
+                read_values[0],
+                read_values[1],
+                read_values[2],
+                read_values[3]);
 
     ChargeIcStatusInfo.current_table = SY8809_REG_UNKNOWN;
 
@@ -666,9 +687,9 @@ static void CheckBudsChargeStatus(void)
     }
 
     DEBUG_PRINT("charge stage L:%d R:%d 0x14:%02X\n",
-           ChargeIcStatusInfo.left_bud_charge_status,
-           ChargeIcStatusInfo.right_bud_charge_status,
-           ChargeIcStatusInfo.check_reg_state.reg_0x14);
+                ChargeIcStatusInfo.left_bud_charge_status,
+                ChargeIcStatusInfo.right_bud_charge_status,
+                ChargeIcStatusInfo.check_reg_state.reg_0x14);
 }
 
 static void UsbModeApplyTable(void)
