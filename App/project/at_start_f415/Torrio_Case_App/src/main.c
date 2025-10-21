@@ -20,6 +20,7 @@
 #include "system_clock.h"
 #include "lid.h"
 #include "wdt.h"
+#include "button.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -130,6 +131,11 @@ int main(void)
   if (TaskScheduler_AddTask(Lid_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
     printf("add lid check task fail\n");
+  }
+
+  if (TaskScheduler_AddTask(Button_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add button check task fail\n");
   }
 
   if (TaskScheduler_AddTask(Usb_StatusCheckTask, 50, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)

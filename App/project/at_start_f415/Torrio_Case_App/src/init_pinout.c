@@ -8,6 +8,7 @@
 #include "usb.h"
 #include "sy8809.h"
 #include "adc.h"
+#include "button.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -25,6 +26,13 @@ static const Lid_HardwareSettings_t lid_config =
         .lid_gpio_port = HALL_OUT_GPIO,
         .lid_gpio_pin = HALL_OUT_PIN,
         .lid_gpio_crm_clk = HALL_OUT_CRM_CLK,
+};
+
+static const Button_HardwareSettings_t button_config =
+    {
+        .button_gpio_port = BUTTON_GPIO,
+        .button_gpio_pin = BUTTON_PIN,
+        .button_gpio_crm_clk = BUTTON_CRM_CLK,
 };
 
 static const I2c1_HardwareSettings_t i2c1_config =
@@ -92,6 +100,7 @@ void InitPinout_Init(void)
     Sy8809_GpioConfigHardware(&sy8809_config);
     Usb_GpioConfigHardware(&usb_config);
     Adc_GpioConfigHardware(&adc_config);
+    Button_GpioConfigHardware(&button_config);
 }
 
 void InitPinout_I2c1Init(void)

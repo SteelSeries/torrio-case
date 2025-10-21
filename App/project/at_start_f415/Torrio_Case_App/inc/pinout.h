@@ -24,6 +24,10 @@
 #define HALL_OUT_GPIO       GPIOB                       // PB1
 #define HALL_OUT_CRM_CLK    CRM_GPIOB_PERIPH_CLOCK      // PB1
 
+#define BUTTON_PIN          GPIO_PINS_15                // PC15
+#define BUTTON_GPIO         GPIOC                       // PC15
+#define BUTTON_CRM_CLK      CRM_GPIOC_PERIPH_CLOCK      // PC15
+
 #define UART2_L_TX_PIN      GPIO_PINS_2                 // PA2
 #define UART2_L_TX_GPIO     GPIOA                       // PA2
 #define UART2_L_TX_CRM_CLK  CRM_GPIOA_PERIPH_CLOCK      // PA2
