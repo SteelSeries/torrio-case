@@ -56,9 +56,15 @@
 #define BUD_DETECT_RESIST_SWITCH_GPIO       GPIOC                       // PC1
 #define BUD_DETECT_RESIST_SWITCH_CRM_CLK    CRM_GPIOC_PERIPH_CLOCK      // PC1
 
+
+// NOTE: This configuration was required in early versions of Scala's circuit design,
+// but has since been removed in later versions. It is currently used for experimental purposes only.
+// Please disable this feature in future versions.
+#ifdef SCALA_BOARD
 #define OPEN_LID_MOS_SWITCH_PIN             GPIO_PINS_2                 // PC2
 #define OPEN_LID_MOS_SWITCH_GPIO            GPIOC                       // PC2
 #define OPEN_LID_MOS_SWITCH_CRM_CLK         CRM_GPIOC_PERIPH_CLOCK      // PC2
+#endif
 
 #define QI_CHARGE_DETECT_PIN                GPIO_PINS_13                // PB13
 #define QI_CHARGE_DETECT_GPIO               GPIOB                       // PB13
