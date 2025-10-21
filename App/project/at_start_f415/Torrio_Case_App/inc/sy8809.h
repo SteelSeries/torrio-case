@@ -29,6 +29,13 @@ typedef struct
     crm_periph_clock_type sy8809_irq_gpio_crm_clk;
 
 } Sy8809_HardwareSettings_t;
+
+typedef enum
+{
+    SY8809_CHARGE_STOP = 0,
+    SY8809_CHARGE_STAR
+} Sy8809_ChargeControl_t;
+
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -43,3 +50,4 @@ const Sy8809_ChargeStatus_t *Sy8809_GetChargeIcStatusInfo(void);
 i2c_status_type Sy8809_DebugRegWrite(const uint8_t reg, const uint8_t value);
 void Sy8809_DebugRegRead(const uint8_t reg, uint8_t *buff);
 void Sy8809_StartWorkTask(void);
+void Sy8809_ChargeStatusSet(Sy8809_ChargeControl_t status);
