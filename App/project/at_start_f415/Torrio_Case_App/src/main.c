@@ -63,27 +63,27 @@ int main(void)
 
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
 
-  printf("\n\n\nAPP Start!!!\n");
+  DEBUG_PRINT("\n\n\nAPP Start!!!\n");
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
   print_clock("AHB", crm_clocks_freq_struct.ahb_freq);
   print_clock("APB2", crm_clocks_freq_struct.apb2_freq);
   print_clock("APB1", crm_clocks_freq_struct.apb1_freq);
   print_clock("ADC", crm_clocks_freq_struct.adc_freq);
 
-  printf("===== User Data Debug Info =====\n");
-  printf("Model              : %02X\n", data->model);
-  printf("Color              : %02X\n", data->color);
-  printf("Shipping Flag      : %02X\n", data->shipping_flag);
-  printf("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
+  DEBUG_PRINT("===== User Data Debug Info =====\n");
+  DEBUG_PRINT("Model              : %02X\n", data->model);
+  DEBUG_PRINT("Color              : %02X\n", data->color);
+  DEBUG_PRINT("Shipping Flag      : %02X\n", data->shipping_flag);
+  DEBUG_PRINT("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
 
-  printf("Serial Number      : ");
+  DEBUG_PRINT("Serial Number      : ");
   for (uint8_t i = 0; i < sizeof(data->serial_number); i++)
   {
-    printf("%02X ", data->serial_number[i]);
+    DEBUG_PRINT("%02X ", data->serial_number[i]);
   }
-  printf("\n");
+  DEBUG_PRINT("\n");
 
-  printf("================================\n");
+  DEBUG_PRINT("================================\n");
   // ==============================debug message==============================
   Wdt_Enable();
 
@@ -91,7 +91,7 @@ int main(void)
 
   if (Usb_GetUsbDetectState() == USB_PLUG)
   {
-    printf("system setup USB detect\n");
+    DEBUG_PRINT("system setup USB detect\n");
 #ifdef USB_LOW_POWER_WAKUP
     Usb_LowPowerWakeupConfig();
 #endif
@@ -125,12 +125,12 @@ int main(void)
 
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
-    printf("add sy8809 task fail\n");
+    DEBUG_PRINT("add sy8809 task fail\n");
   }
 
   if (TaskScheduler_AddTask(Lid_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
-    printf("add lid check task fail\n");
+    DEBUG_PRINT("add lid check task fail\n");
   }
 
   if (TaskScheduler_AddTask(Button_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
@@ -140,10 +140,10 @@ int main(void)
 
   if (TaskScheduler_AddTask(Usb_StatusCheckTask, 50, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
-    printf("add USB check task fail\n");
+    DEBUG_PRINT("add USB check task fail\n");
   }
 
-  printf("main loop start\n");
+  DEBUG_PRINT("main loop start\n");
   while (1)
   {
     TaskScheduler_Run();
@@ -155,16 +155,16 @@ int main(void)
       sleepTime = TaskScheduler_GetTimeUntilNextTask();
       if (sleepTime > 0)
       {
-        // printf("setting sleep time:%d\n", sleepTime);
+        // DEBUG_PRINT("setting sleep time:%d\n", sleepTime);
         Timer5_StartOneShot(sleepTime);
         PowerControl_EnterSleep();
-        // printf("system wakeup\n");
+        // DEBUG_PRINT("system wakeup\n");
       }
     }
 
     if (AppFwUpdata_GetResetFlag())
     {
-      printf("system reset\n");
+      DEBUG_PRINT("system reset\n");
       AppFwUpdata_SetResetFlag(false);
       delay_ms(500);
       usbd_disconnect(&otg_core_struct.dev);
@@ -181,8 +181,9 @@ static void print_clock(const char *name, uint32_t hz)
 {
   unsigned long hz_ul = (unsigned long)hz;
   unsigned long mhz_int = hz_ul / 1000000UL;
-  unsigned long mhz_frac = (hz_ul % 1000000UL) / 1000UL; /* 三位數小數 (kHz) */
+  unsigned long mhz_frac = (hz_ul % 1000000UL) / 1000UL;
 
-  /* %-12s 讓名稱對齊 */
-  printf("%-12s: %lu Hz (%lu.%03lu MHz)\n", name, hz_ul, mhz_int, mhz_frac);
+  (void)mhz_int;
+  (void)mhz_frac;
+  DEBUG_PRINT("%-12s: %lu Hz (%lu.%03lu MHz)\n", name, hz_ul, mhz_int, mhz_frac);
 }

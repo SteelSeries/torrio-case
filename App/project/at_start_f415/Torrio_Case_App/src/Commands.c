@@ -52,6 +52,7 @@ static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -80,6 +81,7 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
         {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
         {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
+        {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
 };
 
 /*************************************************************************************************
@@ -217,7 +219,7 @@ static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_
         Sy8809Xsense_SetPendingXsense(Pending_temp);
         if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
-            printf("add sy8809 trig xsense conv task fail\n");
+            DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -231,7 +233,7 @@ static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN])
         {
             if (TaskScheduler_AddTask(AppFwUpdate_CmdEraseHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                printf("add fw update erase task fail\n");
+                DEBUG_PRINT("add fw update erase task fail\n");
             }
         }
     }
@@ -249,7 +251,7 @@ static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN])
             AppFwUpdata_UsbReceiveData(Temp_buffer, USB_RECEIVE_LEN);
             if (TaskScheduler_AddTask(AppFwUpdate_CmdWriteFlashHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                printf("add fw update write task fail\n");
+                DEBUG_PRINT("add fw update write task fail\n");
             }
         }
     }
@@ -265,7 +267,7 @@ static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN])
 
             if (TaskScheduler_AddTask(AppFwUpdate_CmdCrcCheckHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                printf("add CRC check task fail\n");
+                DEBUG_PRINT("add CRC check task fail\n");
             }
         }
     }
@@ -424,7 +426,44 @@ static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEI
 {
     if (TaskScheduler_AddTask(SystemStateManager_ReadBatteryAndNtcHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-        printf("add read battery and NTC task fail\n");
+        DEBUG_PRINT("add read battery and NTC task fail\n");
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN])
+{
+    Command_Target_t target = (Command_Target_t)command[1];
+    if (target > COMMAND_TARGET_RIGHT_BUD)
+    {
+        uint8_t buff[2] = {0x00};
+        buff[0] = FAC_SET_CHARGE_STATUS;
+        buff[1] = FLASH_WRITE_ERRORS;
+        custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    }
+    else
+    {
+
+        switch (target)
+        {
+        case COMMAND_TARGET_CASE:
+        {
+            Sy8809_ChargeStatusSet((Sy8809_ChargeControl_t)command[2]);
+            break;
+        }
+
+        case COMMAND_TARGET_LEFT_BUD:
+        {
+            // TODO: UART communication to lift bud setting charge status.
+            break;
+        }
+
+        case COMMAND_TARGET_RIGHT_BUD:
+        {
+            // TODO: UART communication to lift bud setting charge status.
+            break;
+        }
+        }
     }
     return COMMAND_STATUS_SUCCESS;
 }

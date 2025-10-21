@@ -81,12 +81,27 @@ typedef enum
 #endif
 
 /**************** define print uart ******************/
-#define PRINT_UART                       USART1
-#define PRINT_UART_CRM_CLK               CRM_USART1_PERIPH_CLOCK
-#define PRINT_UART_TX_PIN                GPIO_PINS_9
-#define PRINT_UART_TX_GPIO               GPIOA
-#define PRINT_UART_TX_GPIO_CRM_CLK       CRM_GPIOA_PERIPH_CLOCK
+// #define SCALA_BOARD
+#ifndef SCALA_BOARD
+// dev board debug uart.
+#define PRINT_UART USART1
+#define PRINT_UART_CRM_CLK CRM_USART1_PERIPH_CLOCK
+#define PRINT_UART_TX_PIN GPIO_PINS_9
+#define PRINT_UART_TX_GPIO GPIOA
+#define PRINT_UART_TX_GPIO_CRM_CLK CRM_GPIOA_PERIPH_CLOCK
+#else
+// scala main board bud uart Reuse debug uart.
+#define PRINT_UART USART3
+#define PRINT_UART_CRM_CLK CRM_USART3_PERIPH_CLOCK
 
+#define PRINT_UART_TX_PIN GPIO_PINS_10
+#define PRINT_UART_TX_GPIO GPIOB
+#define PRINT_UART_TX_GPIO_CRM_CLK CRM_GPIOB_PERIPH_CLOCK
+
+#define PRINT_UART_RX_PIN GPIO_PINS_11
+#define PRINT_UART_RX_GPIO GPIOB
+#define PRINT_UART_RX_GPIO_CRM_CLK CRM_GPIOB_PERIPH_CLOCK
+#endif
 /******************* define button *******************/
 typedef enum
 {
@@ -97,6 +112,12 @@ typedef enum
 #define USER_BUTTON_PIN                  GPIO_PINS_0
 #define USER_BUTTON_PORT                 GPIOA
 #define USER_BUTTON_CRM_CLK              CRM_GPIOA_PERIPH_CLOCK
+
+#ifdef DEBUG
+#define DEBUG_PRINT(...) printf(__VA_ARGS__)
+#else
+#define DEBUG_PRINT(...) ((void)0)
+#endif
 
 /**
   * @}
