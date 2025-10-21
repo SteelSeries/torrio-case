@@ -545,6 +545,7 @@ static void FirstReadVbatProcess(void)
     }
     else
     {
+        // Todo: case low battery enter Protection
         if (TaskScheduler_AddTask(ReadNtcProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
             DEBUG_PRINT("add sy8809 read vbat task fail\n");
@@ -556,9 +557,7 @@ static void ReadNtcProcess(void)
 {
     DEBUG_PRINT("[%s]\n", __func__);
 
-    UpdateStatusRegisters();
-
-    CheckNtcOverTempe();
+    UpdateTableByPowerSource();
 
     if (TaskScheduler_AddTask(SystemStateManager_SystemStartWork, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
