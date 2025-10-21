@@ -1122,6 +1122,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 91</file>
+                </tool>
+            </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>

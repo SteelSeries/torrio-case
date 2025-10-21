@@ -1411,6 +1411,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\Torrio_Case_App_Debug\Exe\Torrio_Case_App.out</name>
+            <outputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 116</file>
+                </tool>
+            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
