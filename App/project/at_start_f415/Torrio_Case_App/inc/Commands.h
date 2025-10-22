@@ -22,7 +22,8 @@
 // debug
 #define DEBUG_CUSTOM_OP             0x08U // each application implements it as they see fit
 #define DEBUG_SY8809_OP             0x71U 
-#define DEBUG_SY8809_XSENSE_OP      0x70U 
+#define DEBUG_SY8809_XSENSE_OP      0x70U
+#define DEBUG_LEDRGB_OP             0x73U 
 
 // internal - we can reuse those as USB APIs for Artery
 #define INTERNAL_USB_SUSPEND_OP     0x0CU // USB entered suspend mode. Lower power usage
@@ -65,6 +66,12 @@ typedef enum
     COMMAND_TARGET_RIGHT_BUD
 } Command_Target_t;
 
+typedef enum
+{
+    AT32F415 = 0,
+    Left_Earbud,
+    Right_Earbud
+} Chip_Select_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
