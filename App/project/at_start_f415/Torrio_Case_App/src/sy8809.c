@@ -255,7 +255,6 @@ static Sy8809_ChargeStatus_t ChargeIcStatusInfo = {
     .check_reg_state = {0},
     .left_bud_charge_status = SY8809_BUD_CHARGE_STATE_UNKNOW,
     .right_bud_charge_status = SY8809_BUD_CHARGE_STATE_UNKNOW,
-    .case_charge_status = SY8809_CASE_CHARGE_STATUS_UNKNOW,
     .current_table = SY8809_REG_UNKNOWN,
     .ntc_level = SY8809_NTC_LEVEL_UNKNOW,
 };
@@ -282,7 +281,6 @@ static void ReadNtcProcess(void);
 static void UpdateTableByPowerSource(void);
 static void UpdateStatusRegisters(void);
 static void CheckNtcOverTempe(void);
-static void CheckCaseChargeStatus(void);
 static void CheckBudsChargeStatus(void);
 static void UsbModeApplyTable(void);
 static void NormalModeApplyTable(void);
@@ -572,10 +570,7 @@ static void UpdateTableByPowerSource(void)
     UpdateStatusRegisters();
 
     CheckNtcOverTempe();
-
     CheckBudsChargeStatus();
-
-    CheckCaseChargeStatus();
 
     if (Usb_GetUsbDetectState() == USB_PLUG)
     {
@@ -660,11 +655,6 @@ static void CheckNtcOverTempe(void)
             SettingRegTable5H();
         }
     }
-}
-
-static void CheckCaseChargeStatus(void)
-{
-    ChargeIcStatusInfo.case_charge_status = (Sy8809_CaseChargeStatus_t)(ChargeIcStatusInfo.check_reg_state.reg_0x12 & ST8809_ST_CHG_STAT_MASK);
 }
 
 static void CheckBudsChargeStatus(void)

@@ -12,6 +12,7 @@
  *************************************************************************************************/
 #define CASE_MAX_VBAT 4340
 #define CASE_MIN_VBAT 3500
+#define SY8809_0X12_CASE_BATT_CHARGE_COMPLETE 0x03
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -68,7 +69,7 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
     adc_convert_to_voltage = vbat_voltage * 4;
     DEBUG_PRINT("battery calculate start\n");
     DEBUG_PRINT("Voltage:%d\n", adc_convert_to_voltage);
-    if ((charge_status->case_charge_status == SY8809_CASE_CHARGE_STATUS_CHARGE_DONE) &&
+    if (((charge_status->check_reg_state.reg_0x12 & SY8809_0X12_CASE_BATT_CHARGE_COMPLETE) == SY8809_0X12_CASE_BATT_CHARGE_COMPLETE) &&
         (Usb_GetUsbDetectState() == USB_PLUG))
     // ((Usb_GetUsbDetectState() == USB_PLUG) || (QI_Charge_state == QI_CONTACT)))
     // todo: check Qi connect status

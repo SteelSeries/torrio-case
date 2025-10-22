@@ -11,14 +11,6 @@
  *************************************************************************************************/
 #define SY8809_I2C_SLAVE_ADDRESS 0x0C
 
-// Bit mask for ST_CHG_STAT[1:0] in register 0x12
-// These two bits indicate the battery charging status:
-// 00 - Not charging (VIN < VIN_UVLO)
-// 01 - Trickle charging
-// 10 - Constant current charging
-// 11 - Charging complete
-#define ST8809_ST_CHG_STAT_MASK    (REG_BIT(1) | REG_BIT(0))  // 0x03
-
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
