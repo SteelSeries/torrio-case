@@ -70,7 +70,7 @@ void Sy8809Xsense_TrigXsenseConv(void)
 {
 
     uint16_t task_delay_time = 0;
-    printf("[%s]start\n", __func__);
+    DEBUG_PRINT("[%s]start\n", __func__);
 
     ConfigXsenseOutput(pending_xsense);
     // After setting xSense, wait 200ms before starting ADC sampling.
@@ -89,13 +89,13 @@ void Sy8809Xsense_TrigXsenseConv(void)
 
     if (TaskScheduler_AddTask(Timer4_AdcTrigStart, task_delay_time, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
-        printf("add adc trig task fail\n");
+        DEBUG_PRINT("add adc trig task fail\n");
     }
 }
 
 void Sy8809Xsense_FirstXsenseConvVbat(void)
 {
-    printf("[%s]start\n", __func__);
+    DEBUG_PRINT("[%s]start\n", __func__);
 
     pending_xsense = SY8809_XSENSE_VBAT;
     is_xsense_pending_command_read = false;
@@ -104,7 +104,7 @@ void Sy8809Xsense_FirstXsenseConvVbat(void)
     // Since the device is not charging in this state, it's sufficient to wait 200ms before triggering the ADC to sample VBAT
     if (TaskScheduler_AddTask(Timer4_AdcTrigStart, WAIT_8809_XSENSE_STABLE_TIMER, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
-        printf("add adc trig task fail\n");
+        DEBUG_PRINT("add adc trig task fail\n");
     }
 }
 
@@ -116,7 +116,7 @@ void Sy8809Xsense_SetPendingXsense(Sy8809Xsense_XsenseRead_t Pending_temp)
 
 void Sy8809Xsense_ReadXsenseProcess(void)
 {
-    printf("[%s]\n", __func__);
+    DEBUG_PRINT("[%s]\n", __func__);
     uint16_t adc_voltage_mv = 0;
     uint16_t adc_raw = 0;
     uint8_t usb_report_buff[5] = {0x00};
@@ -162,7 +162,7 @@ void Sy8809Xsense_ReadXsenseProcess(void)
 
     if (TaskScheduler_AddTask(XsenseClear, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
-        printf("add sy8809 working task fail\n");
+        DEBUG_PRINT("add sy8809 working task fail\n");
     }
 }
 /*************************************************************************************************
@@ -170,7 +170,7 @@ void Sy8809Xsense_ReadXsenseProcess(void)
  *************************************************************************************************/
 static void XsenseClear(void)
 {
-    printf("[%s]\n", __func__);
+    DEBUG_PRINT("[%s]\n", __func__);
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
 
     I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
@@ -261,7 +261,7 @@ static void ConfigXsenseOutput(Sy8809Xsense_OutputItem_t xsense)
 
 static void SetXsenseOutputNtc(void)
 {
-    printf("[%s]\n", __func__);
+    DEBUG_PRINT("[%s]\n", __func__);
     uint8_t sy8809_reg_rx_buff[1] = {0};
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
 
@@ -281,7 +281,7 @@ static void SetXsenseOutputNtc(void)
 
 static void SetXsenseOutputIbat(void)
 {
-    printf("set read IBAT\n");
+    DEBUG_PRINT("set read IBAT\n");
 
     I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
@@ -290,7 +290,7 @@ static void SetXsenseOutputIbat(void)
 
 static void SetXsenseOutputIvor(void)
 {
-    printf("set read IVOR\n");
+    DEBUG_PRINT("set read IVOR\n");
 
     I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
@@ -299,7 +299,7 @@ static void SetXsenseOutputIvor(void)
 
 static void SetXsenseOutputIvol(void)
 {
-    printf("set read IVOL\n");
+    DEBUG_PRINT("set read IVOL\n");
 
     I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
@@ -308,7 +308,7 @@ static void SetXsenseOutputIvol(void)
 
 static void SetXsenseOutputIvin(void)
 {
-    printf("set read IVIN\n");
+    DEBUG_PRINT("set read IVIN\n");
     I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_IVIN));
@@ -316,7 +316,7 @@ static void SetXsenseOutputIvin(void)
 
 static void SetXsenseOutputVbat(void)
 {
-    printf("set read Vbat\n");
+    DEBUG_PRINT("set read Vbat\n");
     uint8_t sy8809_reg_rx_buff[1] = {0};
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
 
@@ -339,7 +339,7 @@ static void SetXsenseOutputVbat(void)
 
 static void SetXsenseOutputVbin(void)
 {
-    printf("set read VBIN\n");
+    DEBUG_PRINT("set read VBIN\n");
     I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_VIN_DIV8));
@@ -347,7 +347,7 @@ static void SetXsenseOutputVbin(void)
 
 static void SetXsenseReset(void)
 {
-    printf("set xSense reset\n");
+    DEBUG_PRINT("set xSense reset\n");
 
     I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
