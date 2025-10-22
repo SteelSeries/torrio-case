@@ -113,10 +113,22 @@ void Lighting_HandlerTask(void)
 void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
 {
   bool R,G,B;
-  R = (PwmR == 0)? true:false;
-  G = (PwmG == 0)? true:false;  
-  B = (PwmB == 0)? true:false;
-  PwmHandler(R*666, G*666, B*666);
+  Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
+  if(Lighting_Change_Flag == LIGHTING_CHANGE_TRUE)
+  {
+      breath_val = 0;
+      illum_val = 0;
+      TaskScheduler_RemoveTask(IllumHandler);
+      TaskScheduler_RemoveTask(BreathHandler);
+      TaskScheduler_RemoveTask(BreathQuickHandler);
+      TaskScheduler_RemoveTask(AlertHandler);
+      TaskScheduler_RemoveTask(StableHandler);
+      Lighting_Change_Flag = LIGHTING_CHANGE_FALSE;
+  }
+  R = (PwmR == 1)? true:false;
+  G = (PwmG == 1)? true:false;  
+  B = (PwmB == 1)? true:false;
+  PwmHandler(R*1930U, G*1930U, B*1930U);
 }
 
 /*************************************************************************************************

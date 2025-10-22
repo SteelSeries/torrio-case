@@ -28,10 +28,11 @@ void Pwm_GpioConfigHardware(const Pwm_HardwareSettings_t *hardware_settings)
 
     memcpy(&user_hardware_settings, hardware_settings, sizeof(Pwm_HardwareSettings_t));
 
-    uint16_t ch1_val = 666;
-    uint16_t ch2_val = 666;
-    uint16_t ch3_val = 666;
+    uint16_t ch1_val = 0U;
+    uint16_t ch2_val = 0U;
+    uint16_t ch3_val = 0U;
     uint16_t div_value = 0;
+    const uint32_t target_timer_clk = 24000000U; /* optional target */
     /*===========Timer3 PIN================*/
     gpio_init_type gpio_init_struct;
 
@@ -57,7 +58,11 @@ void Pwm_GpioConfigHardware(const Pwm_HardwareSettings_t *hardware_settings)
     crm_periph_clock_enable(user_hardware_settings.pwm_b_gpio_crm_clk, TRUE);
 
     /* compute the div value */
-    div_value = (uint16_t)(system_core_clock / 24000000) - 1;
+    if(system_core_clock > target_timer_clk) {
+        div_value = (uint16_t)(system_core_clock / target_timer_clk - 1U);
+    } else {
+        div_value = 0U;
+    }
 
     // Initialize Timer3 for time base configuration
     // 
@@ -73,7 +78,7 @@ void Pwm_GpioConfigHardware(const Pwm_HardwareSettings_t *hardware_settings)
     // - Final configuration:
     //     - Timer counts up
     //     - The timer will generate an interrupt or event when it reaches the ARR value.
-    tmr_base_init(TMR3, 665, div_value);
+    tmr_base_init(TMR3, 1930U, div_value);
     tmr_cnt_dir_set(TMR3, TMR_COUNT_UP);
     tmr_clock_source_div_set(TMR3, TMR_CLOCK_DIV1);
 
