@@ -53,6 +53,7 @@ static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE
 static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -82,6 +83,9 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
         {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
         {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
+
+        // Case/Buds
+        {.op = GET_BATTERY_INFO, .read = GetBatteryStatus, .write = HandleNoop},
 };
 
 /*************************************************************************************************
@@ -464,6 +468,15 @@ static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_
             break;
         }
         }
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN])
+{
+    if (TaskScheduler_AddTask(SystemStateManager_GetBatteryStatusHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        DEBUG_PRINT("add read battery status task fail\n");
     }
     return COMMAND_STATUS_SUCCESS;
 }
