@@ -41,7 +41,6 @@ void SystemStateManager_SystemResetCheck(void)
     AppFwUpdata_SetResetFlag(true);
 }
 
-// This function is used by the factory to report the battery level as voltage and the status of the NTC.
 void SystemStateManager_ReadBatteryAndNtcHandle(void)
 {
     uint8_t buff[13] = {0x00};
@@ -53,20 +52,6 @@ void SystemStateManager_ReadBatteryAndNtcHandle(void)
     buff[2] = (uint8_t)((case_battery_voltage >> 8) & 0x00FF);
     buff[3] = charge_status->check_reg_state.reg_0x16;
     // Todo: need add buds battery and NTC data.
-    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
-}
-
-// This function is used for GG engine, the reported battery level is a percentage.
-void SystemStateManager_GetBatteryStatusHandle(void)
-{
-    uint8_t buff[7] = {0x00};
-    uint8_t case_battery_level = Battery_GetBatteryPercent();
-    Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
-
-    buff[0] = GET_BATTERY_INFO | COMMAND_READ_FLAG;
-    buff[1] = case_battery_level;
-    buff[2] = (uint8_t)charge_status->case_charge_status;
-    // Todo: need add buds battery level and charging status data.
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
 
