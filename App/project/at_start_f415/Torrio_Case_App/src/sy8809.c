@@ -255,7 +255,6 @@ static Sy8809_ChargeStatus_t ChargeIcStatusInfo = {
     .check_reg_state = {0},
     .left_bud_charge_status = SY8809_BUD_CHARGE_STATE_UNKNOW,
     .right_bud_charge_status = SY8809_BUD_CHARGE_STATE_UNKNOW,
-    .case_charge_status = SY8809_CASE_CHARGE_STATUS_UNKNOW,
     .current_table = SY8809_REG_UNKNOWN,
     .ntc_level = SY8809_NTC_LEVEL_UNKNOW,
 };
@@ -282,7 +281,6 @@ static void ReadNtcProcess(void);
 static void UpdateTableByPowerSource(void);
 static void UpdateStatusRegisters(void);
 static void CheckNtcOverTempe(void);
-static void CheckCaseChargeStatus(void);
 static void CheckBudsChargeStatus(void);
 static void UsbModeApplyTable(void);
 static void NormalModeApplyTable(void);
@@ -301,23 +299,23 @@ static void SettingRegTableG(void);
  *************************************************************************************************/
 void Sy8809_InitTask(void)
 {
-    DEBUG_PRINT("%d start Sy8809 init\n", Timer2_GetTick());
+    printf("%d start Sy8809 init\n", Timer2_GetTick());
 
     if (GetSdaState() == SET)
     {
-        DEBUG_PRINT("sy8809 SDA state High power on comple\n");
+        printf("sy8809 SDA state High power on comple\n");
         InitPinout_I2c1Init();
         if (TaskScheduler_AddTask(StartChipModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
-            DEBUG_PRINT("add sy8809 check chip task fail\n");
+            printf("add sy8809 check chip task fail\n");
         }
     }
     else
     {
-        DEBUG_PRINT("check SDA IO is low entery retry\n");
+        printf("check SDA IO is low entery retry\n");
         if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
         {
-            DEBUG_PRINT("add retry sy8809 task fail\n");
+            printf("add retry sy8809 task fail\n");
         }
         // Todo: sy8809 setup fail need reset function.
     }
@@ -389,35 +387,14 @@ void Sy8809_StartWorkTask(void)
 {
     if (charge_irq_flag == true)
     {
-        DEBUG_PRINT("charge_irq_flag detected \n");
+        printf("charge_irq_flag detected \n");
         charge_irq_flag = false;
         UpdateTableByPowerSource();
     }
 
     if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
-        DEBUG_PRINT("add sy8809 working task fail\n");
-    }
-}
-
-void Sy8809_ChargeStatusSet(Sy8809_ChargeControl_t status)
-{
-    static uint8_t sy8809_0x22_chgconfig_temp = 0x00;
-    if (status == SY8809_CHARGE_STOP)
-    {
-        uint8_t sy8809_reg_rx_buff[1] = {0};
-        I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x22, sy8809_reg_rx_buff);
-        sy8809_0x22_chgconfig_temp = sy8809_reg_rx_buff[1];
-
-        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
-                      SY8809_REG_0x22,
-                      0x00);
-    }
-    else
-    {
-        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
-                      SY8809_REG_0x22,
-                      sy8809_0x22_chgconfig_temp);
+        printf("add sy8809 working task fail\n");
     }
 }
 /*************************************************************************************************
@@ -451,11 +428,11 @@ static void DetectCurrentTable(void)
         read_values[i] = sy8809_reg_rx_buff[0];
     }
 
-    DEBUG_PRINT("8809 read: 22:%02X 26:%02X 27:%02X 36:%02X\n",
-                read_values[0],
-                read_values[1],
-                read_values[2],
-                read_values[3]);
+    printf("8809 read: 22:%02X 26:%02X 27:%02X 36:%02X\n",
+           read_values[0],
+           read_values[1],
+           read_values[2],
+           read_values[3]);
 
     ChargeIcStatusInfo.current_table = SY8809_REG_UNKNOWN;
 
@@ -468,7 +445,7 @@ static void DetectCurrentTable(void)
         }
     }
 
-    DEBUG_PRINT("judge table:%d\n", ChargeIcStatusInfo.current_table);
+    printf("judge table:%d\n", ChargeIcStatusInfo.current_table);
 }
 
 static void ConfigBudDetectResistPin(confirm_state enable)
@@ -488,12 +465,12 @@ static void ConfigBudDetectResistPin(confirm_state enable)
 
 static void StartChipModeCheck(void)
 {
-    DEBUG_PRINT("%d sy8809 check chip\n", Timer2_GetTick());
+    printf("%d sy8809 check chip\n", Timer2_GetTick());
     uint8_t sy8809_reg_rx_buff[1] = {0};
     I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
     if ((sy8809_reg_rx_buff[0] & REG_BIT(0)) == SET_REG_BIT(0))
     {
-        DEBUG_PRINT("check 0x15 is start woking\n");
+        printf("check 0x15 is start woking\n");
         DetectCurrentTable();
 
         if ((ChargeIcStatusInfo.current_table == SY8809_REG_TABLE_4) ||
@@ -503,14 +480,14 @@ static void StartChipModeCheck(void)
             SettingRegTable5H();
             if (TaskScheduler_AddTask(FirstReadVbatProcess, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
             {
-                DEBUG_PRINT("add sy8809 delay 100ms read vbat task fail\n");
+                printf("add sy8809 delay 100ms read vbat task fail\n");
             }
         }
         else
         {
             if (TaskScheduler_AddTask(FirstReadVbatProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                DEBUG_PRINT("add sy8809 read vbat task fail\n");
+                printf("add sy8809 read vbat task fail\n");
             }
         }
     }
@@ -519,7 +496,7 @@ static void StartChipModeCheck(void)
         // // check 0x15 chip reg state bit 0 not is 1, so wait 2.5 Sec retry this reg.
         if (TaskScheduler_AddTask(StartChipModeCheck, 2500, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
         {
-            DEBUG_PRINT("add retry sy8809 check chip task fail\n");
+            printf("add retry sy8809 check chip task fail\n");
         }
     }
 }
@@ -532,38 +509,39 @@ static void FirstReadVbatProcess(void)
     {
         if (first_set_read_vbat == false)
         {
-            DEBUG_PRINT("[%s]\n", __func__);
+            printf("[%s]\n", __func__);
             first_set_read_vbat = true;
             if (TaskScheduler_AddTask(Sy8809Xsense_FirstXsenseConvVbat, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
+                printf("add sy8809 trig xsense conv task fail\n");
             }
         }
 
         if (TaskScheduler_AddTask(FirstReadVbatProcess, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
         {
-            DEBUG_PRINT("add sy8809 read vbat task fail\n");
+            printf("add sy8809 read vbat task fail\n");
         }
     }
     else
     {
-        // Todo: case low battery enter Protection
         if (TaskScheduler_AddTask(ReadNtcProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
-            DEBUG_PRINT("add sy8809 read vbat task fail\n");
+            printf("add sy8809 read vbat task fail\n");
         }
     }
 }
 
 static void ReadNtcProcess(void)
 {
-    DEBUG_PRINT("[%s]\n", __func__);
+    printf("[%s]\n", __func__);
 
-    UpdateTableByPowerSource();
+    UpdateStatusRegisters();
+
+    CheckNtcOverTempe();
 
     if (TaskScheduler_AddTask(SystemStateManager_SystemStartWork, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-        DEBUG_PRINT("add system start work task fail\n");
+        printf("add system start work task fail\n");
     }
 }
 
@@ -572,25 +550,22 @@ static void UpdateTableByPowerSource(void)
     UpdateStatusRegisters();
 
     CheckNtcOverTempe();
-
     CheckBudsChargeStatus();
-
-    CheckCaseChargeStatus();
 
     if (Usb_GetUsbDetectState() == USB_PLUG)
     {
-        DEBUG_PRINT("USB table check\n");
+        printf("USB table check\n");
         UsbModeApplyTable();
     }
     // Todo: check Qi chatge whether connect.
     // else if (QI_Charge_state == QI_CONTACT)
     // {
-    //     DEBUG_PRINT("Qi table check\n");
+    //     printf("Qi table check\n");
     //     sy8809_QiInCheckIccTable();
     // }
     else
     {
-        DEBUG_PRINT("normal table check\n");
+        printf("normal table check\n");
         NormalModeApplyTable();
     }
 }
@@ -607,7 +582,7 @@ static void UpdateTableByPowerSource(void)
 static void UpdateStatusRegisters(void)
 {
     uint8_t sy8809_reg_rx_buff[1] = {0};
-    DEBUG_PRINT("start read 8809 int state\n");
+    printf("start read 8809 int state\n");
     I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x12, sy8809_reg_rx_buff);
     ChargeIcStatusInfo.check_reg_state.reg_0x12 = sy8809_reg_rx_buff[0];
     I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x13, sy8809_reg_rx_buff);
@@ -625,17 +600,17 @@ static void UpdateStatusRegisters(void)
                                              0x27, 0x30, 0x31, 0x32, 0x33,
                                              0x34, 0x35, 0x36, 0x37, 0x40,
                                              0x41, 0x42, 0x43, 0x44, 0x4F};
-    DEBUG_PRINT("sy8809 debug ");
+    printf("sy8809 debug ");
     for (size_t i = 0; i < sizeof(sy8809_debug_read_reg_table); i++)
     {
         I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff);
         if ((i % 10) == 0)
         {
-            DEBUG_PRINT("\n");
+            printf("\n");
         }
-        DEBUG_PRINT("%02X:%02X ", sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff[0]);
+        printf("%02X:%02X ", sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff[0]);
     }
-    DEBUG_PRINT("\n");
+    printf("\n");
 }
 
 static void CheckNtcOverTempe(void)
@@ -649,7 +624,7 @@ static void CheckNtcOverTempe(void)
         if ((Lid_GetState() == LID_OPEN) &&
             (Usb_GetUsbDetectState() == USB_UNPLUG))
         {
-            DEBUG_PRINT("NTC over temptrue enter standby mode\n");
+            printf("NTC over temptrue enter standby mode\n");
             SystemStateManager_EnterStandbyModeCheck();
         }
     }
@@ -660,11 +635,6 @@ static void CheckNtcOverTempe(void)
             SettingRegTable5H();
         }
     }
-}
-
-static void CheckCaseChargeStatus(void)
-{
-    ChargeIcStatusInfo.case_charge_status = (Sy8809_CaseChargeStatus_t)(ChargeIcStatusInfo.check_reg_state.reg_0x12 & ST8809_ST_CHG_STAT_MASK);
 }
 
 static void CheckBudsChargeStatus(void)
@@ -695,10 +665,10 @@ static void CheckBudsChargeStatus(void)
         }
     }
 
-    DEBUG_PRINT("charge stage L:%d R:%d 0x14:%02X\n",
-                ChargeIcStatusInfo.left_bud_charge_status,
-                ChargeIcStatusInfo.right_bud_charge_status,
-                ChargeIcStatusInfo.check_reg_state.reg_0x14);
+    printf("charge stage L:%d R:%d 0x14:%02X\n",
+           ChargeIcStatusInfo.left_bud_charge_status,
+           ChargeIcStatusInfo.right_bud_charge_status,
+           ChargeIcStatusInfo.check_reg_state.reg_0x14);
 }
 
 static void UsbModeApplyTable(void)
@@ -771,7 +741,7 @@ static void SettingRegTable5H(void)
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_5H)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_5H;
-        DEBUG_PRINT("table5H\n");
+        printf("table5H\n");
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
@@ -789,13 +759,13 @@ static void SettingRegTable3(void)
     // (first_start_state == NORMAL_START))
     {
         ConfigBudDetectResistPin(TRUE);
-        DEBUG_PRINT("set table 3 PC1 to H\n");
+        printf("set table 3 PC1 to H\n");
     }
 
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_3)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_3;
-        DEBUG_PRINT("table3\n");
+        printf("table3\n");
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
@@ -811,7 +781,7 @@ static void SettingRegTable4(void)
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_4)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_4;
-        DEBUG_PRINT("table4\n");
+        printf("table4\n");
 
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
@@ -828,7 +798,7 @@ static void SettingRegTableA(void)
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_A)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_A;
-        DEBUG_PRINT("tableA\n");
+        printf("tableA\n");
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
@@ -844,7 +814,7 @@ static void SettingRegTableB(void)
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_B)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_B;
-        DEBUG_PRINT("tableB\n");
+        printf("tableB\n");
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
@@ -860,7 +830,7 @@ static void SettingRegTableCEI(void)
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_CEI)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_CEI;
-        DEBUG_PRINT("tableCEI\n");
+        printf("tableCEI\n");
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
@@ -876,7 +846,7 @@ static void SettingRegTableDFJ(void)
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_DFJ)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_DFJ;
-        DEBUG_PRINT("tableDFJ\n");
+        printf("tableDFJ\n");
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
@@ -892,7 +862,7 @@ static void SettingRegTable6(void)
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_6)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_6;
-        DEBUG_PRINT("table6\n");
+        printf("table6\n");
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
@@ -908,7 +878,7 @@ static void SettingRegTableG(void)
     if (ChargeIcStatusInfo.current_table != SY8809_REG_TABLE_G)
     {
         ChargeIcStatusInfo.current_table = SY8809_REG_TABLE_G;
-        DEBUG_PRINT("tableG\n");
+        printf("tableG\n");
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {

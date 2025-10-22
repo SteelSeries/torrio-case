@@ -197,7 +197,7 @@ void DMA1_Channel1_IRQHandler(void)
 
     if (TaskScheduler_AddTask(Sy8809Xsense_ReadXsenseProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-      DEBUG_PRINT("add ReadXsenseProcess task fail\n");
+      printf("add ReadXsenseProcess task fail\n");
     }
   }
 }
