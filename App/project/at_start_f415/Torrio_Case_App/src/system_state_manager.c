@@ -27,6 +27,9 @@
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
+static uint8_t ConvertCaseChargeStatusToCmd(Sy8809_CaseChargeStatus_t status);
+static uint8_t ConvertBudChargeStatusToCmd(Sy8809_BudsChargeStatus_t status);
+
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -65,7 +68,10 @@ void SystemStateManager_GetBatteryStatusHandle(void)
 
     buff[0] = GET_BATTERY_INFO | COMMAND_READ_FLAG;
     buff[1] = case_battery_level;
-    buff[2] = (uint8_t)charge_status->case_charge_status;
+    buff[2] = ConvertCaseChargeStatusToCmd(charge_status->case_charge_status);
+    buff[4] = ConvertBudChargeStatusToCmd(charge_status->left_bud_charge_status);
+    buff[6] = ConvertBudChargeStatusToCmd(charge_status->right_bud_charge_status);
+
     // Todo: need add buds battery level and charging status data.
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
@@ -97,3 +103,53 @@ void SystemStateManager_SystemStartWork(void)
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static uint8_t ConvertCaseChargeStatusToCmd(Sy8809_CaseChargeStatus_t status)
+{
+    switch (status)
+    {
+    case SY8809_CASE_CHARGE_STATUS_NO_CHARGING:
+    case SY8809_CASE_CHARGE_STATUS_UNKNOW:
+    {
+        return (uint8_t)COMMAND_GET_BATTERY_STATUS_UNPLUGGED;
+    }
+
+    case SY8809_CASE_CHARGE_STATUS_TRICKLE:
+    case SY8809_CASE_CHARGE_STATUS_CONSTANT_CURR:
+    {
+        return (uint8_t)COMMAND_GET_BATTERY_STATUS_CHARGE;
+    }
+
+    case SY8809_CASE_CHARGE_STATUS_CHARGE_DONE:
+    {
+        return (uint8_t)COMMAND_GET_BATTERY_STATUS_COMPLETE;
+    }
+
+    default:
+    {
+        return (uint8_t)COMMAND_GET_BATTERY_STATUS_UNPLUGGED;
+    }
+    }
+}
+
+static uint8_t ConvertBudChargeStatusToCmd(Sy8809_BudsChargeStatus_t status)
+{
+    switch (status)
+    {
+    case SY8809_BUD_CHARGE_STATE_CHARGING:
+    {
+        return (uint8_t)COMMAND_GET_BATTERY_STATUS_CHARGE;
+    }
+
+    case SY8809_BUD_CHARGE_STATE_COMPLETE:
+    case SY8809_BUD_CHARGE_STATE_TABLE4_COMPLETE:
+    {
+        return (uint8_t)COMMAND_GET_BATTERY_STATUS_COMPLETE;
+    }
+
+    case SY8809_BUD_CHARGE_STATE_UNKNOW:
+    default:
+    {
+        return (uint8_t)COMMAND_GET_BATTERY_STATUS_UNPLUGGED;
+    }
+    }
+}
