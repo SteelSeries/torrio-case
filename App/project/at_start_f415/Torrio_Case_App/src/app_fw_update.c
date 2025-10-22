@@ -100,7 +100,7 @@ void AppFwUpdate_CmdCrcCheckHandler(void)
     {
         if (txBuf[i] != txBuf[i + 4])
         {
-            printf("CRC check fail\n");
+            DEBUG_PRINT("CRC check fail\n");
             EraseDualImageFlashProcess();
         }
     }
