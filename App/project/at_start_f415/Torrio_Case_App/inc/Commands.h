@@ -24,6 +24,9 @@
 #define DEBUG_SY8809_OP             0x71U 
 #define DEBUG_SY8809_XSENSE_OP      0x70U 
 
+// Case
+#define GET_BATTERY_INFO            0x37 // Read Case and buds battery level and charging status.
+
 // internal - we can reuse those as USB APIs for Artery
 #define INTERNAL_USB_SUSPEND_OP     0x0CU // USB entered suspend mode. Lower power usage
 #define INTERNAL_USB_RESUME_OP      0x0DU // after suspension, resume from device received
