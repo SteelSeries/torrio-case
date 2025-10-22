@@ -13,7 +13,6 @@
 #include "system_state_manager.h"
 #include <stdio.h>
 #include <string.h>
-#include "lighting.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -54,8 +53,7 @@ static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE
 static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
-static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
-static void handle_lighting_debug_command(uint8_t command);
+
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -78,7 +76,6 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_CUSTOM_OP, .read = HandleNoop, .write = DebugCommand},
         {.op = DEBUG_SY8809_OP, .read = Sy8809DebugRegReadCommand, .write = Sy8809DebugRegWriteCommand},
         {.op = DEBUG_SY8809_XSENSE_OP, .read = Sy8809DebugXsenserReadCommand, .write = HandleNoop},
-	    {.op = DEBUG_LEDRGB_OP, .read = HandleNoop, .write = handle_LEDRGB_debug_command},
 
         // factory
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
@@ -187,7 +184,6 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
     {
     case 0x01:
     {
-        handle_lighting_debug_command(command[2]);
         break;
     }
 
@@ -471,40 +467,3 @@ static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_
     }
     return COMMAND_STATUS_SUCCESS;
 }
-
-static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
-{
-    uint8_t buff = 0x00;
-    switch (command[1])
-    {
-    case AT32F415:
-    {
-        Lighting_LEDOnOffSetting(command[2], command[3], command[4]);
-        break;
-    }
-    case Left_Earbud:
-    {
-        break;                   
-    }
-    case Right_Earbud:
-    {
-        break;                   
-    }
-    default:
-        break;
-    }
-    buff = DEBUG_LEDRGB_OP;
-    custom_hid_class_send_report(&otg_core_struct.dev, &buff, sizeof(buff));
-    return COMMAND_STATUS_SUCCESS;
-}
-
-static void handle_lighting_debug_command(uint8_t command)
-{
-    Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
-    Lighting_Mode = command;
-    if(TaskScheduler_AddTask(Lighting_HandlerTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
-    {
-        printf("add lighting task fail\n");
-    }
-}
-
