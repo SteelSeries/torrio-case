@@ -105,6 +105,15 @@ typedef enum
     SY8809_BUD_CHARGE_STATE_TABLE4_COMPLETE
 } Sy8809_BudsChargeStatus_t;
 
+typedef enum
+{
+    SY8809_CASE_CHARGE_STATUS_NO_CHARGING = 0x00,   // No charging (VIN < VIN_UVLO)
+    SY8809_CASE_CHARGE_STATUS_TRICKLE = 0x01,       // Trickle charging
+    SY8809_CASE_CHARGE_STATUS_CONSTANT_CURR = 0x02, // Constant current charging
+    SY8809_CASE_CHARGE_STATUS_CHARGE_DONE = 0x03,   // Charging complete (battery full)
+    SY8809_CASE_CHARGE_STATUS_UNKNOW = 0xFF
+} Sy8809_CaseChargeStatus_t;
+
 typedef struct
 {
     uint8_t reg_0x10;
@@ -124,6 +133,7 @@ typedef struct
     Sy8809_Table_t current_table;
     Sy8809_BudsChargeStatus_t left_bud_charge_status;
     Sy8809_BudsChargeStatus_t right_bud_charge_status;
+    Sy8809_CaseChargeStatus_t case_charge_status;
     Sy8809_RegStateCheck_t check_reg_state;
 } Sy8809_ChargeStatus_t;
 
