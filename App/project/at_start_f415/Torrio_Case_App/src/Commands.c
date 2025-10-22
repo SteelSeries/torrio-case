@@ -13,6 +13,7 @@
 #include "system_state_manager.h"
 #include <stdio.h>
 #include <string.h>
+#include "lighting.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -52,9 +53,8 @@ static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
-static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
-static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
-
+static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static void handle_lighting_debug_command(uint8_t command);
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -77,15 +77,12 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_CUSTOM_OP, .read = HandleNoop, .write = DebugCommand},
         {.op = DEBUG_SY8809_OP, .read = Sy8809DebugRegReadCommand, .write = Sy8809DebugRegWriteCommand},
         {.op = DEBUG_SY8809_XSENSE_OP, .read = Sy8809DebugXsenserReadCommand, .write = HandleNoop},
+	    {.op = DEBUG_LEDRGB_OP, .read = HandleNoop, .write = handle_LEDRGB_debug_command},
 
         // factory
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
         {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
         {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
-        {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
-
-        // Case/Buds
-        {.op = GET_BATTERY_INFO, .read = GetBatteryStatus, .write = HandleNoop},
 };
 
 /*************************************************************************************************
@@ -188,6 +185,7 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
     {
     case 0x01:
     {
+        handle_lighting_debug_command(command[2]);
         break;
     }
 
@@ -223,7 +221,7 @@ static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_
         Sy8809Xsense_SetPendingXsense(Pending_temp);
         if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
-            DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
+            printf("add sy8809 trig xsense conv task fail\n");
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -237,7 +235,7 @@ static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN])
         {
             if (TaskScheduler_AddTask(AppFwUpdate_CmdEraseHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                DEBUG_PRINT("add fw update erase task fail\n");
+                printf("add fw update erase task fail\n");
             }
         }
     }
@@ -255,7 +253,7 @@ static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN])
             AppFwUpdata_UsbReceiveData(Temp_buffer, USB_RECEIVE_LEN);
             if (TaskScheduler_AddTask(AppFwUpdate_CmdWriteFlashHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                DEBUG_PRINT("add fw update write task fail\n");
+                printf("add fw update write task fail\n");
             }
         }
     }
@@ -271,7 +269,7 @@ static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN])
 
             if (TaskScheduler_AddTask(AppFwUpdate_CmdCrcCheckHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
-                DEBUG_PRINT("add CRC check task fail\n");
+                printf("add CRC check task fail\n");
             }
         }
     }
@@ -430,53 +428,44 @@ static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEI
 {
     if (TaskScheduler_AddTask(SystemStateManager_ReadBatteryAndNtcHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-        DEBUG_PRINT("add read battery and NTC task fail\n");
+        printf("add read battery and NTC task fail\n");
     }
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN])
+static Command_Status_t handle_LEDRGB_debug_command(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
 {
-    Command_Target_t target = (Command_Target_t)command[1];
-    if (target > COMMAND_TARGET_RIGHT_BUD)
+    uint8_t buff = 0x00;
+    switch (command[1])
     {
-        uint8_t buff[2] = {0x00};
-        buff[0] = FAC_SET_CHARGE_STATUS;
-        buff[1] = FLASH_WRITE_ERRORS;
-        custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
-    }
-    else
+    case AT32F415:
     {
-
-        switch (target)
-        {
-        case COMMAND_TARGET_CASE:
-        {
-            Sy8809_ChargeStatusSet((Sy8809_ChargeControl_t)command[2]);
-            break;
-        }
-
-        case COMMAND_TARGET_LEFT_BUD:
-        {
-            // TODO: UART communication to lift bud setting charge status.
-            break;
-        }
-
-        case COMMAND_TARGET_RIGHT_BUD:
-        {
-            // TODO: UART communication to lift bud setting charge status.
-            break;
-        }
-        }
+        Lighting_LEDOnOffSetting(command[2], command[3], command[4]);
+        break;
     }
+    case Left_Earbud:
+    {
+        break;                   
+    }
+    case Right_Earbud:
+    {
+        break;                   
+    }
+    default:
+        break;
+    }
+    buff = DEBUG_LEDRGB_OP;
+    custom_hid_class_send_report(&otg_core_struct.dev, &buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN])
+static void handle_lighting_debug_command(uint8_t command)
 {
-    if (TaskScheduler_AddTask(SystemStateManager_GetBatteryStatusHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
+    Lighting_Mode = command;
+    if(TaskScheduler_AddTask(Lighting_HandlerTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
-        DEBUG_PRINT("add read battery status task fail\n");
+        printf("add lighting task fail\n");
     }
-    return COMMAND_STATUS_SUCCESS;
 }
+

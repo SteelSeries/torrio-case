@@ -1,0 +1,5 @@
+{
+    "files.associations": {
+        "at32f415_board.h": "c"
+    }
+}

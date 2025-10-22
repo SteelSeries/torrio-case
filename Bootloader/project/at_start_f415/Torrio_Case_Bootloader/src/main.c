@@ -38,7 +38,7 @@ int main(void)
 
   Bootloader_BackDoorGpioInit();
 
-  DEBUG_PRINT("\n\n\nBootloader start!!!\n");
+  printf("\n\n\nBootloader start!!!\n");
 
   if (FileSystem_CheckImageCopyFlag() == SUCCESS)
   {
@@ -48,7 +48,7 @@ int main(void)
       {
         if (gCurrentMode != BOOTLOADER_MODE)
         {
-          DEBUG_PRINT("jump to app\n");
+          printf("jump to app\n");
           Bootloader_JumpToApp();
         }
       }

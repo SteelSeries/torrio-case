@@ -71,15 +71,15 @@ void Adc_GetAvgRawAndVoltage(uint16_t *adc_raw, uint16_t *voltage_mv)
  *************************************************************************************************/
 static uint16_t GetAvgRawValueHandle(void)
 {
-    DEBUG_PRINT("[%s] ", __func__);
+    printf("[%s] ", __func__);
     uint32_t Adc_Avg_Value_temp = 0;
 
     for (uint8_t sample_times_index = 0; sample_times_index < ADC_DMA_BUFFER_SIZE; sample_times_index++)
     {
-        DEBUG_PRINT("%d ", adc1_ordinary_valuetab[sample_times_index]);
+        printf("%d ", adc1_ordinary_valuetab[sample_times_index]);
         Adc_Avg_Value_temp += adc1_ordinary_valuetab[sample_times_index];
     }
-    DEBUG_PRINT("\n");
+    printf("\n");
     Adc_Avg_Value_temp = Adc_Avg_Value_temp >> 3;
     return Adc_Avg_Value_temp;
 }

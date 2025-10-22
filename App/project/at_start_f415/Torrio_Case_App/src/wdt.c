@@ -56,7 +56,7 @@ void Wdt_Enable(void)
 {
     /* enable wdt */
     wdt_enable();
-    DEBUG_PRINT("set wdt enable\n");
+    printf("set wdt enable\n");
 }
 
 void Wdt_CountReset(void)

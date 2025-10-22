@@ -162,7 +162,7 @@ void Bootloader_CmdCrcCheckHandler(uint8_t *buff)
     {
         if (buff[i] != buff[i + 4])
         {
-            DEBUG_PRINT("CRC check fail\n");
+            printf("CRC check fail\n");
             EraseDualImageFlashProcess();
         }
     }
@@ -204,11 +204,11 @@ bool Bootloader_CheckBackDoor(void)
 {
     if (gpio_input_data_bit_read(GPIOC, GPIO_PINS_10) == RESET)
     {
-        DEBUG_PRINT("back door enter\n");
+        printf("back door enter\n");
         return true;
     }
     // todo: check back door state, and change GPIO to PC15.
-    DEBUG_PRINT("back door exit\n");
+    printf("back door exit\n");
     return false;
 }
 
@@ -244,12 +244,12 @@ bool Bootloader_CheckAppCodeComplete(void)
 
     if (null_count == 4)
     {
-        DEBUG_PRINT("CRC fail\n");
+        printf("CRC fail\n");
         return false;
     }
     else
     {
-        DEBUG_PRINT("CRC pass\n");
+        printf("CRC pass\n");
         return true;
     }
 }

@@ -8,16 +8,40 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-
+#define LIGHTING_CHANGE_FALSE                 0x00U
+#define LIGHTING_CHANGE_TRUE                  0x01U
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
+typedef enum
+{
+  LED_R,
+  LED_G,
+  LED_B,
+} LED_COLOR;
 
+typedef enum
+{
+  LED_MODE_NORMAL,
+  STABLE,
+  BREATH,
+  BREATH_QUICKLY,
+  BLINK,
+  ILLUM
+} LED_MODE;
+
+typedef enum
+{
+  LED_ON,
+  LED_OFF
+} LED_STATE;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
-
+extern uint8_t Lighting_Change_Flag;
+extern uint8_t Lighting_Mode;
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void Lighting_HandlerTask(void);
+void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);

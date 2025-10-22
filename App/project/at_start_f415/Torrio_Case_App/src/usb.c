@@ -101,12 +101,12 @@ void Usb_StatusCheckTask(void)
     if (usb_detect_state != pre_usb_detect_state)
     {
       pre_usb_detect_state = usb_detect_state;
-      DEBUG_PRINT("USB state changed to: %s\n", usb_detect_state == USB_PLUG ? "PLUG" : "UNPLUG");
+      printf("USB state changed to: %s\n", usb_detect_state == USB_PLUG ? "PLUG" : "UNPLUG");
       if (pre_usb_detect_state == USB_UNPLUG)
       {
         if (TaskScheduler_AddTask(SystemStateManager_SystemResetCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
-          DEBUG_PRINT("add system reset task fail\n");
+          printf("add system reset task fail\n");
         }
       }
     }
@@ -117,7 +117,7 @@ void Usb_StatusCheckTask(void)
 void Usb_ReadyStateSet(usbd_event_type usb_state)
 {
   usb_ready = usb_state;
-  DEBUG_PRINT("USB event:%d\n", usb_ready);
+  printf("USB event:%d\n", usb_ready);
 }
 
 usbd_event_type Usb_ReadyStateGet(void)

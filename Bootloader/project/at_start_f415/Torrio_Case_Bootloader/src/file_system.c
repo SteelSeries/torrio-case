@@ -46,7 +46,7 @@ const FileSystem_UserData_t *FileSystem_GetUserData(void)
 error_status FileSystem_CheckImageCopyFlag(void)
 {
     uint8_t retry = 10;
-    DEBUG_PRINT("Dual Image CopyFlg : %02X\n", user_data->dual_image_copy_flag);
+    printf("Dual Image CopyFlg : %02X\n", user_data->dual_image_copy_flag);
     if (user_data->dual_image_copy_flag == DUAL_IMAGE_FLAG_REQUEST)
     {
         do
