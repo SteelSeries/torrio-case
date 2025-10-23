@@ -11,10 +11,10 @@
 #include "file_system.h"
 #include "sy8809.h"
 #include "system_state_manager.h"
+#include "uart_command_queue.h"
+#include "uart_interface.h"
 #include <stdio.h>
 #include <string.h>
-#include "uart_command_queue.h"
-#include "uart_comm_manager.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -196,14 +196,13 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
 
     case 0x02:
     {
-
-        UART_CommContext_t *ctx = UartCommManager_GetLeftBudContext();
         UartCommand_t cmd;
-        memcpy(cmd.data, command, sizeof(cmd.data));
-        cmd.length = sizeof(cmd.data);
+        memcpy(cmd.data, &command[3], sizeof(cmd.data));
+        cmd.length = command[2];
         cmd.command_id = 0x01;
         cmd.timeout_ms = 200;
-        UartCommandQueue_Enqueue(&ctx->cmd_queue, &cmd);
+        UartInterface_SendCommand(UART_INTERFACE_BUD_LEFT, &cmd);
+
         break;
     }
 

@@ -67,6 +67,7 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     ctx->timeout_tick = 0;
     ctx->current_timeout_ms = 0;
     ctx->retry_count = 0;
+    ctx->tx_seqn = 0;
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
 }
