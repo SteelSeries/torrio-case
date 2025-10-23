@@ -11,7 +11,6 @@
 #include "file_system.h"
 #include "sy8809.h"
 #include "system_state_manager.h"
-#include "uart_command_queue.h"
 #include "uart_interface.h"
 #include <stdio.h>
 #include <string.h>
@@ -196,11 +195,11 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
 
     case 0x02:
     {
-        UartCommand_t cmd;
+        UartCommandQueue_Command_t cmd;
         memcpy(cmd.data, &command[3], sizeof(cmd.data));
         cmd.length = command[2];
         cmd.command_id = 0x01;
-        cmd.timeout_ms = 200;
+        cmd.timeout_ms = 2000;
         UartInterface_SendCommand(UART_INTERFACE_BUD_LEFT, &cmd);
 
         break;

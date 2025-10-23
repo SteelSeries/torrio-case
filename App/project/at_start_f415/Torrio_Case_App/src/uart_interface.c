@@ -23,7 +23,7 @@
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-bool UartInterface_SendCommand(UartInterface_Port_t port, UartCommand_t *cmd)
+bool UartInterface_SendCommand(UartInterface_Port_t port, UartCommandQueue_Command_t *cmd)
 {
     DEBUG_PRINT("UartInterface_SendCommand called with port=%d, cmd->command_id=0x%02X, length=%d\n", port, cmd->command_id, cmd->length);
 
@@ -55,7 +55,7 @@ bool UartInterface_SendCommand(UartInterface_Port_t port, UartCommand_t *cmd)
     }
     DEBUG_PRINT("UartProtocol_PackCommand succeeded: packed length = %d\n", out_len);
 
-    UartCommand_t tx_cmd;
+    UartCommandQueue_Command_t tx_cmd;
     memcpy(tx_cmd.data, tx_buf, out_len);
     tx_cmd.length = out_len;
     tx_cmd.command_id = cmd->command_id;

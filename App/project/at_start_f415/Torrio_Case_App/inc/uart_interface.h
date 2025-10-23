@@ -22,7 +22,7 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
-bool UartInterface_SendCommand(UartInterface_Port_t port, UartCommand_t *cmd);
+bool UartInterface_SendCommand(UartInterface_Port_t port, UartCommandQueue_Command_t *cmd);
 
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *

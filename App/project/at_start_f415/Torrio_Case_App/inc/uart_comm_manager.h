@@ -26,7 +26,7 @@ typedef enum
 typedef struct
 {
     usart_type *uart;
-    UartCommandQueue_t cmd_queue;
+    UartCommandQueue_Queue_t cmd_queue;
     UART_State_t state;
     uint32_t timeout_tick;
     uint16_t current_timeout_ms;

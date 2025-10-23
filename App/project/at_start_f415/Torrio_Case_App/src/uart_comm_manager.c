@@ -80,7 +80,7 @@ static void CommTask(UART_CommContext_t *ctx)
     {
         if (!UartCommandQueue_IsEmpty(&ctx->cmd_queue))
         {
-            UartCommand_t cmd;
+            UartCommandQueue_Command_t cmd;
             if (UartCommandQueue_Dequeue(&ctx->cmd_queue, &cmd))
             {
                 DEBUG_PRINT("[UART][IDLE] Dequeued command -> ID: 0x%02X, Len: %d\n",
@@ -147,7 +147,7 @@ static void CommTask(UART_CommContext_t *ctx)
         else
         {
             DEBUG_PRINT("[UART][TIMEOUT] Max retry reached. Reset to IDLE.\n");
-            ctx->state = UART_STATE_IDLE; // 或錯誤處理
+            ctx->state = UART_STATE_IDLE;
             ctx->retry_count = 0;
         }
         break;

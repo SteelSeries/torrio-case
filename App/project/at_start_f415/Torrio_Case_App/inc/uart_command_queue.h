@@ -9,7 +9,7 @@
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
 #define CMD_QUEUE_SIZE 10
-#define CMD_MAX_DATA_LEN 32 // 可根據 command 最大長度調整
+#define CMD_MAX_DATA_LEN 32
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -19,15 +19,15 @@ typedef struct
     uint8_t length;
     uint8_t command_id;
     uint16_t timeout_ms;
-} UartCommand_t;
+} UartCommandQueue_Command_t;
 
 typedef struct
 {
-    UartCommand_t queue[CMD_QUEUE_SIZE];
+    UartCommandQueue_Command_t queue[CMD_QUEUE_SIZE];
     uint8_t head;
     uint8_t tail;
     uint8_t count;
-} UartCommandQueue_t;
+} UartCommandQueue_Queue_t;
 
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
@@ -36,8 +36,8 @@ typedef struct
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void UartCommandQueue_Init(UartCommandQueue_t *q);
-bool UartCommandQueue_Enqueue(UartCommandQueue_t *q, const UartCommand_t *cmd);
-bool UartCommandQueue_Dequeue(UartCommandQueue_t *q, UartCommand_t *cmd);
-bool UartCommandQueue_IsEmpty(const UartCommandQueue_t *q);
-bool UartCommandQueue_IsFull(const UartCommandQueue_t *q);
+void UartCommandQueue_Init(UartCommandQueue_Queue_t *q);
+bool UartCommandQueue_Enqueue(UartCommandQueue_Queue_t *q, const UartCommandQueue_Command_t *cmd);
+bool UartCommandQueue_Dequeue(UartCommandQueue_Queue_t *q, UartCommandQueue_Command_t *cmd);
+bool UartCommandQueue_IsEmpty(const UartCommandQueue_Queue_t *q);
+bool UartCommandQueue_IsFull(const UartCommandQueue_Queue_t *q);
