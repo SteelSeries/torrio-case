@@ -2,9 +2,10 @@
  *                                         INCLUDES                                              *
  *************************************************************************************************/
 #include "lighting.h"
+#include "timer3.h"
 #include <stdio.h>
 #include "task_scheduler.h"
-
+#include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -14,33 +15,285 @@
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+uint8_t Lighting_Change_Flag = LIGHTING_CHANGE_FALSE;
+uint8_t Lighting_Mode = LIGHTING_LED_OFF;
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+static uint16_t breath_val = 0;
+static uint16_t breath_rising = LIGHTING_BRIGHT_MAX;
+static uint16_t breath_falling = LIGHTING_BRIGHT_MAX * 2;
+static uint16_t breath_interval = 3;
+
+static uint16_t light_max = 0;
+static uint16_t light_min = LIGHTING_BRIGHT_MAX;
+static uint16_t light_on = 1;
+
+static uint16_t illum_val = 0;
+static uint16_t illum_rising = LIGHTING_BRIGHT_MAX; //illum_rising - illum_val = led rising time
+static uint16_t illum_hold_bright = LIGHTING_BRIGHT_MAX + LIGHTING_HOLD_TIME; //illum_hold_bright - illum_val = led hold bright time
+static uint16_t illum_falling = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_HOLD_TIME; //illum_falling - illum_val = led falling time
+static uint16_t illum_hold_dark = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_HOLD_TIME * 2; //illum_hold_dark - illum_val = led hold dark time
+
+static uint16_t r_en, g_en, b_en;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
+static void IllumHandler(void);
+static void BreathHandler(void);
+static void BreathQuickHandler(void);
+static void AlertHandler(void);
+static void StableHandler(void);
+static void PwmHandler(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
+static Lighting_HardwareSettings_t user_hardware_settings = {0};
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-
-uint8_t i = 0;
-void Lighting_HandlerTask(void)
+void Lighting_Handler(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
 {
-    DEBUG_PRINT("[%s]%d\n", __func__, i);
-    at32_led_toggle(LED2);
-    at32_led_toggle(LED3);
-    at32_led_toggle(LED4);
-    if (i > 10)
+    DEBUG_PRINT("run Lighting_Handler\n");
+    if(Lighting_Change_Flag == LIGHTING_CHANGE_TRUE)
     {
-        i = 0;
-        // if (TaskScheduler_RemoveTask(Lighting_HandlerTask) != TASK_OK)
-        // {
-        //     DEBUG_PRINT("remove task fail\n");
-        // }
+        breath_val = 0;
+        illum_val = 0;
+        TaskScheduler_RemoveTask(IllumHandler);
+        TaskScheduler_RemoveTask(BreathHandler);
+        TaskScheduler_RemoveTask(BreathQuickHandler);
+        TaskScheduler_RemoveTask(AlertHandler);
+        TaskScheduler_RemoveTask(StableHandler);
+        Lighting_Change_Flag = LIGHTING_CHANGE_FALSE;
     }
-    i++;
+
+    r_en = PwmR;
+    g_en = PwmG;
+    b_en = PwmB;
+
+    switch (Lighting_Mode)
+    {
+        case LIGHTING_ILLUM:
+        {
+          if(TaskScheduler_AddTask(IllumHandler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+          {
+              DEBUG_PRINT("add IllumHandler fail\n");
+          }
+          break;
+        }
+        case LIGHTING_BREATH:
+        {
+          if(TaskScheduler_AddTask(BreathHandler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+          {
+              DEBUG_PRINT("add BreathHandler fail\n");
+          }
+          break;
+        }
+        case LIGHTING_BREATH_QUICKLY:
+        {
+          if(TaskScheduler_AddTask(BreathQuickHandler, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+          {
+              DEBUG_PRINT("add BreathQuickHandler fail\n");
+          }
+          break;
+        }
+        case LIGHTING_BLINK:
+        {
+          if(TaskScheduler_AddTask(AlertHandler, 500, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+          {
+              DEBUG_PRINT("add AlertHandler fail\n");
+          }
+          break;
+        }
+        case LIGHTING_STABLE:
+        {
+          if(TaskScheduler_AddTask(StableHandler, 5000, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+          {
+              DEBUG_PRINT("add StableHandler fail\n");
+          }
+          break;
+        }
+        default:
+        {
+            break;
+        }
+    }   
+    
 }
+
+void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
+{
+    bool R,G,B;
+    Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
+    if(Lighting_Change_Flag == LIGHTING_CHANGE_TRUE)
+    {
+        breath_val = 0;
+        illum_val = 0;
+        TaskScheduler_RemoveTask(IllumHandler);
+        TaskScheduler_RemoveTask(BreathHandler);
+        TaskScheduler_RemoveTask(BreathQuickHandler);
+        TaskScheduler_RemoveTask(AlertHandler);
+        TaskScheduler_RemoveTask(StableHandler);
+        Lighting_Change_Flag = LIGHTING_CHANGE_FALSE;
+    }
+    R = (PwmR == 1)? true:false;
+    G = (PwmG == 1)? true:false;  
+    B = (PwmB == 1)? true:false;
+  PwmHandler(R*LIGHTING_BRIGHT_MAX, G*LIGHTING_BRIGHT_MAX, B*LIGHTING_BRIGHT_MAX);
+}
+
+void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_settings)
+{
+    memcpy(&user_hardware_settings, hardware_settings, sizeof(Lighting_HardwareSettings_t));
+    /*===========Timer3 PIN================*/
+    gpio_init_type gpio_init_struct;
+
+    gpio_default_para_init(&gpio_init_struct);
+
+    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+    gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
+    gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+
+    gpio_init_struct.gpio_pins = user_hardware_settings.lighting_r_gpio_pin;
+    gpio_init(user_hardware_settings.lighting_r_gpio_port, &gpio_init_struct);
+
+    gpio_init_struct.gpio_pins = user_hardware_settings.lighting_g_gpio_pin;
+    gpio_init(user_hardware_settings.lighting_g_gpio_port, &gpio_init_struct);
+
+    gpio_init_struct.gpio_pins = user_hardware_settings.lighting_b_gpio_pin;
+    gpio_init(user_hardware_settings.lighting_b_gpio_port, &gpio_init_struct);
+
+    crm_periph_clock_enable(user_hardware_settings.lighting_r_gpio_crm_clk, TRUE);
+    crm_periph_clock_enable(user_hardware_settings.lighting_g_gpio_crm_clk, TRUE);
+    crm_periph_clock_enable(user_hardware_settings.lighting_b_gpio_crm_clk, TRUE);
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static void IllumHandler(void)
+{
+    static uint16_t illum_reg;
+    illum_val += breath_interval;
+    if(illum_val == illum_hold_dark)
+    {
+      illum_val = 0;
+      illum_reg = illum_val;
+    }
+    else if((illum_val >= illum_falling) && (illum_val < illum_hold_dark))
+    {
+      illum_reg = light_max;
+    }
+    else if((illum_val >= illum_hold_bright) && (illum_val < illum_falling))
+    {
+      illum_reg = illum_falling - illum_val;
+    }
+    else if((illum_val >= illum_rising) && (illum_val < illum_hold_bright))
+    {
+      illum_reg = light_min;
+    }
+    else if(illum_val < illum_rising)
+    {
+      illum_reg = illum_val;
+    }
+    PwmHandler(illum_reg * r_en, illum_reg * g_en, illum_reg * b_en);
+    if(TaskScheduler_AddTask(IllumHandler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        DEBUG_PRINT("add IllumHandler fail\n");
+    }
+}
+
+static void BreathHandler(void)
+{
+    static uint16_t breath_reg;
+    breath_val += breath_interval;
+    if(breath_val < breath_rising)
+    {
+      breath_reg = breath_val;
+    }
+    else if((breath_val >= breath_rising) && (breath_val < breath_falling))
+    {
+      breath_reg = breath_falling - breath_val;
+    }
+    else
+    {
+      breath_val = light_max;
+      breath_reg = breath_val;
+    }
+    PwmHandler(breath_reg * r_en, breath_reg * g_en, breath_reg * b_en);
+    if(TaskScheduler_AddTask(BreathHandler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        DEBUG_PRINT("add BreathHandler fail\n");
+    } 
+}
+
+static void BreathQuickHandler(void)
+{
+    static uint16_t breath_reg;
+    breath_val += breath_interval;
+    if(breath_val < breath_rising)
+    {
+      breath_reg = breath_val;
+    }
+    else if((breath_val >= breath_rising) && (breath_val < breath_falling))
+    {
+      breath_reg = breath_falling - breath_val;
+    }
+    else
+    {
+      breath_val = light_max;
+      breath_reg = breath_val;
+    }
+    PwmHandler(breath_reg * r_en, breath_reg * g_en, breath_reg * b_en);
+    if(TaskScheduler_AddTask(BreathQuickHandler, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        DEBUG_PRINT("add BreathQuickHandler fail\n");
+    }
+}
+
+static void AlertHandler(void)
+{
+    static uint16_t alert_val;
+    static uint16_t alert_reg;
+    if(alert_val < light_on)
+    {
+      alert_val += 1;
+      alert_reg = light_max;
+    }
+    else
+    {
+      alert_val = 0;
+      alert_reg = light_min;
+    }
+    PwmHandler(alert_reg * r_en, alert_reg * g_en, alert_reg * b_en);
+    if(TaskScheduler_AddTask(AlertHandler, 500, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        DEBUG_PRINT("add AlertHandler fail\n");
+    }
+}
+
+static void StableHandler(void)
+{
+    static uint16_t stable_val;
+    static uint16_t stable_reg;
+    if(stable_val < light_on)
+    {
+      stable_val += 1;
+      stable_reg = light_max;
+    }
+    else
+    {
+      stable_val = 0;
+      stable_reg = light_min;
+    }
+    PwmHandler(stable_reg * r_en, stable_reg * g_en, stable_reg * b_en);
+    if(TaskScheduler_AddTask(StableHandler, 5000, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        DEBUG_PRINT("add StableHandler fail\n");
+    }
+}
+
+static void PwmHandler(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
+{
+    tmr_channel_value_set(TMR3, TMR_SELECT_CHANNEL_1, PwmR);
+    tmr_channel_value_set(TMR3, TMR_SELECT_CHANNEL_2, PwmG);
+    tmr_channel_value_set(TMR3, TMR_SELECT_CHANNEL_3, PwmB);
+}

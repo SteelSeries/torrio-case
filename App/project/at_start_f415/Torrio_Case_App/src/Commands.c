@@ -13,6 +13,7 @@
 #include "system_state_manager.h"
 #include <stdio.h>
 #include <string.h>
+#include "lighting.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -54,6 +55,8 @@ static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIV
 static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static void HandleLightingDebugCommand(uint8_t command,uint8_t r,uint8_t g,uint8_t b);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -77,6 +80,7 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_CUSTOM_OP, .read = HandleNoop, .write = DebugCommand},
         {.op = DEBUG_SY8809_OP, .read = Sy8809DebugRegReadCommand, .write = Sy8809DebugRegWriteCommand},
         {.op = DEBUG_SY8809_XSENSE_OP, .read = Sy8809DebugXsenserReadCommand, .write = HandleNoop},
+	    {.op = DEBUG_LEDRGB_OP, .read = HandleNoop, .write = HandleLedDebugCommand},
 
         // factory
         {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
@@ -188,6 +192,7 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
     {
     case 0x01:
     {
+        HandleLightingDebugCommand(command[2],command[3],command[4],command[5]);
         break;
     }
 
@@ -480,3 +485,37 @@ static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN])
     }
     return COMMAND_STATUS_SUCCESS;
 }
+
+static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+{
+    uint8_t buff = 0x00;
+    switch (command[1])
+    {
+    case COMMAND_TARGET_CASE:
+    {
+        Lighting_LEDOnOffSetting(command[2], command[3], command[4]);
+        break;
+    }
+    case COMMAND_TARGET_LEFT_BUD:
+    {
+        break;                   
+    }
+    case COMMAND_TARGET_RIGHT_BUD:
+    {
+        break;                   
+    }
+    default:
+        break;
+    }
+    buff = DEBUG_LEDRGB_OP;
+    custom_hid_class_send_report(&otg_core_struct.dev, &buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static void HandleLightingDebugCommand(uint8_t command,uint8_t r,uint8_t g,uint8_t b)
+{
+    Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
+    Lighting_Mode = command;
+    Lighting_Handler(r, g, b);
+}
+

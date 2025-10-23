@@ -7,6 +7,7 @@
 #include "usb.h"
 #include "Commands.h"
 #include "timer2.h"
+#include "timer3.h"
 #include "timer5.h"
 #include "task_scheduler.h"
 #include "lighting.h"
@@ -117,6 +118,8 @@ int main(void)
   }
 
   Timer2_Init();
+
+  Timer3_Init();
 
   Timer4_Init();
 

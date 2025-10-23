@@ -8,6 +8,7 @@
 #include "usb.h"
 #include "sy8809.h"
 #include "adc.h"
+#include "lighting.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -80,6 +81,21 @@ static const Adc_HardwareSettings_t adc_config =
         .adc_gpio_crm_clk = ADC_CRM_CLK,
 };
 
+static const Lighting_HardwareSettings_t pwm_config =
+    {
+        .lighting_r_gpio_port = PWM_R_GPIO_PORT,
+        .lighting_r_gpio_pin = PWM_R_PIN,
+        .lighting_r_gpio_crm_clk = PWM_R_GPIO_CLK,
+
+        .lighting_g_gpio_port = PWM_G_GPIO_PORT,
+        .lighting_g_gpio_pin = PWM_G_PIN,
+        .lighting_g_gpio_crm_clk = PWM_G_GPIO_CLK,
+
+        .lighting_b_gpio_port = PWM_B_GPIO_PORT,
+        .lighting_b_gpio_pin = PWM_B_PIN,
+        .lighting_b_gpio_crm_clk = PWM_B_GPIO_CLK,
+};
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -92,6 +108,7 @@ void InitPinout_Init(void)
     Sy8809_GpioConfigHardware(&sy8809_config);
     Usb_GpioConfigHardware(&usb_config);
     Adc_GpioConfigHardware(&adc_config);
+    Lighting_GpioConfigHardware(&pwm_config);
 }
 
 void InitPinout_I2c1Init(void)
