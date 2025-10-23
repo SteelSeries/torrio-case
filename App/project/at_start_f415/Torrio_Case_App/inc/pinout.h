@@ -32,6 +32,8 @@
 #define UART2_L_RX_GPIO     GPIOA                       // PA3
 #define UART2_L_RX_CRM_CLK  CRM_GPIOA_PERIPH_CLOCK      // PA3
 
+#define LEFT_UART           USART2
+
 #define UART3_R_TX_PIN      GPIO_PINS_10                // PB10
 #define UART3_R_TX_GPIO     GPIOB                       // PB10
 #define UART3_R_TX_CRM_CLK  CRM_GPIOB_PERIPH_CLOCK      // PB10
@@ -39,6 +41,8 @@
 #define UART3_R_RX_PIN      GPIO_PINS_11                // PB11
 #define UART3_R_RX_GPIO     GPIOB                       // PB11
 #define UART3_R_RX_CRM_CLK  CRM_GPIOB_PERIPH_CLOCK      // PB11
+
+#define RIGHT_UART           USART3
 
 #define LED_R_PIN           GPIO_PINS_6                 // PA6
 #define LED_R_GPIO          GPIOA                       // PA6

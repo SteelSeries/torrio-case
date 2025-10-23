@@ -4,6 +4,7 @@
 #include "uart_comm_manager.h"
 #include "task_scheduler.h"
 #include "timer2.h"
+#include "uart_driver.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -68,6 +69,7 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     ctx->current_timeout_ms = 0;
     ctx->retry_count = 0;
     ctx->tx_seqn = 0;
+    ctx->tx_len = 0;
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
 }
@@ -93,8 +95,12 @@ static void CommTask(UART_CommContext_t *ctx)
                 }
                 DEBUG_PRINT("\r\n");
 
-                // UART_PackCommand(&cmd, ctx->tx_buffer);
-                // UART_Send(ctx->usart, ctx->tx_buffer, cmd.length);
+                memcpy(&ctx->tx_buffer, cmd.data, cmd.length);
+                ctx->tx_len = cmd.length;
+                UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
+                UartDrive_SendData(ctx);
+                UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_RECEIVE_MODE);
+
                 ctx->current_timeout_ms = cmd.timeout_ms;
                 ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
                 ctx->state = UART_STATE_WAITING_RESPONSE;
@@ -140,6 +146,11 @@ static void CommTask(UART_CommContext_t *ctx)
         if (++ctx->retry_count < 3)
         {
             // UART_Send(&ctx->uart, ctx->tx_buffer, /* len */);
+
+            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
+            UartDrive_SendData(ctx);
+            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_RECEIVE_MODE);
+
             ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
             ctx->state = UART_STATE_WAITING_RESPONSE;
             DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (retry)\n");

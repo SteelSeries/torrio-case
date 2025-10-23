@@ -3025,6 +3025,9 @@
             <name>$PROJ_DIR$\..\src\uart_command_queue.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\uart_driver.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\uart_interface.c</name>
         </file>
         <file>
