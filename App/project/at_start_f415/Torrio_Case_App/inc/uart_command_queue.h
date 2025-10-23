@@ -18,6 +18,7 @@ typedef struct
     uint8_t data[CMD_MAX_DATA_LEN];
     uint8_t length;
     uint8_t command_id;
+    uint16_t timeout_ms;
 } UartCommand_t;
 
 typedef struct

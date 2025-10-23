@@ -29,6 +29,7 @@ typedef struct
     UartCommandQueue_t cmd_queue;
     UART_State_t state;
     uint32_t timeout_tick;
+    uint16_t current_timeout_ms;
     uint8_t tx_buffer[64];
     uint8_t rx_buffer[64];
     uint8_t retry_count;

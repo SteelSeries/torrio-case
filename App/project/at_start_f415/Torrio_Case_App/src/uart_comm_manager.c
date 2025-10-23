@@ -65,6 +65,7 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     UartCommandQueue_Init(&ctx->cmd_queue);
     ctx->state = UART_STATE_IDLE;
     ctx->timeout_tick = 0;
+    ctx->current_timeout_ms = 0;
     ctx->retry_count = 0;
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
@@ -93,8 +94,8 @@ static void CommTask(UART_CommContext_t *ctx)
 
                 // UART_PackCommand(&cmd, ctx->tx_buffer);
                 // UART_Send(ctx->usart, ctx->tx_buffer, cmd.length);
-
-                ctx->timeout_tick = Timer2_GetTick() + 100;
+                ctx->current_timeout_ms = cmd.timeout_ms;
+                ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
                 ctx->state = UART_STATE_WAITING_RESPONSE;
                 DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (timeout @ %lu)\n", ctx->timeout_tick);
             }
@@ -138,7 +139,7 @@ static void CommTask(UART_CommContext_t *ctx)
         if (++ctx->retry_count < 3)
         {
             // UART_Send(&ctx->uart, ctx->tx_buffer, /* len */);
-            ctx->timeout_tick = Timer2_GetTick() + 100;
+            ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
             ctx->state = UART_STATE_WAITING_RESPONSE;
             DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (retry)\n");
         }
@@ -146,6 +147,7 @@ static void CommTask(UART_CommContext_t *ctx)
         {
             DEBUG_PRINT("[UART][TIMEOUT] Max retry reached. Reset to IDLE.\n");
             ctx->state = UART_STATE_IDLE; // 或錯誤處理
+            ctx->retry_count = 0;
         }
         break;
     }

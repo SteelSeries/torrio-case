@@ -199,9 +199,10 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
 
         UART_CommContext_t *ctx = UartCommManager_GetLeftBudContext();
         UartCommand_t cmd;
-        cmd.command_id = 0x01;
         memcpy(cmd.data, command, sizeof(cmd.data));
         cmd.length = sizeof(cmd.data);
+        cmd.command_id = 0x01;
+        cmd.timeout_ms = 200;
         UartCommandQueue_Enqueue(&ctx->cmd_queue, &cmd);
         break;
     }
