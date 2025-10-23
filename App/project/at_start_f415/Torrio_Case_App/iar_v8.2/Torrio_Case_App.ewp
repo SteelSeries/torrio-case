@@ -1728,7 +1728,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>48</hasPrio>
+                <hasPrio>1</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -2306,6 +2306,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\timer5.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_comm_manager.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_command_queue.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\usb.c</name>
