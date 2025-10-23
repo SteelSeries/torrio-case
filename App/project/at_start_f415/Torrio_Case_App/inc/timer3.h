@@ -8,7 +8,8 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-
+#define PWM_SET_LEVEL               1023U
+#define TIMER3_PWM_FREQUENCY        7800U  // 7.8 kHz
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -20,8 +21,4 @@
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void SystemStateManager_EnterStandbyModeCheck(void);
-void SystemStateManager_SystemResetCheck(void);
-void SystemStateManager_ReadBatteryAndNtcHandle(void);
-void SystemStateManager_SystemStartWork(void);
-void SystemStateManager_GetBatteryStatusHandle(void);
+void Timer3_Init(void);

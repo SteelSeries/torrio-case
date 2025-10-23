@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <settings>
     <Jet>
-        <JetConnSerialNo>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07</JetConnSerialNo>
-        <JetConnFoundProbes>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07:AT-Link-Plus(WinUSB) CMSIS-DAP:ECA81400004001210C156C07:</JetConnFoundProbes>
+        <JetConnSerialNo>AT-Link CMSIS-DAP:9C69593300C0636C0A177502</JetConnSerialNo>
+        <JetConnFoundProbes>AT-Link CMSIS-DAP:9C69593300C0636C0A177502:AT-Link(WinUSB) CMSIS-DAP:9C69593300C0636C0A177502:</JetConnFoundProbes>
         <PrevWtdReset>Connect during reset</PrevWtdReset>
         <OnlineReset>Software</OnlineReset>
         <DisableInterrupts>0</DisableInterrupts>
@@ -14,7 +14,7 @@
         <MemConfigValue>C:\Program Files\IAR Systems\Embedded Workbench 9.0\arm\CONFIG\debugger\ArteryTek\AT32F415xB_v2.ddf</MemConfigValue>
     </PlDriver>
     <DebugChecksum>
-        <Checksum>3108854648</Checksum>
+        <Checksum>1197433649</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -40,8 +40,8 @@
     <SWOManager>
         <SamplingDivider>8192</SamplingDivider>
         <OverrideClock>0</OverrideClock>
-        <CpuClock>1464151629</CpuClock>
-        <SwoClock>1313426478</SwoClock>
+        <CpuClock>0</CpuClock>
+        <SwoClock>0</SwoClock>
         <DataLogMode>0</DataLogMode>
         <ItmPortsEnabled>63</ItmPortsEnabled>
         <ItmTermIOPorts>1</ItmTermIOPorts>
@@ -54,6 +54,11 @@
         <EnableCache>1</EnableCache>
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
+        <Category2>_ 2</Category2>
+    </LogFile>
     <Trace1>
         <Enabled>0</Enabled>
         <ShowSource>1</ShowSource>
@@ -88,11 +93,6 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
-        <Category2>_ 2</Category2>
-    </LogFile>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>

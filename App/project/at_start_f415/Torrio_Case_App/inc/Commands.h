@@ -20,17 +20,21 @@
 #define FILE_CRC32_OP               0x04U
 
 // debug
-#define DEBUG_CUSTOM_OP             0x08U // each application implements it as they see fit
-#define DEBUG_SY8809_OP             0x71U 
-#define DEBUG_SY8809_XSENSE_OP      0x70U 
+#define DEBUG_CUSTOM_OP 			0x08U // each application implements it as they see fit
+#define DEBUG_SY8809_OP 			0x71U
+#define DEBUG_SY8809_XSENSE_OP 		0x70U
+#define DEBUG_LEDRGB_OP             0x73U 
+
+// Case
+#define GET_BATTERY_INFO 			0x37 // Read Case and buds battery level and charging status.
 
 // internal - we can reuse those as USB APIs for Artery
 #define INTERNAL_USB_SUSPEND_OP     0x0CU // USB entered suspend mode. Lower power usage
 #define INTERNAL_USB_RESUME_OP      0x0DU // after suspension, resume from device received
 
 // factory
-#define FAC_GET_BATTERY_AND_NTC     0x72 // factory settings
-#define FAC_SET_CHARGE_STATUS       0x74 // factory settings
+#define FAC_GET_BATTERY_AND_NTC 	0x72 // factory settings
+#define FAC_SET_CHARGE_STATUS 		0x74   // factory settings
 
 // factory settings
 #define FAC_SERIAL_OP               0x13 // factory settings
@@ -64,6 +68,13 @@ typedef enum
     COMMAND_TARGET_LEFT_BUD,
     COMMAND_TARGET_RIGHT_BUD
 } Command_Target_t;
+
+typedef enum
+{
+    COMMAND_GET_BATTERY_STATUS_UNPLUGGED = 0x00,
+    COMMAND_GET_BATTERY_STATUS_CHARGE,
+    COMMAND_GET_BATTERY_STATUS_COMPLETE
+} Command_GetBatteryStatus_t;
 
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *

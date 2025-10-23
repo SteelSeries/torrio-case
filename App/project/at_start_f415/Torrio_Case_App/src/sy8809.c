@@ -255,6 +255,7 @@ static Sy8809_ChargeStatus_t ChargeIcStatusInfo = {
     .check_reg_state = {0},
     .left_bud_charge_status = SY8809_BUD_CHARGE_STATE_UNKNOW,
     .right_bud_charge_status = SY8809_BUD_CHARGE_STATE_UNKNOW,
+    .case_charge_status = SY8809_CASE_CHARGE_STATUS_UNKNOW,
     .current_table = SY8809_REG_UNKNOWN,
     .ntc_level = SY8809_NTC_LEVEL_UNKNOW,
 };
@@ -281,6 +282,7 @@ static void ReadNtcProcess(void);
 static void UpdateTableByPowerSource(void);
 static void UpdateStatusRegisters(void);
 static void CheckNtcOverTempe(void);
+static void CheckCaseChargeStatus(void);
 static void CheckBudsChargeStatus(void);
 static void UsbModeApplyTable(void);
 static void NormalModeApplyTable(void);
@@ -545,6 +547,7 @@ static void FirstReadVbatProcess(void)
     }
     else
     {
+        // Todo: case low battery enter Protection
         if (TaskScheduler_AddTask(ReadNtcProcess, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
             DEBUG_PRINT("add sy8809 read vbat task fail\n");
@@ -556,9 +559,7 @@ static void ReadNtcProcess(void)
 {
     DEBUG_PRINT("[%s]\n", __func__);
 
-    UpdateStatusRegisters();
-
-    CheckNtcOverTempe();
+    UpdateTableByPowerSource();
 
     if (TaskScheduler_AddTask(SystemStateManager_SystemStartWork, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
@@ -571,7 +572,10 @@ static void UpdateTableByPowerSource(void)
     UpdateStatusRegisters();
 
     CheckNtcOverTempe();
+
     CheckBudsChargeStatus();
+
+    CheckCaseChargeStatus();
 
     if (Usb_GetUsbDetectState() == USB_PLUG)
     {
@@ -656,6 +660,11 @@ static void CheckNtcOverTempe(void)
             SettingRegTable5H();
         }
     }
+}
+
+static void CheckCaseChargeStatus(void)
+{
+    ChargeIcStatusInfo.case_charge_status = (Sy8809_CaseChargeStatus_t)(ChargeIcStatusInfo.check_reg_state.reg_0x12 & ST8809_ST_CHG_STAT_MASK);
 }
 
 static void CheckBudsChargeStatus(void)

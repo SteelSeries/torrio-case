@@ -44,25 +44,19 @@
 #define UART3_R_RX_GPIO     GPIOB                       // PB11
 #define UART3_R_RX_CRM_CLK  CRM_GPIOB_PERIPH_CLOCK      // PB11
 
-#define LED_R_PIN           GPIO_PINS_6                 // PA6
-#define LED_R_GPIO          GPIOA                       // PA6
-#define LED_R_CRM_CLK       CRM_GPIOA_PERIPH_CLOCK      // PA6
-
-#define LED_G_PIN           GPIO_PINS_7                 // PA7
-#define LED_G_GPIO          GPIOA                       // PA7
-#define LED_G_CRM_CLK       CRM_GPIOA_PERIPH_CLOCK      // PA7
-
-#define LED_B_PIN           GPIO_PINS_0                 // PB0
-#define LED_B_GPIO          GPIOB                       // PB0
-#define LED_B_CRM_CLK       CRM_GPIOB_PERIPH_CLOCK      // PB0
-
 #define BUD_DETECT_RESIST_SWITCH_PIN        GPIO_PINS_1                 // PC1
 #define BUD_DETECT_RESIST_SWITCH_GPIO       GPIOC                       // PC1
 #define BUD_DETECT_RESIST_SWITCH_CRM_CLK    CRM_GPIOC_PERIPH_CLOCK      // PC1
 
+
+// NOTE: This configuration was required in early versions of Scala's circuit design,
+// but has since been removed in later versions. It is currently used for experimental purposes only.
+// Please disable this feature in future versions.
+#ifdef SCALA_BOARD
 #define OPEN_LID_MOS_SWITCH_PIN             GPIO_PINS_2                 // PC2
 #define OPEN_LID_MOS_SWITCH_GPIO            GPIOC                       // PC2
 #define OPEN_LID_MOS_SWITCH_CRM_CLK         CRM_GPIOC_PERIPH_CLOCK      // PC2
+#endif
 
 #define QI_CHARGE_DETECT_PIN                GPIO_PINS_13                // PB13
 #define QI_CHARGE_DETECT_GPIO               GPIOB                       // PB13
@@ -75,6 +69,18 @@
 #define I2C1_SDA_PIN                        GPIO_PINS_7                 // PB7
 #define I2C1_SDA_GPIO_PORT                  GPIOB                       // PB7
 #define I2C1_SDA_GPIO_CLK                   CRM_GPIOB_PERIPH_CLOCK      // PB7
+
+#define PWM_R_PIN                           GPIO_PINS_6                 // PA6
+#define PWM_R_GPIO_PORT                     GPIOA                       // PA6
+#define PWM_R_GPIO_CLK                      CRM_TMR3_PERIPH_CLOCK      // PA6
+
+#define PWM_G_PIN                           GPIO_PINS_7                 // PA7
+#define PWM_G_GPIO_PORT                     GPIOA                       // PA7
+#define PWM_G_GPIO_CLK                      CRM_TMR3_PERIPH_CLOCK      // PA7
+
+#define PWM_B_PIN                           GPIO_PINS_0                 // PB0
+#define PWM_B_GPIO_PORT                     GPIOB                       // PB0
+#define PWM_B_GPIO_CLK                      CRM_TMR3_PERIPH_CLOCK      // PB0
 
 #define I2C1_PORT                           I2C1
 #define I2C1_CLK                            CRM_I2C1_PERIPH_CLOCK
