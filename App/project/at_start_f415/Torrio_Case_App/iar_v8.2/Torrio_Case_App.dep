@@ -1628,6 +1628,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\Torrio_Case_App_Debug\Exe\Torrio_Case_App.out</name>
+            <outputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 100</file>
+                </tool>
+            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
@@ -2135,16 +2141,10 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\uart_protocol.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 192</file>
-                </tool>
-            </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 110 127 175 41 166 187 47 169 107 114 108 115 116 106 124 36 188 118 135 25 179 165 37 131 27 26 139 164 178 143 62 28 140 42 172 31 136 146 117 119 132 130 38 167 201</file>
+                    <file> 110 127 175 41 166 187 47 169 107 114 108 115 116 106 124 36 188 118 135 25 179 165 37 131 27 26 139 164 178 143 62 28 140 42 172 31 136 146 117 119 132 130 38 167 194 201</file>
                 </tool>
             </inputs>
         </file>

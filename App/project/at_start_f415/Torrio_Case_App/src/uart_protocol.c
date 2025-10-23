@@ -20,7 +20,7 @@
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
-static uint8_t CalcChecksum(uint8_t *dataPtr, uint16_t len);
+static uint8_t CalcChecksum(const uint8_t *dataPtr, uint16_t len);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -67,10 +67,41 @@ bool UartProtocol_PackCommand(uint16_t event_id, uint8_t *tx_seq,
     return true;
 }
 
+bool UARTProtocol_UnpackCommand(const uint8_t *in_buf, uint16_t in_len, UartProtocol_Packet_t *out_packet)
+{
+    if (in_len < 7)
+    {
+        return false;
+    }
+    if (in_buf[0] != CMD_SYNC_BYTE)
+    {
+        return false;
+    }
+
+    uint16_t len_field = (uint16_t)in_buf[2] | ((uint16_t)in_buf[3] << 8);
+    if (len_field + 5 != in_len)
+    {
+        return false;
+    }
+
+    uint8_t checksum = CalcChecksum(&in_buf[1], in_len - 2);
+    if (checksum != in_buf[in_len - 1])
+    {
+        return false;
+    }
+
+    out_packet->tx_seq = in_buf[1];
+    out_packet->event_id = (uint16_t)in_buf[4] | ((uint16_t)in_buf[5] << 8);
+    out_packet->payload_len = len_field - 2;
+    memcpy(out_packet->payload, &in_buf[6], out_packet->payload_len);
+
+    return true;
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-static uint8_t CalcChecksum(uint8_t *dataPtr, uint16_t len)
+static uint8_t CalcChecksum(const uint8_t *dataPtr, uint16_t len)
 {
     uint8_t check_sum;
 
