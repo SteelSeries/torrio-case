@@ -41,6 +41,14 @@ typedef struct
     crm_periph_clock_type lighting_b_gpio_crm_clk;
 
 } Lighting_HardwareSettings_t;
+
+typedef enum
+{
+    LIGHTING_BREATH_COMPLETE = 0,
+    LIGHTING_BREATH_NON_COMPLETE,
+    LIGHTING_BREATH_UNKNOW
+} Lighting_Breath_State_t;
+
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -52,3 +60,4 @@ void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_set
 void Lighting_HandleTask(void);
 void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
 void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
+Lighting_Breath_State_t Lighting_LidOffHandle(void);

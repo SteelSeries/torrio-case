@@ -38,7 +38,7 @@ static uint16_t illum_hold_dark = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_HOLD_TIME *
 
 static uint16_t r_en, g_en, b_en;
 
-static bool breath_complete_flag = true;
+static Lighting_Breath_State_t breath_complete_flag = LIGHTING_BREATH_NON_COMPLETE;
 static uint16_t lid_pre_state;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
@@ -62,15 +62,15 @@ void Lighting_HandleTask(void)
     TaskScheduler_RemoveTask(StableHandler);
     if (Lid_GetState() != lid_pre_state)
     {
-      breath_complete_flag = false;
+      breath_complete_flag = LIGHTING_BREATH_NON_COMPLETE;
     }
     
-    if ((Lid_GetState() == LID_OPEN) && breath_complete_flag == false)
+    if ((Lid_GetState() == LID_OPEN) && breath_complete_flag == LIGHTING_BREATH_NON_COMPLETE)
     {
         lid_pre_state = LID_OPEN;
         Lighting_Handler(LIGHTING_BREATH_QUICKLY, 0, 1, 0);
     }
-    else if ((Lid_GetState() == LID_CLOSE) && breath_complete_flag == false)
+    else if ((Lid_GetState() == LID_CLOSE) && breath_complete_flag == LIGHTING_BREATH_NON_COMPLETE)
     {
         lid_pre_state = LID_CLOSE;
         Lighting_Handler(LIGHTING_BREATH_QUICKLY, 1, 1, 0);
@@ -84,6 +84,19 @@ void Lighting_HandleTask(void)
         Lighting_Handler(LIGHTING_LED_OFF, 0, 0, 0);
     }
 }
+
+Lighting_Breath_State_t Lighting_LidOffHandle(void)
+{
+  if ((Lid_GetState() == LID_CLOSE) && breath_complete_flag == LIGHTING_BREATH_NON_COMPLETE)
+  {
+    if ((Lid_GetState() == LID_CLOSE) && breath_complete_flag == LIGHTING_BREATH_COMPLETE)
+    {
+        return LIGHTING_BREATH_COMPLETE;//when lid close and breath complete enter to standby mode
+    }
+  }
+  return LIGHTING_BREATH_NON_COMPLETE;
+}
+
 void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
 {
     DEBUG_PRINT("run Lighting_Handler\n");
@@ -281,7 +294,7 @@ static void BreathQuickHandler(void)
       breath_val = light_max;
       breath_reg = breath_val;
       TaskScheduler_RemoveTask(BreathQuickHandler);
-      breath_complete_flag = true;
+      breath_complete_flag = LIGHTING_BREATH_COMPLETE;
     }
     PwmHandler(breath_reg * r_en, breath_reg * g_en, breath_reg * b_en);
 }

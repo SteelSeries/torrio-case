@@ -6,6 +6,7 @@
 #include "system_state_manager.h"
 #include "task_scheduler.h"
 #include "usb.h"
+#include "lighting.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -90,7 +91,7 @@ void Lid_StatusCheckTask(void)
       DEBUG_PRINT("Lid state changed to: %s\n", lid_state == LID_OPEN ? "OPEN" : "CLOSED");
       if (pre_lid_state == LID_CLOSE)
       {
-        if (Usb_FirstSetupUsbState() == USB_UNPLUG)
+        if ((Usb_FirstSetupUsbState() == USB_UNPLUG) && (Lighting_LidOffHandle() == LIGHTING_BREATH_COMPLETE))
         {
           if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
           {
