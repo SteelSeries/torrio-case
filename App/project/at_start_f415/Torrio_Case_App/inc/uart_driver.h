@@ -51,3 +51,4 @@ typedef enum
 void UartDrive_GpioConfigHardware(const UartDrive_HardwareSettings_t *hardware_settings);
 void UartDrive_SetOneWireMode(UART_CommContext_t *ctx, UART_OneWireMode_t mode);
 void UartDrive_SendData(UART_CommContext_t *ctx);
+void UartDrive_RxIrqHandler(UART_CommContext_t *ctx, uint8_t data);

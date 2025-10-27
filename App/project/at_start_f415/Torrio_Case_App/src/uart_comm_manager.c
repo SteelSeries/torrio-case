@@ -5,6 +5,8 @@
 #include "task_scheduler.h"
 #include "timer2.h"
 #include "uart_driver.h"
+#include "at32f415_int.h"
+#include "uart_protocol.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -44,6 +46,7 @@ void UartCommManager_Init(void)
 {
     CommInit(&bud_left_ctx, USART2);
     CommInit(&bud_right_ctx, USART3);
+    Interrupt_BudsCtxInit();
 }
 
 void UartCommManager_RunningTask(void)
@@ -70,6 +73,10 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     ctx->retry_count = 0;
     ctx->tx_seqn = 0;
     ctx->tx_len = 0;
+    ctx->rx_index = 0;
+    ctx->expected_len = 0;
+    ctx->sync_detected = false;
+    ctx->packet_ready = false;
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
 }
@@ -116,23 +123,52 @@ static void CommTask(UART_CommContext_t *ctx)
 
     case UART_STATE_WAITING_RESPONSE:
     {
-
-        // if (UART_ReceiveAvailable(&ctx->uart))
-        // {
-        //     UART_Receive(&ctx->uart, ctx->rx_buffer);
-        //     if (UART_ParseResponse(ctx->rx_buffer))
-        //     {
-        //         ctx->state = UART_STATE_IDLE;
-        //         ctx->retry_count = 0;
-        //     }
-        //     else
-        //     {
-        //         ctx->state = UART_STATE_ERROR;
-        //     }
-        // }
-        // else if (Timer2_GetTick() > ctx->timeout_tick)
-        if (Timer2_GetTick() > ctx->timeout_tick)
+        if (ctx->packet_ready)
         {
+            ctx->packet_ready = false;
+            DEBUG_PRINT("[UART][WAIT] Response packet ready, len=%d\n", ctx->rx_index);
+
+            UartProtocol_Packet_t rx_packet;
+            if (UARTProtocol_UnpackCommand(ctx->rx_buffer, ctx->rx_index, &rx_packet))
+            {
+                DEBUG_PRINT("[UART][WAIT] Response OK, EventID=0x%04X, Seq=%d, PayloadLen=%d\n",
+                            rx_packet.event_id, rx_packet.tx_seq, rx_packet.payload_len);
+
+                // TODO: callback or message to upper layer
+                ctx->state = UART_STATE_IDLE;
+                ctx->retry_count = 0;
+            }
+            else
+            {
+                DEBUG_PRINT("[UART][WAIT] CRC/Error detected -> UART_STATE_ERROR\n");
+                DEBUG_PRINT("Received data (%d bytes): ", ctx->rx_index);
+                for (uint16_t i = 0; i < ctx->rx_index; i++)
+                {
+                    DEBUG_PRINT("%02X ", ctx->rx_buffer[i]);
+                }
+                DEBUG_PRINT("\n");
+
+                if (ctx->rx_index < ctx->expected_len)
+                {
+                    DEBUG_PRINT("Error: Incomplete packet. Expected %d bytes, got %d bytes.\n",
+                                ctx->expected_len, ctx->rx_index);
+                }
+                else
+                {
+                    DEBUG_PRINT("Error: CRC mismatch or invalid data.\n");
+                }
+
+                ctx->state = UART_STATE_ERROR;
+            }
+
+            ctx->rx_index = 0;
+            ctx->expected_len = 0;
+            ctx->sync_detected = false;
+        }
+        else if (Timer2_GetTick() > ctx->timeout_tick)
+        {
+            DEBUG_PRINT("[UART][TIMEOUT] No data received. Current index=%d, expected_len=%d\n",
+                        ctx->rx_index, ctx->expected_len);
             DEBUG_PRINT("[UART][WAIT] Timeout detected (tick=%lu, limit=%lu)\n",
                         Timer2_GetTick(), ctx->timeout_tick);
             ctx->state = UART_STATE_TIMEOUT;
@@ -145,8 +181,6 @@ static void CommTask(UART_CommContext_t *ctx)
 
         if (++ctx->retry_count < 3)
         {
-            // UART_Send(&ctx->uart, ctx->tx_buffer, /* len */);
-
             UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
             UartDrive_SendData(ctx);
             UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_RECEIVE_MODE);

@@ -199,7 +199,7 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
         memcpy(cmd.data, &command[3], sizeof(cmd.data));
         cmd.length = command[2];
         cmd.command_id = 0x01;
-        cmd.timeout_ms = 2000;
+        cmd.timeout_ms = 10000;
         UartInterface_SendCommand(UART_INTERFACE_BUD_LEFT, &cmd);
 
         break;

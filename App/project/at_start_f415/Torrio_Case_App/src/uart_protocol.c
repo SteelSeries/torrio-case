@@ -7,7 +7,6 @@
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
-#define CMD_SYNC_BYTE 0xAA
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -69,24 +68,37 @@ bool UartProtocol_PackCommand(uint16_t event_id, uint8_t *tx_seq,
 
 bool UARTProtocol_UnpackCommand(const uint8_t *in_buf, uint16_t in_len, UartProtocol_Packet_t *out_packet)
 {
+    DEBUG_PRINT("[UART][Unpack] Called, in_len=%d\n", in_len);
+
     if (in_len < 7)
     {
+        DEBUG_PRINT("[UART][Unpack] Error: Packet too short. Minimum 7 bytes required.\n");
         return false;
     }
+
     if (in_buf[0] != CMD_SYNC_BYTE)
     {
+        DEBUG_PRINT("[UART][Unpack] Error: Invalid sync byte. Expected 0x%02X, got 0x%02X\n", CMD_SYNC_BYTE, in_buf[0]);
         return false;
     }
 
     uint16_t len_field = (uint16_t)in_buf[2] | ((uint16_t)in_buf[3] << 8);
     if (len_field + 5 != in_len)
     {
+        DEBUG_PRINT("[UART][Unpack] Error: Length mismatch. Len field=%d, in_len=%d\n", len_field, in_len);
         return false;
     }
 
     uint8_t checksum = CalcChecksum(&in_buf[1], in_len - 2);
     if (checksum != in_buf[in_len - 1])
     {
+        DEBUG_PRINT("[UART][Unpack] Error: Checksum mismatch. Calculated=0x%02X, Received=0x%02X\n", checksum, in_buf[in_len - 1]);
+        DEBUG_PRINT("[UART][Unpack] Received data: ");
+        for (uint16_t i = 0; i < in_len; i++)
+        {
+            DEBUG_PRINT("%02X ", in_buf[i]);
+        }
+        DEBUG_PRINT("\n");
         return false;
     }
 
@@ -94,6 +106,9 @@ bool UARTProtocol_UnpackCommand(const uint8_t *in_buf, uint16_t in_len, UartProt
     out_packet->event_id = (uint16_t)in_buf[4] | ((uint16_t)in_buf[5] << 8);
     out_packet->payload_len = len_field - 2;
     memcpy(out_packet->payload, &in_buf[6], out_packet->payload_len);
+
+    DEBUG_PRINT("[UART][Unpack] Success: tx_seq=%d, event_id=0x%04X, payload_len=%d\n",
+                out_packet->tx_seq, out_packet->event_id, out_packet->payload_len);
 
     return true;
 }

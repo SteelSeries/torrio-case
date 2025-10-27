@@ -33,6 +33,10 @@ typedef struct
     uint8_t tx_buffer[CMD_MAX_DATA_LEN];
     uint8_t tx_len;
     uint8_t rx_buffer[CMD_MAX_DATA_LEN];
+    uint16_t rx_index;
+    uint16_t expected_len; // Expected total length of the incoming packet
+    bool sync_detected;    // Indicates whether the CMD_SYNC_BYTE (start byte) has been detected
+    bool packet_ready;     // Set to true when a complete packet has been received in the interrupt
     uint8_t retry_count;
     uint8_t tx_seqn;
 } UART_CommContext_t;
