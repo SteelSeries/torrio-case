@@ -7,6 +7,7 @@
 #include "uart_driver.h"
 #include "at32f415_int.h"
 #include "uart_protocol.h"
+#include "uart_command_handler.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -66,6 +67,15 @@ void UartCommManager_RunningTask(void)
 static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
 {
     ctx->uart = usart_x;
+    if (usart_x == USART2)
+    {
+        ctx->side = UART_BUD_LEFT;
+    }
+    else if (usart_x == USART3)
+    {
+        ctx->side = UART_BUD_RIGHT;
+    }
+
     UartCommandQueue_Init(&ctx->cmd_queue);
     ctx->state = UART_STATE_IDLE;
     ctx->timeout_tick = 0;
@@ -127,26 +137,26 @@ static void CommTask(UART_CommContext_t *ctx)
         {
             ctx->packet_ready = false;
             DEBUG_PRINT("[UART][WAIT] Response packet ready, len=%d\n", ctx->rx_index);
-
+            DEBUG_PRINT("Received data (%d bytes): ", ctx->rx_index);
+            for (uint16_t i = 0; i < ctx->rx_index; i++)
+            {
+                DEBUG_PRINT("%02X ", ctx->rx_buffer[i]);
+            }
+            DEBUG_PRINT("\n");
+            
             UartProtocol_Packet_t rx_packet;
             if (UARTProtocol_UnpackCommand(ctx->rx_buffer, ctx->rx_index, &rx_packet))
             {
                 DEBUG_PRINT("[UART][WAIT] Response OK, EventID=0x%04X, Seq=%d, PayloadLen=%d\n",
                             rx_packet.event_id, rx_packet.tx_seq, rx_packet.payload_len);
 
-                // TODO: callback or message to upper layer
+                UartCommandsHandle_CommandsHandle(ctx, rx_packet);
                 ctx->state = UART_STATE_IDLE;
                 ctx->retry_count = 0;
             }
             else
             {
                 DEBUG_PRINT("[UART][WAIT] CRC/Error detected -> UART_STATE_ERROR\n");
-                DEBUG_PRINT("Received data (%d bytes): ", ctx->rx_index);
-                for (uint16_t i = 0; i < ctx->rx_index; i++)
-                {
-                    DEBUG_PRINT("%02X ", ctx->rx_buffer[i]);
-                }
-                DEBUG_PRINT("\n");
 
                 if (ctx->rx_index < ctx->expected_len)
                 {
