@@ -2260,6 +2260,9 @@
             <name>$PROJ_DIR$\..\src\battery.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\button.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\Commands.c</name>
         </file>
         <file>

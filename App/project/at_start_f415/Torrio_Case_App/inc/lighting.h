@@ -45,10 +45,10 @@ typedef struct
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
 extern uint8_t Lighting_Change_Flag;
-extern uint8_t Lighting_Mode;
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_settings);
-void Lighting_Handler(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
+void Lighting_HandleTask(void);
+void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
 void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);

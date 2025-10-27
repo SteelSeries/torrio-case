@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <settings>
     <Jet>
-        <JetConnSerialNo>AT-Link(WinUSB) CMSIS-DAP:9C69593300C0636C0A177502</JetConnSerialNo>
-        <JetConnFoundProbes />
+        <JetConnSerialNo>AT-Link CMSIS-DAP:9C69593300C0636C0A177502</JetConnSerialNo>
+        <JetConnFoundProbes>AT-Link CMSIS-DAP:9C69593300C0636C0A177502:AT-Link(WinUSB) CMSIS-DAP:9C69593300C0636C0A177502:</JetConnFoundProbes>
         <PrevWtdReset>Connect during reset</PrevWtdReset>
+        <OnlineReset>Software</OnlineReset>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>0</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
-        <OnlineReset>Software</OnlineReset>
     </Jet>
     <PlDriver>
         <FirstRun>0</FirstRun>
@@ -46,7 +46,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>2003676189</Checksum>
+        <Checksum>1886237438</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -96,18 +96,18 @@
         <EventLSU>0</EventLSU>
         <EventSLEEP>0</EventSLEEP>
     </SWOTraceWindow>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints2>
         <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\app_fw_update.c}.146.5" 0 0 1 "" 0 "" 0</Bp0>
-        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\timer3.c}.61.5" 0 0 1 "" 0 "" 0</Bp1>
+        <Bp1>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\lid.c}.105.9" 0 0 1 "" 0 "" 0</Bp1>
         <Count>2</Count>
     </Breakpoints2>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>

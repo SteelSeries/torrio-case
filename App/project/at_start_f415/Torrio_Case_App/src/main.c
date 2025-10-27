@@ -146,6 +146,11 @@ int main(void)
     DEBUG_PRINT("add USB check task fail\n");
   }
 
+  if (TaskScheduler_AddTask(Lighting_HandleTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    DEBUG_PRINT("add lighting handle task fail\n");
+  }
+
   DEBUG_PRINT("main loop start\n");
   while (1)
   {

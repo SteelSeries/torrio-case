@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include "task_scheduler.h"
 #include <string.h>
+#include "usb.h"
+#include "lid.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -16,7 +18,6 @@
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 uint8_t Lighting_Change_Flag = LIGHTING_CHANGE_FALSE;
-uint8_t Lighting_Mode = LIGHTING_LED_OFF;
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -36,6 +37,9 @@ static uint16_t illum_falling = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_HOLD_TIME; //
 static uint16_t illum_hold_dark = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_HOLD_TIME * 2; //illum_hold_dark - illum_val = led hold dark time
 
 static uint16_t r_en, g_en, b_en;
+
+static bool breath_complete_flag = true;
+static uint16_t lid_pre_state;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -49,7 +53,38 @@ static Lighting_HardwareSettings_t user_hardware_settings = {0};
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-void Lighting_Handler(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
+void Lighting_HandleTask(void)
+{
+    TaskScheduler_RemoveTask(IllumHandler);
+    TaskScheduler_RemoveTask(BreathHandler);
+    TaskScheduler_RemoveTask(BreathQuickHandler);
+    TaskScheduler_RemoveTask(AlertHandler);
+    TaskScheduler_RemoveTask(StableHandler);
+    if (Lid_GetState() != lid_pre_state)
+    {
+      breath_complete_flag = false;
+    }
+    
+    if ((Lid_GetState() == LID_OPEN) && breath_complete_flag == false)
+    {
+        lid_pre_state = LID_OPEN;
+        Lighting_Handler(LIGHTING_BREATH_QUICKLY, 0, 1, 0);
+    }
+    else if ((Lid_GetState() == LID_CLOSE) && breath_complete_flag == false)
+    {
+        lid_pre_state = LID_CLOSE;
+        Lighting_Handler(LIGHTING_BREATH_QUICKLY, 1, 1, 0);
+    }
+    else if (Usb_GetUsbDetectState() == USB_PLUG)
+    {
+        Lighting_Handler(LIGHTING_BREATH, 0, 0, 1);
+    }
+    else
+    {
+        Lighting_Handler(LIGHTING_LED_OFF, 0, 0, 0);
+    }
+}
+void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
 {
     DEBUG_PRINT("run Lighting_Handler\n");
     if(Lighting_Change_Flag == LIGHTING_CHANGE_TRUE)
@@ -68,7 +103,7 @@ void Lighting_Handler(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
     g_en = PwmG;
     b_en = PwmB;
 
-    switch (Lighting_Mode)
+    switch (LightingMode)
     {
         case LIGHTING_ILLUM:
         {
@@ -205,6 +240,10 @@ static void BreathHandler(void)
 {
     static uint16_t breath_reg;
     breath_val += breath_interval;
+    if(TaskScheduler_AddTask(BreathHandler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        DEBUG_PRINT("add BreathHandler fail\n");
+    } 
     if(breath_val < breath_rising)
     {
       breath_reg = breath_val;
@@ -219,16 +258,16 @@ static void BreathHandler(void)
       breath_reg = breath_val;
     }
     PwmHandler(breath_reg * r_en, breath_reg * g_en, breath_reg * b_en);
-    if(TaskScheduler_AddTask(BreathHandler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
-    {
-        DEBUG_PRINT("add BreathHandler fail\n");
-    } 
 }
 
 static void BreathQuickHandler(void)
 {
     static uint16_t breath_reg;
     breath_val += breath_interval;
+    if(TaskScheduler_AddTask(BreathQuickHandler, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        DEBUG_PRINT("add BreathQuickHandler fail\n");
+    }
     if(breath_val < breath_rising)
     {
       breath_reg = breath_val;
@@ -241,12 +280,10 @@ static void BreathQuickHandler(void)
     {
       breath_val = light_max;
       breath_reg = breath_val;
+      TaskScheduler_RemoveTask(BreathQuickHandler);
+      breath_complete_flag = true;
     }
     PwmHandler(breath_reg * r_en, breath_reg * g_en, breath_reg * b_en);
-    if(TaskScheduler_AddTask(BreathQuickHandler, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
-    {
-        DEBUG_PRINT("add BreathQuickHandler fail\n");
-    }
 }
 
 static void AlertHandler(void)

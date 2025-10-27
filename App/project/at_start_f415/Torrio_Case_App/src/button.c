@@ -62,7 +62,7 @@ void Button_StatusCheckTask(void)
   {
     if (button_state == BUTTON_PRESS)//TDB action on button press
     {
-        printf("Button state is PRESS\n");
+        DEBUG_PRINT("Button state is PRESS\n");
         uint8_t buff[2] = {0x00};
         buff[0] = BUTTON_PRESS;
         buff[1] = COMMAND_STATUS_SUCCESS;

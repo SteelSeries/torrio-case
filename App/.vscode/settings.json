@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "commands.h": "c"
+        "commands.h": "c",
+        "task_scheduler.h": "c",
+        "at32f415_board.h": "c",
+        "system_state_manager.h": "c"
     }
 }

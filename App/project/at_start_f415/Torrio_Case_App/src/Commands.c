@@ -515,7 +515,6 @@ static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_
 static void HandleLightingDebugCommand(uint8_t command,uint8_t r,uint8_t g,uint8_t b)
 {
     Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
-    Lighting_Mode = command;
-    Lighting_Handler(r, g, b);
+    Lighting_Handler(command, r, g, b);
 }
 
