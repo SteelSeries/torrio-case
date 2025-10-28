@@ -20,6 +20,24 @@
  *************************************************************************************************/
 #define NUM_COMMANDS (sizeof(handler_table) / sizeof(handler_table[0]))
 #define WRITE_SERIAL_NUMBER_KEY 0xAA551133U
+
+// ---------------------------------------------------------------------------
+// Bud Debug Command payload length definitions
+// ---------------------------------------------------------------------------
+//
+// The total UART buffer size available for transmission is 32 bytes,
+// which is defined by CMD_MAX_DATA_LEN.
+//
+// The RTK communication protocol requires 7 bytes of overhead
+// (header + length + checksum, etc.), leaving 25 bytes available
+// for user payload data.
+//
+// Therefore:
+//   BUD_DEBUG_PAYLOAD_MAX = CMD_MAX_DATA_LEN (32) - 7 = 25
+//   BUD_DEBUG_PAYLOAD_MIN = 1 (must have at least 1 byte of data)
+// ---------------------------------------------------------------------------
+#define BUD_DEBUG_PAYLOAD_MAX (CMD_MAX_DATA_LEN - 7)
+#define BUD_DEBUG_PAYLOAD_MIN 1
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -56,6 +74,7 @@ static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIV
 static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -85,6 +104,7 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
         {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
         {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
+        {.op = FAC_READ_BUDS_DEBUG, .read = FactoryDebugReadBuds, .write = HandleNoop},
 
         // Case/Buds
         {.op = GET_BATTERY_INFO, .read = GetBatteryStatus, .write = HandleNoop},
@@ -195,13 +215,6 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
 
     case 0x02:
     {
-        UartCommandQueue_Command_t cmd;
-        memcpy(cmd.data, &command[3], sizeof(cmd.data));
-        cmd.length = command[2];
-        cmd.command_id = 0x01;
-        cmd.timeout_ms = 10000;
-        UartInterface_SendCommand(UART_INTERFACE_BUD_LEFT, &cmd);
-
         break;
     }
 
@@ -483,6 +496,52 @@ static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_
         }
         }
     }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN])
+{
+    Command_Target_t target = (Command_Target_t)command[1];
+    if ((target != COMMAND_TARGET_RIGHT_BUD) && (target != COMMAND_TARGET_LEFT_BUD))
+    {
+        uint8_t buff[2] = {0x00};
+        buff[0] = FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG;
+        buff[1] = FLASH_WRITE_ERRORS;
+        custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+        return COMMAND_STATUS_SUCCESS;
+    }
+
+    if ((command[2] < BUD_DEBUG_PAYLOAD_MIN) || (command[2] > BUD_DEBUG_PAYLOAD_MAX))
+    {
+        uint8_t buff[2] = {0};
+        buff[0] = FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG;
+        buff[1] = FLASH_WRITE_ERRORS;
+        custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+        return COMMAND_STATUS_SUCCESS;
+    }
+
+    UartCommandQueue_Command_t cmd;
+    uint8_t length = command[2];
+    memcpy(cmd.data, &command[3], length);
+    cmd.length = length;
+    cmd.command_id = FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG;
+    cmd.timeout_ms = 10000;
+
+    switch (target)
+    {
+    case COMMAND_TARGET_LEFT_BUD:
+    {
+        UartInterface_SendCommand(UART_INTERFACE_BUD_LEFT, &cmd);
+        break;
+    }
+
+    case COMMAND_TARGET_RIGHT_BUD:
+    {
+        UartInterface_SendCommand(UART_INTERFACE_BUD_RIGHT, &cmd);
+        break;
+    }
+    }
+
     return COMMAND_STATUS_SUCCESS;
 }
 

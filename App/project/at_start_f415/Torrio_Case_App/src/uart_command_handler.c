@@ -34,6 +34,7 @@ typedef struct
  *************************************************************************************************/
 static Command_Status_t HandleNoop(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
 static Command_Status_t ReadVersion(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
+static Command_Status_t FactoryDebugReadBuds(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -43,6 +44,8 @@ static const cmd_handler_t handler_table[] =
         {.op = NO_OP, .read = HandleNoop, .write = HandleNoop},
         // info
         {.op = VERSION_OP, .read = ReadVersion, .write = HandleNoop},
+        // factory
+        {.op = FAC_READ_BUDS_DEBUG, .read = FactoryDebugReadBuds, .write = HandleNoop},
 };
 
 /*************************************************************************************************
@@ -54,7 +57,7 @@ void UartCommandsHandle_CommandsHandle(UART_CommContext_t *ctx, UartProtocol_Pac
 
     memcpy(buffer, &rx_packet.payload[2], rx_packet.payload_len);
 
-    uint8_t command = (buffer[0]);
+    uint8_t command = ctx->command_id;
     uint8_t op = command & (~COMMAND_READ_FLAG);
     bool is_read = (command & COMMAND_READ_FLAG) == COMMAND_READ_FLAG;
     for (int i = 0; i < NUM_COMMANDS; ++i)
@@ -75,7 +78,7 @@ void UartCommandsHandle_CommandsHandle(UART_CommContext_t *ctx, UartProtocol_Pac
     }
     if (status != COMMAND_STATUS_SUCCESS)
     {
-        DEBUG_PRINT("USB COMMAND ERROR CMD:%02X\n", command);
+        DEBUG_PRINT("UNKNOW COMMAND :%02X\n", command);
     }
 }
 
@@ -117,5 +120,14 @@ static Command_Status_t ReadVersion(const uint8_t command[CMD_MAX_DATA_LEN], UAR
                 (ctx->side == UART_BUD_LEFT) ? "LEFT" : (ctx->side == UART_BUD_RIGHT) ? "RIGHT"
                                                                                       : "UNKNOWN");
 
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t FactoryDebugReadBuds(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx)
+{
+    uint8_t buff[CMD_MAX_DATA_LEN] = {0x00};
+    buff[0] = FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG;
+    memcpy(&buff[1], ctx->rx_buffer, CMD_MAX_DATA_LEN);
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }

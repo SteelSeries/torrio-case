@@ -87,6 +87,7 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     ctx->expected_len = 0;
     ctx->sync_detected = false;
     ctx->packet_ready = false;
+    ctx->command_id = 0;
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
 }
@@ -114,6 +115,7 @@ static void CommTask(UART_CommContext_t *ctx)
 
                 memcpy(&ctx->tx_buffer, cmd.data, cmd.length);
                 ctx->tx_len = cmd.length;
+                ctx->command_id = cmd.command_id;
                 UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
                 UartDrive_SendData(ctx);
                 UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_RECEIVE_MODE);
@@ -135,6 +137,7 @@ static void CommTask(UART_CommContext_t *ctx)
     {
         if (ctx->packet_ready)
         {
+            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
             ctx->packet_ready = false;
             DEBUG_PRINT("[UART][WAIT] Response packet ready, len=%d\n", ctx->rx_index);
             DEBUG_PRINT("Received data (%d bytes): ", ctx->rx_index);

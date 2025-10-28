@@ -33,7 +33,8 @@
 
 // factory
 #define FAC_GET_BATTERY_AND_NTC 	0x72 // factory settings
-#define FAC_SET_CHARGE_STATUS 		0x74   // factory settings
+#define FAC_SET_CHARGE_STATUS 		0x74 // factory settings
+#define FAC_READ_BUDS_DEBUG 		0x75 // factory settings
 
 // factory settings
 #define FAC_SERIAL_OP               0x13 // factory settings

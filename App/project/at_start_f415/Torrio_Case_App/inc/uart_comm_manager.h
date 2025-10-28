@@ -47,6 +47,7 @@ typedef struct
     uint8_t retry_count;
     uint8_t tx_seqn;
     Uart_BudSide_t side; // Indicates which bud this context belongs to (Left or Right)
+    uint8_t command_id;
 } UART_CommContext_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
