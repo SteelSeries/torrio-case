@@ -485,13 +485,25 @@ static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_
 
         case COMMAND_TARGET_LEFT_BUD:
         {
-            // TODO: UART communication to lift bud setting charge status.
+            uint8_t payload[] = {FAC_SET_CHARGE_STATUS, command[2]};
+            UartCommandQueue_Command_t cmd;
+            memcpy(cmd.data, payload, sizeof(payload));
+            cmd.length = sizeof(payload);
+            cmd.command_id = FAC_SET_CHARGE_STATUS;
+            cmd.timeout_ms = 10000;
+            UartInterface_SendCommand(UART_INTERFACE_BUD_LEFT, &cmd);
             break;
         }
 
         case COMMAND_TARGET_RIGHT_BUD:
         {
-            // TODO: UART communication to lift bud setting charge status.
+            uint8_t payload[] = {FAC_SET_CHARGE_STATUS, command[2]};
+            UartCommandQueue_Command_t cmd;
+            memcpy(cmd.data, payload, sizeof(payload));
+            cmd.length = sizeof(payload);
+            cmd.command_id = FAC_SET_CHARGE_STATUS;
+            cmd.timeout_ms = 10000;
+            UartInterface_SendCommand(UART_INTERFACE_BUD_RIGHT, &cmd);
             break;
         }
         }

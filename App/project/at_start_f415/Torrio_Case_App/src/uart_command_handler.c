@@ -35,6 +35,7 @@ typedef struct
 static Command_Status_t HandleNoop(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
 static Command_Status_t ReadVersion(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
 static Command_Status_t FactoryDebugReadBuds(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
+static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -46,6 +47,7 @@ static const cmd_handler_t handler_table[] =
         {.op = VERSION_OP, .read = ReadVersion, .write = HandleNoop},
         // factory
         {.op = FAC_READ_BUDS_DEBUG, .read = FactoryDebugReadBuds, .write = HandleNoop},
+        {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
 };
 
 /*************************************************************************************************
@@ -129,5 +131,10 @@ static Command_Status_t FactoryDebugReadBuds(const uint8_t command[CMD_MAX_DATA_
     buff[0] = FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG;
     memcpy(&buff[1], ctx->rx_buffer, CMD_MAX_DATA_LEN);
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx)
+{
     return COMMAND_STATUS_SUCCESS;
 }
