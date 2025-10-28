@@ -4,37 +4,51 @@
  *                                          INCLUDES                                             *
  *************************************************************************************************/
 #include "at32f415_board.h"
+#include "uart_command_queue.h"
 
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-#define TIME_BASE_US 100U                                  // Tick duration in microseconds (100us per tick)
-#define MS_TO_TICKS(ms) ((ms) * 1000 / TIME_BASE_US)       // Convert milliseconds to ticks
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
 typedef enum
 {
-    TASK_RUN_FOREVER = 0, // Task will persist indefinitely and will not be removed after execution
-    TASK_RUN_ONCE,        // Task will be executed only once and then automatically removed
-} TaskScheduler_RunMode_t;
+    UART_STATE_IDLE,
+    UART_STATE_SENDING,
+    UART_STATE_WAITING_RESPONSE,
+    UART_STATE_PROCESSING,
+    UART_STATE_TIMEOUT,
+    UART_STATE_ERROR
+} Uart_State_t;
 
 typedef enum
 {
-    TASK_START_DELAYED,  // Wait interval before first run
-    TASK_START_IMMEDIATE // Run as soon as idle
-} TaskScheduler_StartMode_t;
+    UART_BUD_LEFT = 0,
+    UART_BUD_RIGHT,
+    UART_BUD_UNKNOWN
+} Uart_BudSide_t;
 
-typedef enum
+typedef struct
 {
-    TASK_OK = 0,           // Task added/removed successfully
-    TASK_LIST_FULL,        // Task list is full
-    TASK_ALREADY_EXISTS,   // Task already exists, not added again
-    TASK_REMOVE_NOT_FOUND, // Task not found in the list
-    TASK_INVALID_INTERVAL, // Interval value is invalid (too large or out of range)
-} TaskScheduler_TaskStatus_t;
-
+    usart_type *uart;
+    UartCommandQueue_Queue_t cmd_queue;
+    Uart_State_t state;
+    uint32_t timeout_tick;
+    uint16_t current_timeout_ms;
+    uint8_t tx_buffer[CMD_MAX_DATA_LEN];
+    uint8_t tx_len;
+    uint8_t rx_buffer[CMD_MAX_DATA_LEN];
+    uint16_t rx_index;
+    uint16_t expected_len; // Expected total length of the incoming packet
+    bool sync_detected;    // Indicates whether the CMD_SYNC_BYTE (start byte) has been detected
+    bool packet_ready;     // Set to true when a complete packet has been received in the interrupt
+    uint8_t retry_count;
+    uint8_t tx_seqn;
+    Uart_BudSide_t side; // Indicates which bud this context belongs to (Left or Right)
+    uint8_t command_id;
+} UART_CommContext_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -42,10 +56,7 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void TaskScheduler_Run(void);
-TaskScheduler_TaskStatus_t TaskScheduler_RemoveTask(void (*func)(void));
-TaskScheduler_TaskStatus_t TaskScheduler_AddTask(void (*func)(void),
-                                                 uint32_t interval_ticks,
-                                                 TaskScheduler_RunMode_t runMode,
-                                                 TaskScheduler_StartMode_t startMode);
-uint32_t TaskScheduler_GetTimeUntilNextTask(void);
+void UartCommManager_Init(void);
+void UartCommManager_RunningTask(void);
+UART_CommContext_t *UartCommManager_GetLeftBudContext(void);
+UART_CommContext_t *UartCommManager_GetRightBudContext(void);

@@ -4,37 +4,43 @@
  *                                          INCLUDES                                             *
  *************************************************************************************************/
 #include "at32f415_board.h"
+#include "uart_comm_manager.h"
 
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-#define TIME_BASE_US 100U                                  // Tick duration in microseconds (100us per tick)
-#define MS_TO_TICKS(ms) ((ms) * 1000 / TIME_BASE_US)       // Convert milliseconds to ticks
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
-typedef enum
+typedef struct
 {
-    TASK_RUN_FOREVER = 0, // Task will persist indefinitely and will not be removed after execution
-    TASK_RUN_ONCE,        // Task will be executed only once and then automatically removed
-} TaskScheduler_RunMode_t;
+    gpio_type *left_bud_uart_tx_gpio_port;
+    uint32_t left_bud_uart_tx_gpio_pin;
+    crm_periph_clock_type left_bud_uart_tx_gpio_crm_clk;
+
+    gpio_type *left_bud_uart_rx_gpio_port;
+    uint32_t left_bud_uart_rx_gpio_pin;
+    crm_periph_clock_type left_bud_uart_rx_gpio_crm_clk;
+
+    gpio_type *right_bud_uart_tx_gpio_port;
+    uint32_t right_bud_uart_tx_gpio_pin;
+    crm_periph_clock_type right_bud_uart_tx_gpio_crm_clk;
+
+    gpio_type *right_bud_uart_rx_gpio_port;
+    uint32_t right_bud_uart_rx_gpio_pin;
+    crm_periph_clock_type right_bud_uart_rx_gpio_crm_clk;
+
+    usart_type *left_bud_uart;
+    usart_type *right_bud_uart;
+
+} UartDrive_HardwareSettings_t;
 
 typedef enum
 {
-    TASK_START_DELAYED,  // Wait interval before first run
-    TASK_START_IMMEDIATE // Run as soon as idle
-} TaskScheduler_StartMode_t;
-
-typedef enum
-{
-    TASK_OK = 0,           // Task added/removed successfully
-    TASK_LIST_FULL,        // Task list is full
-    TASK_ALREADY_EXISTS,   // Task already exists, not added again
-    TASK_REMOVE_NOT_FOUND, // Task not found in the list
-    TASK_INVALID_INTERVAL, // Interval value is invalid (too large or out of range)
-} TaskScheduler_TaskStatus_t;
-
+    UART_ONEWIRE_SEND_MODE = 0,   // Send mode: TX = UART, RX = floating (analog)
+    UART_ONEWIRE_RECEIVE_MODE = 1 // Receive mode: TX = floating (analog), RX = UART
+} UART_OneWireMode_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -42,10 +48,7 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void TaskScheduler_Run(void);
-TaskScheduler_TaskStatus_t TaskScheduler_RemoveTask(void (*func)(void));
-TaskScheduler_TaskStatus_t TaskScheduler_AddTask(void (*func)(void),
-                                                 uint32_t interval_ticks,
-                                                 TaskScheduler_RunMode_t runMode,
-                                                 TaskScheduler_StartMode_t startMode);
-uint32_t TaskScheduler_GetTimeUntilNextTask(void);
+void UartDrive_GpioConfigHardware(const UartDrive_HardwareSettings_t *hardware_settings);
+void UartDrive_SetOneWireMode(UART_CommContext_t *ctx, UART_OneWireMode_t mode);
+void UartDrive_SendData(UART_CommContext_t *ctx);
+void UartDrive_RxIrqHandler(UART_CommContext_t *ctx, uint8_t data);

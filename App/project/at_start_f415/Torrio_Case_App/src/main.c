@@ -21,6 +21,7 @@
 #include "system_clock.h"
 #include "lid.h"
 #include "wdt.h"
+#include "uart_comm_manager.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -124,6 +125,8 @@ int main(void)
   Timer4_Init();
 
   Adc_Init();
+
+  UartCommManager_Init();
 
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
