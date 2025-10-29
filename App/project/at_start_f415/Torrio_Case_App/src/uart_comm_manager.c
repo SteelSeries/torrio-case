@@ -9,6 +9,7 @@
 #include "uart_protocol.h"
 #include "uart_command_handler.h"
 #include <string.h>
+#include <stdlib.h>
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -88,6 +89,12 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     ctx->sync_detected = false;
     ctx->packet_ready = false;
     ctx->command_id = 0;
+    ctx->direct_mode = false;
+    ctx->direct_pending = false;
+    ctx->direct_data = NULL;
+    ctx->direct_len = 0;
+    ctx->direct_event_id = 0;
+    ctx->direct_timeout_ms = 0;
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
 }
@@ -98,7 +105,24 @@ static void CommTask(UART_CommContext_t *ctx)
     {
     case UART_STATE_IDLE:
     {
-        if (!UartCommandQueue_IsEmpty(&ctx->cmd_queue))
+        if (ctx->direct_pending)
+        {
+            DEBUG_PRINT("[UART][IDLE] Direct send triggered (event_id=0x%04X, len=%d)\n",
+                        ctx->direct_event_id, ctx->tx_len);
+
+            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
+            UartDrive_SendData(ctx);
+            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_RECEIVE_MODE);
+
+            ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->direct_timeout_ms);
+            ctx->current_timeout_ms = ctx->direct_timeout_ms;
+            ctx->retry_count = 0;
+            ctx->direct_pending = false;
+            ctx->state = UART_STATE_WAITING_RESPONSE;
+
+            DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (direct)\n");
+        }
+        else if (!UartCommandQueue_IsEmpty(&ctx->cmd_queue))
         {
             UartCommandQueue_Command_t cmd;
             if (UartCommandQueue_Dequeue(&ctx->cmd_queue, &cmd))
@@ -146,7 +170,7 @@ static void CommTask(UART_CommContext_t *ctx)
                 DEBUG_PRINT("%02X ", ctx->rx_buffer[i]);
             }
             DEBUG_PRINT("\n");
-            
+
             UartProtocol_Packet_t rx_packet;
             if (UARTProtocol_UnpackCommand(ctx->rx_buffer, ctx->rx_index, &rx_packet))
             {
@@ -156,6 +180,15 @@ static void CommTask(UART_CommContext_t *ctx)
                 UartCommandsHandle_CommandsHandle(ctx, rx_packet);
                 ctx->state = UART_STATE_IDLE;
                 ctx->retry_count = 0;
+
+                if (ctx->direct_mode && ctx->direct_data)
+                {
+                    free(ctx->direct_data);
+                    ctx->direct_data = NULL;
+                    ctx->direct_len = 0;
+                    ctx->direct_mode = false;
+                    ctx->direct_pending = false;
+                }
             }
             else
             {
@@ -205,8 +238,17 @@ static void CommTask(UART_CommContext_t *ctx)
         else
         {
             DEBUG_PRINT("[UART][TIMEOUT] Max retry reached. Reset to IDLE.\n");
+            UartCommandsHandle_CommandsHandleTimeout(ctx);
             ctx->state = UART_STATE_IDLE;
             ctx->retry_count = 0;
+            if (ctx->direct_mode && ctx->direct_data)
+            {
+                free(ctx->direct_data);
+                ctx->direct_data = NULL;
+                ctx->direct_len = 0;
+                ctx->direct_mode = false;
+                ctx->direct_pending = false;
+            }
         }
         break;
     }
@@ -215,6 +257,14 @@ static void CommTask(UART_CommContext_t *ctx)
     {
         DEBUG_PRINT("[UART][ERROR] Communication error detected.\n");
         ctx->state = UART_STATE_IDLE;
+        if (ctx->direct_mode && ctx->direct_data)
+        {
+            free(ctx->direct_data);
+            ctx->direct_data = NULL;
+            ctx->direct_len = 0;
+            ctx->direct_mode = false;
+            ctx->direct_pending = false;
+        }
         break;
     }
 

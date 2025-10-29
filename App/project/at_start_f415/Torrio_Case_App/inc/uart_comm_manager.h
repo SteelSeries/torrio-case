@@ -38,7 +38,7 @@ typedef struct
     uint32_t timeout_tick;
     uint16_t current_timeout_ms;
     uint8_t tx_buffer[CMD_MAX_DATA_LEN];
-    uint8_t tx_len;
+    uint16_t tx_len;
     uint8_t rx_buffer[CMD_MAX_DATA_LEN];
     uint16_t rx_index;
     uint16_t expected_len; // Expected total length of the incoming packet
@@ -48,6 +48,12 @@ typedef struct
     uint8_t tx_seqn;
     Uart_BudSide_t side; // Indicates which bud this context belongs to (Left or Right)
     uint8_t command_id;
+    bool direct_mode;
+    bool direct_pending;
+    uint8_t *direct_data;
+    uint16_t direct_len;
+    uint16_t direct_event_id;
+    uint32_t direct_timeout_ms;
 } UART_CommContext_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *

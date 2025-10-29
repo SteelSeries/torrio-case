@@ -75,8 +75,9 @@ static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEI
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
-static void HandleLightingDebugCommand(uint8_t command,uint8_t r,uint8_t g,uint8_t b);
+static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, uint8_t b);
 static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN]);
+static void SendBudFwUpdateCommand(UartInterface_Port_t target, uint8_t op, uint8_t mode, uint16_t timeout);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -176,33 +177,36 @@ static Command_Status_t RecoveryAndReset(const uint8_t command[USB_RECEIVE_LEN])
     {
         if (command[1] == RECOVERY_MODE_BOOTLOADER)
         {
-            if (command[2] == FILE_ID_LOCAL)
+            if (command[2] == COMMAND_TARGET_CASE)
             {
                 AppFwUpdata_SetResetFlag(true);
                 AppFwUpdata_SetCurrentMode(BOOTLOADER_MODE);
             }
-            else if (command[2] == FILE_ID_PERIPHERAL)
+            else if (command[2] == COMMAND_TARGET_LEFT_BUD)
             {
-                // Todo: switch to buds or dongle
+                SendBudFwUpdateCommand(UART_INTERFACE_BUD_LEFT, RESET_OP, command[1], 10000);
+            }
+            else if (command[2] == COMMAND_TARGET_RIGHT_BUD)
+            {
+                SendBudFwUpdateCommand(UART_INTERFACE_BUD_RIGHT, RESET_OP, command[1], 10000);
             }
         }
         else if (command[1] == RECOVERY_MODE_APPLICATION)
         {
-            if (command[2] == FILE_ID_LOCAL)
+            if (command[2] == COMMAND_TARGET_CASE)
             {
                 AppFwUpdata_SetResetFlag(true);
                 AppFwUpdata_SetCurrentMode(NORMAL_MODE);
             }
-            else if (command[2] == FILE_ID_PERIPHERAL)
+            else if (command[2] == COMMAND_TARGET_LEFT_BUD)
             {
-                // Todo: switch to buds or dongle
+                SendBudFwUpdateCommand(UART_INTERFACE_BUD_LEFT, RESET_OP, command[1], 10000);
+            }
+            else if (command[2] == COMMAND_TARGET_RIGHT_BUD)
+            {
+                SendBudFwUpdateCommand(UART_INTERFACE_BUD_RIGHT, RESET_OP, command[1], 10000);
             }
         }
-    }
-    else
-    {
-        AppFwUpdata_SetResetFlag(true);
-        AppFwUpdata_SetCurrentMode(NORMAL_MODE);
     }
     return COMMAND_STATUS_SUCCESS;
 }
@@ -213,7 +217,7 @@ static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN])
     {
     case 0x01:
     {
-        HandleLightingDebugCommand(command[2],command[3],command[4],command[5]);
+        HandleLightingDebugCommand(command[2], command[3], command[4], command[5]);
         break;
     }
 
@@ -262,14 +266,24 @@ static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_
 
 static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN])
 {
-    if (command[1] < FILE_ID_NUM_MODES)
+    if (command[1] < COMMAND_TARGET_NUM_MODES)
     {
-        if (command[1] == FILE_ID_LOCAL)
+        if (command[1] == COMMAND_TARGET_CASE)
         {
             if (TaskScheduler_AddTask(AppFwUpdate_CmdEraseHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
                 DEBUG_PRINT("add fw update erase task fail\n");
             }
+        }
+        else if (command[1] == COMMAND_TARGET_LEFT_BUD)
+        {
+            DEBUG_PRINT("set left bud erase\n");
+            SendBudFwUpdateCommand(UART_INTERFACE_BUD_LEFT, ERASE_FILE_OP, command[2], 3000);
+        }
+        else if (command[1] == COMMAND_TARGET_RIGHT_BUD)
+        {
+            DEBUG_PRINT("set right bud erase\n");
+            SendBudFwUpdateCommand(UART_INTERFACE_BUD_RIGHT, ERASE_FILE_OP, command[2], 3000);
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -277,14 +291,26 @@ static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN])
 
 static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN])
 {
-    uint8_t Temp_buffer[USB_RECEIVE_LEN] = {0};
-    if (command[1] < FILE_ID_NUM_MODES)
+    if (command[1] < COMMAND_TARGET_NUM_MODES)
     {
-        if (command[1] == FILE_ID_LOCAL)
+        AppFwUpdata_UsbReceiveData((uint8_t *)command, USB_RECEIVE_LEN);
+        if (command[1] == COMMAND_TARGET_CASE)
         {
-            memcpy(Temp_buffer, command, USB_RECEIVE_LEN);
-            AppFwUpdata_UsbReceiveData(Temp_buffer, USB_RECEIVE_LEN);
             if (TaskScheduler_AddTask(AppFwUpdate_CmdWriteFlashHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                DEBUG_PRINT("add fw update write task fail\n");
+            }
+        }
+        else if (command[1] == COMMAND_TARGET_LEFT_BUD)
+        {
+            if (TaskScheduler_AddTask(AppFwUpdate_LeftBudWriteFlashTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                DEBUG_PRINT("add fw update write task fail\n");
+            }
+        }
+        else if (command[1] == COMMAND_TARGET_RIGHT_BUD)
+        {
+            if (TaskScheduler_AddTask(AppFwUpdate_RightBudWriteFlashTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
                 DEBUG_PRINT("add fw update write task fail\n");
             }
@@ -295,15 +321,22 @@ static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN])
 
 static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN])
 {
-    if (command[1] < FILE_ID_NUM_MODES)
+    if (command[1] < COMMAND_TARGET_NUM_MODES)
     {
-        if (command[1] == FILE_ID_LOCAL)
+        if (command[1] == COMMAND_TARGET_CASE)
         {
-
             if (TaskScheduler_AddTask(AppFwUpdate_CmdCrcCheckHandler, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
                 DEBUG_PRINT("add CRC check task fail\n");
             }
+        }
+        else if (command[1] == COMMAND_TARGET_LEFT_BUD)
+        {
+            SendBudFwUpdateCommand(UART_INTERFACE_BUD_LEFT, FILE_CRC32_OP | COMMAND_READ_FLAG, command[2], 3000);
+        }
+        else if (command[1] == COMMAND_TARGET_RIGHT_BUD)
+        {
+            SendBudFwUpdateCommand(UART_INTERFACE_BUD_RIGHT, FILE_CRC32_OP | COMMAND_READ_FLAG, command[2], 3000);
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -582,11 +615,11 @@ static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_
     }
     case COMMAND_TARGET_LEFT_BUD:
     {
-        break;                   
+        break;
     }
     case COMMAND_TARGET_RIGHT_BUD:
     {
-        break;                   
+        break;
     }
     default:
         break;
@@ -596,10 +629,23 @@ static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_
     return COMMAND_STATUS_SUCCESS;
 }
 
-static void HandleLightingDebugCommand(uint8_t command,uint8_t r,uint8_t g,uint8_t b)
+static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, uint8_t b)
 {
     Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
     Lighting_Mode = command;
     Lighting_Handler(r, g, b);
 }
 
+static void SendBudFwUpdateCommand(UartInterface_Port_t target, uint8_t op, uint8_t mode, uint16_t timeout)
+{
+    DEBUG_PRINT("send bud cmd op:%02X\n", op);
+
+    uint8_t payload[] = {op, mode};
+    UartCommandQueue_Command_t cmd = {
+        .length = sizeof(payload),
+        .command_id = op,
+        .timeout_ms = timeout};
+    memcpy(cmd.data, payload, sizeof(payload));
+
+    UartInterface_SendCommand(target, &cmd);
+}

@@ -105,12 +105,6 @@ typedef enum
     RECOVERY_MODE_NUM_MODES
 } AppFwUpdate_RecoveryMode_t;
 
-typedef enum
-{
-    FILE_ID_LOCAL = 0,
-    FILE_ID_PERIPHERAL,
-    FILE_ID_NUM_MODES
-} AppFwUpdate_FileId_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -124,3 +118,5 @@ void AppFwUpdata_SetResetFlag(bool state);
 bool AppFwUpdata_GetResetFlag(void);
 void AppFwUpdata_SetCurrentMode(uint8_t mode);
 void AppFwUpdata_UsbReceiveData(uint8_t *data, uint16_t len);
+void AppFwUpdate_LeftBudWriteFlashTask(void);
+void AppFwUpdate_RightBudWriteFlashTask(void);

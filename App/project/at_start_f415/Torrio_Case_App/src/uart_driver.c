@@ -88,25 +88,38 @@ void UartDrive_SetOneWireMode(UART_CommContext_t *ctx, UART_OneWireMode_t mode)
 
 void UartDrive_SendData(UART_CommContext_t *ctx)
 {
-    usart_type *uart;
-
-    if (ctx->uart == user_hardware_settings.left_bud_uart)
+    if (ctx == NULL || ctx->uart == NULL)
     {
-        uart = user_hardware_settings.left_bud_uart;
-    }
-    else if (ctx->uart == user_hardware_settings.right_bud_uart)
-    {
-        uart = user_hardware_settings.right_bud_uart;
+        return;
     }
 
-    for (uint8_t i = 0; i < ctx->tx_len; i++)
+    usart_type *uart = ctx->uart;
+    const uint8_t *send_buf;
+    uint16_t send_len;
+
+    if (ctx->direct_mode)
+    {
+        send_buf = ctx->direct_data;
+        send_len = ctx->direct_len;
+        DEBUG_PRINT("[UART][SEND] Direct send %d bytes.\n", send_len);
+    }
+    else
+    {
+        send_buf = ctx->tx_buffer;
+        send_len = ctx->tx_len;
+        DEBUG_PRINT("[UART][SEND] Queue send %d bytes.\n", send_len);
+    }
+
+    for (uint16_t i = 0; i < send_len; i++)
     {
         while (usart_flag_get(uart, USART_TDBE_FLAG) == RESET)
             ;
-        usart_data_transmit(uart, ctx->tx_buffer[i]);
+        usart_data_transmit(uart, send_buf[i]);
         while (usart_flag_get(uart, USART_TDC_FLAG) == RESET)
             ;
     }
+
+    DEBUG_PRINT("[UART][SEND] Completed %d bytes.\n", send_len);
 }
 
 void UartDrive_RxIrqHandler(UART_CommContext_t *ctx, uint8_t data)

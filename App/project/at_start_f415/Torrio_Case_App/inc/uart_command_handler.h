@@ -23,3 +23,4 @@
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void UartCommandsHandle_CommandsHandle(UART_CommContext_t *ctx, UartProtocol_Packet_t rx_packet);
+void UartCommandsHandle_CommandsHandleTimeout(UART_CommContext_t *ctx);
