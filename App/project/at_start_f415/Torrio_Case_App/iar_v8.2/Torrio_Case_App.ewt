@@ -2998,6 +2998,9 @@
             <name>$PROJ_DIR$\..\src\power_control.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\qi.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\sy8809.c</name>
         </file>
         <file>

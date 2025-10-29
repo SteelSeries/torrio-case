@@ -7,6 +7,7 @@
 #include "task_scheduler.h"
 #include <string.h>
 #include "usb.h"
+#include "qi.h"
 #include "lid.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -38,7 +39,7 @@ static uint16_t illum_hold_dark = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_HOLD_TIME *
 
 static uint16_t r_en, g_en, b_en;
 
-static Lighting_Breath_State_t breath_complete_flag = LIGHTING_BREATH_NON_COMPLETE;
+static Lighting_Breath_State_t breath_complete_flag = LIGHTING_BREATH_COMPLETE;
 static uint16_t lid_pre_state;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
@@ -79,9 +80,13 @@ void Lighting_HandleTask(void)
     {
         Lighting_Handler(LIGHTING_BREATH, 0, 0, 1);
     }
+    else if (Qi_GetDetectState() == QI_DETECT)
+    {
+        Lighting_Handler(LIGHTING_BREATH, 1, 0, 0);
+    }
     else
     {
-        Lighting_Handler(LIGHTING_LED_OFF, 0, 0, 0);
+        PwmHandler(LIGHTING_LED_OFF, LIGHTING_LED_OFF, LIGHTING_LED_OFF);
     }
 }
 
@@ -99,7 +104,6 @@ Lighting_Breath_State_t Lighting_LidOffHandle(void)
 
 void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
 {
-    DEBUG_PRINT("run Lighting_Handler\n");
     if(Lighting_Change_Flag == LIGHTING_CHANGE_TRUE)
     {
         breath_val = 0;
@@ -128,7 +132,7 @@ void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint1
         }
         case LIGHTING_BREATH:
         {
-          if(TaskScheduler_AddTask(BreathHandler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+          if(TaskScheduler_AddTask(BreathHandler, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
           {
               DEBUG_PRINT("add BreathHandler fail\n");
           }
@@ -253,7 +257,7 @@ static void BreathHandler(void)
 {
     static uint16_t breath_reg;
     breath_val += breath_interval;
-    if(TaskScheduler_AddTask(BreathHandler, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    if(TaskScheduler_AddTask(BreathHandler, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
         DEBUG_PRINT("add BreathHandler fail\n");
     } 

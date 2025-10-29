@@ -5,6 +5,7 @@
 #include "custom_hid_class.h"
 #include "custom_hid_desc.h"
 #include "usb.h"
+#include "qi.h"
 #include "Commands.h"
 #include "timer2.h"
 #include "timer3.h"
@@ -144,6 +145,11 @@ int main(void)
   if (TaskScheduler_AddTask(Usb_StatusCheckTask, 50, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
     DEBUG_PRINT("add USB check task fail\n");
+  }
+
+  if (TaskScheduler_AddTask(Qi_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    DEBUG_PRINT("add Qi check task fail\n");
   }
 
   if (TaskScheduler_AddTask(Lighting_HandleTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)

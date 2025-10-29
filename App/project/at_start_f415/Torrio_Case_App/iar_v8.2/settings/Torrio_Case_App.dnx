@@ -46,7 +46,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>496003736</Checksum>
+        <Checksum>557781117</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -105,7 +105,7 @@
     </DisassembleMode>
     <Breakpoints2>
         <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\app_fw_update.c}.146.5" 0 0 1 "" 0 "" 0</Bp0>
-        <Bp1>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\lid.c}.105.9" 0 0 1 "" 0 "" 0</Bp1>
+        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\usb.c}.108.9" 0 0 1 "" 0 "" 0</Bp1>
         <Count>2</Count>
     </Breakpoints2>
     <Aliases>
