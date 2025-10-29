@@ -12,6 +12,7 @@
 #include "sy8809.h"
 #include "lid.h"
 #include "task_scheduler.h"
+#include "uart_comm_manager.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -98,6 +99,11 @@ void SystemStateManager_SystemStartWork(void)
     if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
         DEBUG_PRINT("add battery status update task fail\n");
+    }
+
+    if (TaskScheduler_AddTask(UartCommManager_RunningTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        DEBUG_PRINT("add uart running task fail\n");
     }
 }
 

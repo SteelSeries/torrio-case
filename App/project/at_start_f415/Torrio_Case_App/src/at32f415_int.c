@@ -30,6 +30,11 @@
 #include "timer4.h"
 #include "task_scheduler.h"
 #include "sy8809_xsense.h"
+#include "uart_comm_manager.h"
+#include "uart_driver.h"
+
+static UART_CommContext_t *user_left_bud_ctx = NULL;
+static UART_CommContext_t *user_right_bud_ctx = NULL;
 
 /** @addtogroup AT32F415_periph_examples
  * @{
@@ -39,11 +44,12 @@
  * @{
  */
 
-/**
- * @brief  this function handles nmi exception.
- * @param  none
- * @retval none
- */
+void Interrupt_BudsCtxInit(void)
+{
+  user_left_bud_ctx = UartCommManager_GetLeftBudContext();
+  user_right_bud_ctx = UartCommManager_GetRightBudContext();
+}
+
 void NMI_Handler(void)
 {
 }
@@ -199,6 +205,36 @@ void DMA1_Channel1_IRQHandler(void)
     {
       DEBUG_PRINT("add ReadXsenseProcess task fail\n");
     }
+  }
+}
+
+/**
+ * @brief  this function handles usart2 handler.
+ * @param  none
+ * @retval none
+ */
+void USART2_IRQHandler(void)
+{
+  if (usart_interrupt_flag_get(USART2, USART_RDBF_FLAG) != RESET)
+  {
+    /* read one byte from the receive data register */
+    uint8_t data = usart_data_receive(USART2);
+    UartDrive_RxIrqHandler(user_left_bud_ctx, data);
+  }
+}
+
+/**
+ * @brief  this function handles usart3 handler.
+ * @param  none
+ * @retval none
+ */
+void USART3_IRQHandler(void)
+{
+  if (usart_interrupt_flag_get(USART3, USART_RDBF_FLAG) != RESET)
+  {
+    /* read one byte from the receive data register */
+    uint8_t data = usart_data_receive(USART3);
+    UartDrive_RxIrqHandler(user_right_bud_ctx, data);
   }
 }
 

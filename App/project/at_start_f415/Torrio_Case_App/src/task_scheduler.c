@@ -8,8 +8,6 @@
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define MAX_TASKS 10                                       // Maximum number of tasks
-#define TIME_BASE_US 100U                                  // Tick duration in microseconds (100us per tick)
-#define MS_TO_TICKS(ms) ((ms) * 1000 / TIME_BASE_US)       // Convert milliseconds to ticks
 #define SEC_TO_TICKS(sec) ((sec) * 1000000 / TIME_BASE_US) // Convert seconds to ticks
 
 // UINT32_MAX is the maximum value for a 32-bit unsigned integer (4294967295)

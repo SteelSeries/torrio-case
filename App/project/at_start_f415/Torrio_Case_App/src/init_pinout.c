@@ -11,6 +11,7 @@
 #include "adc.h"
 #include "lighting.h"
 #include "button.h"
+#include "uart_driver.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -112,6 +113,28 @@ static const Lighting_HardwareSettings_t pwm_config =
         .lighting_b_gpio_crm_clk = PWM_B_GPIO_CLK,
 };
 
+static const UartDrive_HardwareSettings_t buds_uart_config =
+    {
+        .left_bud_uart_tx_gpio_port = UART2_L_TX_GPIO,
+        .left_bud_uart_tx_gpio_pin = UART2_L_TX_PIN,
+        .left_bud_uart_tx_gpio_crm_clk = UART2_L_TX_CRM_CLK,
+
+        .left_bud_uart_rx_gpio_port = UART2_L_RX_GPIO,
+        .left_bud_uart_rx_gpio_pin = UART2_L_RX_PIN,
+        .left_bud_uart_rx_gpio_crm_clk = UART2_L_RX_CRM_CLK,
+
+        .right_bud_uart_tx_gpio_port = UART3_R_TX_GPIO,
+        .right_bud_uart_tx_gpio_pin = UART3_R_TX_PIN,
+        .right_bud_uart_tx_gpio_crm_clk = UART3_R_TX_CRM_CLK,
+
+        .right_bud_uart_rx_gpio_port = UART3_R_RX_GPIO,
+        .right_bud_uart_rx_gpio_pin = UART3_R_RX_PIN,
+        .right_bud_uart_rx_gpio_crm_clk = UART3_R_RX_CRM_CLK,
+
+        .left_bud_uart = LEFT_UART,
+        .right_bud_uart = RIGHT_UART,
+};
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -127,6 +150,7 @@ void InitPinout_Init(void)
     Lighting_GpioConfigHardware(&pwm_config);
 	Button_GpioConfigHardware(&button_config);
     Qi_GpioConfigHardware(&qi_config);
+	UartDrive_GpioConfigHardware(&buds_uart_config);
 }
 
 void InitPinout_I2c1Init(void)
