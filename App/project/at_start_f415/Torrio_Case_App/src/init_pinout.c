@@ -132,7 +132,19 @@ void InitPinout_Init(void)
     Usb_GpioConfigHardware(&usb_config);
     Adc_GpioConfigHardware(&adc_config);
     Lighting_GpioConfigHardware(&pwm_config);
-	UartDrive_GpioConfigHardware(&buds_uart_config);
+    UartDrive_GpioConfigHardware(&buds_uart_config);
+
+    /*===========DEBUG PIN================*/
+    gpio_init_type gpio_initstructure;
+    crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
+    gpio_default_para_init(&gpio_initstructure);
+    gpio_initstructure.gpio_mode = GPIO_MODE_OUTPUT;
+    gpio_initstructure.gpio_pins = GPIO_PINS_9 | GPIO_PINS_8;
+    gpio_initstructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_initstructure.gpio_pull = GPIO_PULL_NONE;
+    gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+    gpio_init(GPIOB, &gpio_initstructure);
+    /*====================================*/
 }
 
 void InitPinout_I2c1Init(void)

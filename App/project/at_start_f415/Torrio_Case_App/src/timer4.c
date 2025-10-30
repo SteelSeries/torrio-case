@@ -25,18 +25,6 @@ void Timer4_Init(void)
     tmr_output_config_type tmr_oc_init_structure;
     crm_clocks_freq_type crm_clocks_freq_struct = {0};
 
-    /*===========DEBUG PIN================*/
-    gpio_init_type gpio_initstructure;
-    crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
-    gpio_default_para_init(&gpio_initstructure);
-    gpio_initstructure.gpio_mode = GPIO_MODE_OUTPUT;
-    gpio_initstructure.gpio_pins = GPIO_PINS_9 | GPIO_PINS_8;
-    gpio_initstructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-    gpio_initstructure.gpio_pull = GPIO_PULL_NONE;
-    gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
-    gpio_init(GPIOB, &gpio_initstructure);
-    /*====================================*/
-
     /* get system clock */
     crm_clocks_freq_get(&crm_clocks_freq_struct);
 

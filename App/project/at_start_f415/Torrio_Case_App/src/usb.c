@@ -85,7 +85,6 @@ Usb_DetectConnectState_t Usb_FirstSetupUsbState(void)
 
 void Usb_StatusCheckTask(void)
 {
-  gpio_bits_toggle(GPIOB, GPIO_PINS_9);
   static bool is_debounce_check = false;
   usb_detect_state = (Usb_DetectConnectState_t)gpio_input_data_bit_read(user_hardware_settings.usb_detect_gpio_port, user_hardware_settings.usb_detect_gpio_pin);
 
