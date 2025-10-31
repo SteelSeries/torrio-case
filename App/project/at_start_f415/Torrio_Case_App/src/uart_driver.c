@@ -5,6 +5,9 @@
 #include "uart_protocol.h"
 #include "uart_comm_manager.h"
 #include "task_scheduler.h"
+#include "uart_interface.h"
+#include "usb.h"
+#include "uart_command_handler.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -42,6 +45,7 @@ static UART_CommContext_t *user_right_bud_ctx = NULL;
 static void InitOneWriteSend(const UartHardwareConfig_t *config);
 static void InitOneWriteReceive(const UartHardwareConfig_t *config);
 static void CheckBudConnection(UART_CommContext_t *ctx);
+static void SendInitCommand(UartInterface_Port_t target);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -280,16 +284,19 @@ static void CheckBudConnection(UART_CommContext_t *ctx)
 {
     gpio_type *port;
     uint32_t pin;
+    UartInterface_Port_t side;
 
     if (ctx->uart == user_hardware_settings.left_bud_uart)
     {
         port = user_hardware_settings.left_bud_uart_tx_gpio_port;
         pin = user_hardware_settings.left_bud_uart_tx_gpio_pin;
+        side = UART_INTERFACE_BUD_LEFT;
     }
     else if (ctx->uart == user_hardware_settings.right_bud_uart)
     {
         port = user_hardware_settings.right_bud_uart_tx_gpio_port;
         pin = user_hardware_settings.right_bud_uart_tx_gpio_pin;
+        side = UART_INTERFACE_BUD_RIGHT;
     }
     else
     {
@@ -315,6 +322,7 @@ static void CheckBudConnection(UART_CommContext_t *ctx)
         else
         {
             ctx->Connect = UART_BUDS_CONNT_CONNECT;
+            SendInitCommand(side);
             DEBUG_PRINT("%s bud initial state: connected\n",
                         (ctx->uart == user_hardware_settings.left_bud_uart) ? "left" : "right");
         }
@@ -355,11 +363,32 @@ static void CheckBudConnection(UART_CommContext_t *ctx)
                 else
                 {
                     ctx->Connect = UART_BUDS_CONNT_CONNECT;
+                    SendInitCommand(side);
                     DEBUG_PRINT("connected\n");
                 }
 
                 ctx->detect_state_pre = ctx->detect_state;
             }
         }
+    }
+}
+
+static void SendInitCommand(UartInterface_Port_t target)
+{
+    if (Usb_GetUsbDetectState() == USB_PLUG)
+    {
+        {
+            uint8_t payload[] = {BUD_CMD_PREVENT_SLEEP};
+            UartInterface_SendBudCommand(target, BUD_CMD_PREVENT_SLEEP, payload, sizeof(payload), 1000);
+        }
+        {
+            uint8_t payload[] = {BUD_CMD_FACTORY_BUTTON};
+            UartInterface_SendBudCommand(target, BUD_CMD_FACTORY_BUTTON, payload, sizeof(payload), 1000);
+        }
+    }
+    else
+    {
+        uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF};
+        UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF, payload, sizeof(payload), 1000);
     }
 }

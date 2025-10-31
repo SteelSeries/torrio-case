@@ -52,23 +52,31 @@ static Command_Status_t Crc32FileTimeoutHandle(UART_CommContext_t *ctx);
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static uint8_t buffer[CMD_MAX_DATA_LEN] = {0};
+// clang-format off
+
 static const cmd_handler_t handler_table[] =
     {
-        {.op = NO_OP, .read = HandleNoop, .write = HandleNoop, .timeout = TimeoutHandleNoop},
+        {.op = NO_OP,                   .read = HandleNoop,             .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         // info
-        {.op = VERSION_OP, .read = ReadVersion, .write = HandleNoop, .timeout = TimeoutHandleNoop},
+        {.op = VERSION_OP,              .read = ReadVersion,            .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         // factory
-        {.op = FAC_READ_BUDS_DEBUG, .read = FactoryDebugReadBuds, .write = HandleNoop, .timeout = TimeoutHandleNoop},
-        {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus, .timeout = TimeoutHandleNoop},
+        {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,   .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,             .write = FactorySetBatteryChargeStatus,     .timeout = TimeoutHandleNoop},
 
         // mcu control
-        {.op = RESET_OP, .read = HandleNoop, .write = RecoveryAndReset, .timeout = TimeoutHandleNoop},
+        {.op = RESET_OP,                .read = HandleNoop,             .write = RecoveryAndReset,                  .timeout = TimeoutHandleNoop},
 
         // file/firmware update
-        {.op = ERASE_FILE_OP, .read = HandleNoop, .write = EraseFile, .timeout = EraseFileTimeoutHandle},
-        {.op = FILE_ACCESS_OP, .read = HandleNoop, .write = WriteFile, .timeout = WriteFileTimeoutHandle},
-        {.op = FILE_CRC32_OP, .read = Crc32File, .write = HandleNoop, .timeout = Crc32FileTimeoutHandle},
-};
+        {.op = ERASE_FILE_OP,           .read = HandleNoop,             .write = EraseFile,                         .timeout = EraseFileTimeoutHandle},
+        {.op = FILE_ACCESS_OP,          .read = HandleNoop,             .write = WriteFile,                         .timeout = WriteFileTimeoutHandle},
+        {.op = FILE_CRC32_OP,           .read = Crc32File,              .write = HandleNoop,                        .timeout = Crc32FileTimeoutHandle},
+
+        // internal
+        {.op = BUD_CMD_PREVENT_SLEEP,   .read = HandleNoop,             .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_FACTORY_BUTTON,  .read = HandleNoop,             .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_DEEP_POWER_OFF,  .read = HandleNoop,             .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+    };
+// clang-format on
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *

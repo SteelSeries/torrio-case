@@ -150,8 +150,7 @@ static void CommTask(UART_CommContext_t *ctx)
             UartCommandQueue_Command_t cmd;
             if (UartCommandQueue_Dequeue(&ctx->cmd_queue, &cmd))
             {
-                DEBUG_PRINT("[UART][IDLE] Dequeued command -> ID: 0x%02X, Len: %d\n",
-                            cmd.command_id, cmd.length);
+                DEBUG_PRINT("%lu [UART][IDLE] Dequeued command -> ID: 0x%02X, Len: %d\n", Timer2_GetTick(), cmd.command_id, cmd.length);
 
                 DEBUG_PRINT("[UART][IDLE] Data: ");
                 for (uint8_t i = 0; i < cmd.length; i++)
@@ -170,7 +169,7 @@ static void CommTask(UART_CommContext_t *ctx)
                 ctx->current_timeout_ms = cmd.timeout_ms;
                 ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
                 ctx->state = UART_STATE_WAITING_RESPONSE;
-                DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (timeout @ %lu)\n", ctx->timeout_tick);
+                DEBUG_PRINT("%lu [UART][STATE] -> WAITING_RESPONSE (current timeout @ %lu)(timeout @ %lu)\n", Timer2_GetTick(), ctx->current_timeout_ms, ctx->timeout_tick);
             }
             else
             {
@@ -256,6 +255,8 @@ static void CommTask(UART_CommContext_t *ctx)
             ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
             ctx->state = UART_STATE_WAITING_RESPONSE;
             DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (retry)\n");
+            DEBUG_PRINT("[UART][STATE] Timeout detected (tick=%lu, limit=%lu current timeout:%lu)\n",
+                        Timer2_GetTick(), ctx->timeout_tick, ctx->current_timeout_ms);
         }
         else
         {

@@ -84,8 +84,6 @@ extern "C"
 
 /**************** define print uart ******************/
 // #define SCALA_BOARD
-// #define RIGHT_BUD_PORT
-// #define LEFT_BUD_PORT
 #ifndef SCALA_BOARD
 // dev board debug uart.
 #define PRINT_UART USART1
@@ -95,6 +93,8 @@ extern "C"
 #define PRINT_UART_TX_GPIO_CRM_CLK CRM_GPIOA_PERIPH_CLOCK
 #else
 
+// #define RIGHT_BUD_PORT
+#define LEFT_BUD_PORT
 #ifdef RIGHT_BUD_PORT
 // scala main board left bud uart Reuse debug uart.
 #define PRINT_UART USART3

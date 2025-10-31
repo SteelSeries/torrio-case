@@ -77,42 +77,43 @@ static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN])
 static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
 static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, uint8_t b);
 static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN]);
-static void SendBudFwUpdateCommand(UartInterface_Port_t target, uint8_t op, uint8_t mode, uint16_t timeout);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static uint8_t buffer[USB_RECEIVE_LEN] = {0};
+// clang-format off
 static const cmd_handler_t handler_table[] =
     {
-        {.op = NO_OP, .read = HandleNoop, .write = HandleNoop},
+        {.op = NO_OP,                   .read = HandleNoop,                     .write = HandleNoop},
         // mcu control
-        {.op = RESET_OP, .read = HandleNoop, .write = RecoveryAndReset},
+        {.op = RESET_OP,                .read = HandleNoop,                     .write = RecoveryAndReset},
 
         // file/firmware update
-        {.op = ERASE_FILE_OP, .read = HandleNoop, .write = EraseFile},
-        {.op = FILE_ACCESS_OP, .read = HandleNoop, .write = WriteFile},
-        {.op = FILE_CRC32_OP, .read = Crc32File, .write = HandleNoop},
+        {.op = ERASE_FILE_OP,           .read = HandleNoop,                     .write = EraseFile},
+        {.op = FILE_ACCESS_OP,          .read = HandleNoop,                     .write = WriteFile},
+        {.op = FILE_CRC32_OP,           .read = Crc32File,                      .write = HandleNoop},
 
         // info
-        {.op = VERSION_OP, .read = ReadVersion, .write = HandleNoop},
+        {.op = VERSION_OP,              .read = ReadVersion,                    .write = HandleNoop},
 
         // debug
-        {.op = DEBUG_CUSTOM_OP, .read = HandleNoop, .write = DebugCommand},
-        {.op = DEBUG_SY8809_OP, .read = Sy8809DebugRegReadCommand, .write = Sy8809DebugRegWriteCommand},
-        {.op = DEBUG_SY8809_XSENSE_OP, .read = Sy8809DebugXsenserReadCommand, .write = HandleNoop},
-	    {.op = DEBUG_LEDRGB_OP, .read = HandleNoop, .write = HandleLedDebugCommand},
+        {.op = DEBUG_CUSTOM_OP,         .read = HandleNoop,                     .write = DebugCommand},
+        {.op = DEBUG_SY8809_OP,         .read = Sy8809DebugRegReadCommand,      .write = Sy8809DebugRegWriteCommand},
+        {.op = DEBUG_SY8809_XSENSE_OP,  .read = Sy8809DebugXsenserReadCommand,  .write = HandleNoop},
+        {.op = DEBUG_LEDRGB_OP,         .read = HandleNoop,                     .write = HandleLedDebugCommand},
 
         // factory
-        {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
-        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
-        {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
-        {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
-        {.op = FAC_READ_BUDS_DEBUG, .read = FactoryDebugReadBuds, .write = HandleNoop},
+        {.op = FAC_SERIAL_OP,           .read = GetSerialNumber,                .write = SetSerialNumber},
+        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel,         .write = WriteColorSpinAndMoldel},
+        {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc,       .write = HandleNoop},
+        {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,                     .write = FactorySetBatteryChargeStatus},
+        {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,           .write = HandleNoop},
 
         // Case/Buds
-        {.op = GET_BATTERY_INFO, .read = GetBatteryStatus, .write = HandleNoop},
+        {.op = GET_BATTERY_INFO,        .read = GetBatteryStatus,               .write = HandleNoop},
 };
+// clang-format on
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -184,11 +185,13 @@ static Command_Status_t RecoveryAndReset(const uint8_t command[USB_RECEIVE_LEN])
             }
             else if (command[2] == COMMAND_TARGET_LEFT_BUD)
             {
-                SendBudFwUpdateCommand(UART_INTERFACE_BUD_LEFT, RESET_OP, command[1], 10000);
+                uint8_t payload[] = {RESET_OP, command[1]};
+                UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, RESET_OP, payload, sizeof(payload), 10000);
             }
             else if (command[2] == COMMAND_TARGET_RIGHT_BUD)
             {
-                SendBudFwUpdateCommand(UART_INTERFACE_BUD_RIGHT, RESET_OP, command[1], 10000);
+                uint8_t payload[] = {RESET_OP, command[1]};
+                UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, RESET_OP, payload, sizeof(payload), 10000);
             }
         }
         else if (command[1] == RECOVERY_MODE_APPLICATION)
@@ -200,11 +203,13 @@ static Command_Status_t RecoveryAndReset(const uint8_t command[USB_RECEIVE_LEN])
             }
             else if (command[2] == COMMAND_TARGET_LEFT_BUD)
             {
-                SendBudFwUpdateCommand(UART_INTERFACE_BUD_LEFT, RESET_OP, command[1], 10000);
+                uint8_t payload[] = {RESET_OP, command[1]};
+                UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, RESET_OP, payload, sizeof(payload), 10000);
             }
             else if (command[2] == COMMAND_TARGET_RIGHT_BUD)
             {
-                SendBudFwUpdateCommand(UART_INTERFACE_BUD_RIGHT, RESET_OP, command[1], 10000);
+                uint8_t payload[] = {RESET_OP, command[1]};
+                UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, RESET_OP, payload, sizeof(payload), 10000);
             }
         }
     }
@@ -278,12 +283,14 @@ static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN])
         else if (command[1] == COMMAND_TARGET_LEFT_BUD)
         {
             DEBUG_PRINT("set left bud erase\n");
-            SendBudFwUpdateCommand(UART_INTERFACE_BUD_LEFT, ERASE_FILE_OP, command[2], 3000);
+            uint8_t payload[] = {ERASE_FILE_OP, command[2]};
+            UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, ERASE_FILE_OP, payload, sizeof(payload), 3000);
         }
         else if (command[1] == COMMAND_TARGET_RIGHT_BUD)
         {
             DEBUG_PRINT("set right bud erase\n");
-            SendBudFwUpdateCommand(UART_INTERFACE_BUD_RIGHT, ERASE_FILE_OP, command[2], 3000);
+            uint8_t payload[] = {ERASE_FILE_OP, command[2]};
+            UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, ERASE_FILE_OP, payload, sizeof(payload), 3000);
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -332,11 +339,13 @@ static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN])
         }
         else if (command[1] == COMMAND_TARGET_LEFT_BUD)
         {
-            SendBudFwUpdateCommand(UART_INTERFACE_BUD_LEFT, FILE_CRC32_OP | COMMAND_READ_FLAG, command[2], 3000);
+            uint8_t payload[] = {FILE_CRC32_OP | COMMAND_READ_FLAG, command[2]};
+            UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, FILE_CRC32_OP | COMMAND_READ_FLAG, payload, sizeof(payload), 3000);
         }
         else if (command[1] == COMMAND_TARGET_RIGHT_BUD)
         {
-            SendBudFwUpdateCommand(UART_INTERFACE_BUD_RIGHT, FILE_CRC32_OP | COMMAND_READ_FLAG, command[2], 3000);
+            uint8_t payload[] = {FILE_CRC32_OP | COMMAND_READ_FLAG, command[2]};
+            UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, FILE_CRC32_OP | COMMAND_READ_FLAG, payload, sizeof(payload), 3000);
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -523,24 +532,15 @@ static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_
         case COMMAND_TARGET_LEFT_BUD:
         {
             uint8_t payload[] = {FAC_SET_CHARGE_STATUS, command[2]};
-            UartCommandQueue_Command_t cmd;
-            memcpy(cmd.data, payload, sizeof(payload));
-            cmd.length = sizeof(payload);
-            cmd.command_id = FAC_SET_CHARGE_STATUS;
-            cmd.timeout_ms = 10000;
-            UartInterface_SendCommand(UART_INTERFACE_BUD_LEFT, &cmd);
+            UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, FAC_SET_CHARGE_STATUS, payload, sizeof(payload), 10000);
             break;
         }
 
         case COMMAND_TARGET_RIGHT_BUD:
         {
+
             uint8_t payload[] = {FAC_SET_CHARGE_STATUS, command[2]};
-            UartCommandQueue_Command_t cmd;
-            memcpy(cmd.data, payload, sizeof(payload));
-            cmd.length = sizeof(payload);
-            cmd.command_id = FAC_SET_CHARGE_STATUS;
-            cmd.timeout_ms = 10000;
-            UartInterface_SendCommand(UART_INTERFACE_BUD_RIGHT, &cmd);
+            UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, FAC_SET_CHARGE_STATUS, payload, sizeof(payload), 10000);
             break;
         }
         }
@@ -580,13 +580,13 @@ static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_L
     {
     case COMMAND_TARGET_LEFT_BUD:
     {
-        UartInterface_SendCommand(UART_INTERFACE_BUD_LEFT, &cmd);
+        UartInterface_SendQueue(UART_INTERFACE_BUD_LEFT, &cmd);
         break;
     }
 
     case COMMAND_TARGET_RIGHT_BUD:
     {
-        UartInterface_SendCommand(UART_INTERFACE_BUD_RIGHT, &cmd);
+        UartInterface_SendQueue(UART_INTERFACE_BUD_RIGHT, &cmd);
         break;
     }
     }
@@ -634,18 +634,4 @@ static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, ui
     Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
     Lighting_Mode = command;
     Lighting_Handler(r, g, b);
-}
-
-static void SendBudFwUpdateCommand(UartInterface_Port_t target, uint8_t op, uint8_t mode, uint16_t timeout)
-{
-    DEBUG_PRINT("send bud cmd op:%02X\n", op);
-
-    uint8_t payload[] = {op, mode};
-    UartCommandQueue_Command_t cmd = {
-        .length = sizeof(payload),
-        .command_id = op,
-        .timeout_ms = timeout};
-    memcpy(cmd.data, payload, sizeof(payload));
-
-    UartInterface_SendCommand(target, &cmd);
 }

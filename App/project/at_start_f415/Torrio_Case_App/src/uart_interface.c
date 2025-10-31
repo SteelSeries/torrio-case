@@ -24,9 +24,28 @@
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-bool UartInterface_SendCommand(UartInterface_Port_t port, UartCommandQueue_Command_t *cmd)
+void UartInterface_SendBudCommand(UartInterface_Port_t target,
+                                  uint8_t command_id,
+                                  const uint8_t *payload,
+                                  size_t payload_len,
+                                  uint16_t timeout)
 {
-    DEBUG_PRINT("UartInterface_SendCommand called with port=%d, cmd->command_id=0x%02X, length=%d\n", port, cmd->command_id, cmd->length);
+    UartCommandQueue_Command_t cmd = {
+        .length = payload_len,
+        .command_id = command_id,
+        .timeout_ms = timeout};
+
+    if (payload_len > 0 && payload != NULL)
+    {
+        memcpy(cmd.data, payload, payload_len);
+    }
+
+    UartInterface_SendQueue(target, &cmd);
+}
+
+bool UartInterface_SendQueue(UartInterface_Port_t port, UartCommandQueue_Command_t *cmd)
+{
+    DEBUG_PRINT("UartInterface_SendQueue called with port=%d, cmd->command_id=0x%02X, length=%d\n", port, cmd->command_id, cmd->length);
 
     UART_CommContext_t *ctx = NULL;
     if (port == UART_INTERFACE_BUD_LEFT)
@@ -48,7 +67,7 @@ bool UartInterface_SendCommand(UartInterface_Port_t port, UartCommandQueue_Comma
     uint16_t out_len = CMD_MAX_DATA_LEN;
     uint8_t tx_buf[CMD_MAX_DATA_LEN] = {0};
 
-    bool pack_result = UartProtocol_PackCommand(CMD_ONE_WIRE_UART_ACK, &ctx->tx_seqn, cmd->data, cmd->length, tx_buf, &out_len);
+    bool pack_result = UartProtocol_PackCommand(CMD_ONE_WIRE_UART_DATA, &ctx->tx_seqn, cmd->data, cmd->length, tx_buf, &out_len);
     if (!pack_result)
     {
         DEBUG_PRINT("UartProtocol_PackCommand failed: buffer too small or invalid input\n");
