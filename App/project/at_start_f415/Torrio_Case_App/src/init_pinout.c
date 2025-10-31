@@ -66,13 +66,13 @@ static const Usb_HardwareSettings_t usb_config =
         .usb_detect_gpio_pin = USB_DET_PIN,
         .usb_detect_gpio_crm_clk = USB_DET_CRM_CLK,
 
-        .usb_otg_pin_sof_gpio_port = BUD_DETECT_RESIST_SWITCH_GPIO,
-        .usb_otg_pin_sof_gpio_pin = BUD_DETECT_RESIST_SWITCH_PIN,
-        .usb_otg_pin_sof_gpio_crm_clk = BUD_DETECT_RESIST_SWITCH_CRM_CLK,
+        .usb_otg_pin_sof_gpio_port = OTG_SOF_GPIO,
+        .usb_otg_pin_sof_gpio_pin = OTG_SOF_PIN,
+        .usb_otg_pin_sof_gpio_crm_clk = OTG_SOF_CRM_CLK,
 
-        .usb_otg_pin_vbus_gpio_port = CHARGER_IRQ_GPIO,
-        .usb_otg_pin_vbus_gpio_pin = CHARGER_IRQ_PIN,
-        .usb_otg_pin_vbus_gpio_crm_clk = CHARGER_IRQ_CRM_CLK,
+        .usb_otg_pin_vbus_gpio_port = OTG_VBUS_GPIO,
+        .usb_otg_pin_vbus_gpio_pin = OTG_VBUS_PIN,
+        .usb_otg_pin_vbus_gpio_crm_clk = OTG_VBUS_CRM_CLK,
 };
 
 static const Adc_HardwareSettings_t adc_config =

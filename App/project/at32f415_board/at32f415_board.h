@@ -84,6 +84,8 @@ extern "C"
 
 /**************** define print uart ******************/
 // #define SCALA_BOARD
+// #define RIGHT_BUD_PORT
+// #define LEFT_BUD_PORT
 #ifndef SCALA_BOARD
 // dev board debug uart.
 #define PRINT_UART USART1
@@ -92,7 +94,9 @@ extern "C"
 #define PRINT_UART_TX_GPIO GPIOA
 #define PRINT_UART_TX_GPIO_CRM_CLK CRM_GPIOA_PERIPH_CLOCK
 #else
-// scala main board bud uart Reuse debug uart.
+
+#ifdef RIGHT_BUD_PORT
+// scala main board left bud uart Reuse debug uart.
 #define PRINT_UART USART3
 #define PRINT_UART_CRM_CLK CRM_USART3_PERIPH_CLOCK
 
@@ -103,6 +107,21 @@ extern "C"
 #define PRINT_UART_RX_PIN GPIO_PINS_11
 #define PRINT_UART_RX_GPIO GPIOB
 #define PRINT_UART_RX_GPIO_CRM_CLK CRM_GPIOB_PERIPH_CLOCK
+
+#else
+// scala main board right bud uart Reuse debug uart.
+#define PRINT_UART USART2
+#define PRINT_UART_CRM_CLK CRM_USART2_PERIPH_CLOCK
+
+#define PRINT_UART_TX_PIN GPIO_PINS_2
+#define PRINT_UART_TX_GPIO GPIOA
+#define PRINT_UART_TX_GPIO_CRM_CLK CRM_GPIOA_PERIPH_CLOCK
+
+#define PRINT_UART_RX_PIN GPIO_PINS_3
+#define PRINT_UART_RX_GPIO GPIOA
+#define PRINT_UART_RX_GPIO_CRM_CLK CRM_GPIOA_PERIPH_CLOCK
+#endif
+
 #endif
   /******************* define button *******************/
   typedef enum

@@ -3,11 +3,18 @@
  *************************************************************************************************/
 #include "uart_driver.h"
 #include "uart_protocol.h"
+#include "uart_comm_manager.h"
+#include "task_scheduler.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define BUDS_UART_BAUD_RATE 921600
+
+// Each task runs every 10 ms
+// To achieve 50 ms debounce time:
+// 50 ms / 10 ms = 5 task cycles
+#define BUD_INCASE_DEBOUNCE_TIMER 5
 
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
@@ -27,14 +34,24 @@ typedef struct
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
 static UartDrive_HardwareSettings_t user_hardware_settings = {0};
+static UART_CommContext_t *user_left_bud_ctx = NULL;
+static UART_CommContext_t *user_right_bud_ctx = NULL;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
 static void InitOneWriteSend(const UartHardwareConfig_t *config);
 static void InitOneWriteReceive(const UartHardwareConfig_t *config);
+static void CheckBudConnection(UART_CommContext_t *ctx);
+
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+void UartDrive_BudsCtxInit(void)
+{
+    user_left_bud_ctx = UartCommManager_GetLeftBudContext();
+    user_right_bud_ctx = UartCommManager_GetRightBudContext();
+}
+
 void UartDrive_GpioConfigHardware(const UartDrive_HardwareSettings_t *hardware_settings)
 {
     memcpy(&user_hardware_settings, hardware_settings, sizeof(UartDrive_HardwareSettings_t));
@@ -49,6 +66,32 @@ void UartDrive_GpioConfigHardware(const UartDrive_HardwareSettings_t *hardware_s
 
     nvic_irq_enable(USART2_IRQn, 0, 0);
     nvic_irq_enable(USART3_IRQn, 0, 0);
+
+    gpio_init_type gpio_init_struct;
+
+    /* Initialize structure to default values */
+    gpio_default_para_init(&gpio_init_struct);
+
+    gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
+    gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+
+    /* ---------- Configure left TX pin as analog (Input mode) ---------- */
+    gpio_init_struct.gpio_pins = user_hardware_settings.left_bud_uart_tx_gpio_pin;
+    gpio_init(user_hardware_settings.left_bud_uart_tx_gpio_port, &gpio_init_struct);
+
+    /* ---------- Configure left RX pin as UART (Input mode) ---------- */
+    gpio_init_struct.gpio_pins = user_hardware_settings.left_bud_uart_rx_gpio_pin;
+    gpio_init(user_hardware_settings.left_bud_uart_rx_gpio_port, &gpio_init_struct);
+
+    /* ---------- Configure right TX pin as analog (Input mode) ---------- */
+    gpio_init_struct.gpio_pins = user_hardware_settings.right_bud_uart_tx_gpio_pin;
+    gpio_init(user_hardware_settings.right_bud_uart_tx_gpio_port, &gpio_init_struct);
+
+    /* ---------- Configure right RX pin as UART (Input mode) ---------- */
+    gpio_init_struct.gpio_pins = user_hardware_settings.right_bud_uart_rx_gpio_pin;
+    gpio_init(user_hardware_settings.right_bud_uart_rx_gpio_port, &gpio_init_struct);
 }
 
 void UartDrive_SetOneWireMode(UART_CommContext_t *ctx, UART_OneWireMode_t mode)
@@ -157,6 +200,17 @@ void UartDrive_RxIrqHandler(UART_CommContext_t *ctx, uint8_t data)
     }
 }
 
+void UartDrive_BudsConnectCheckTask(void)
+{
+    CheckBudConnection(user_left_bud_ctx);
+    CheckBudConnection(user_right_bud_ctx);
+
+    if (TaskScheduler_AddTask(UartDrive_BudsConnectCheckTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+    {
+        DEBUG_PRINT("add buds connect check task fail\n");
+    }
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -196,21 +250,21 @@ static void InitOneWriteReceive(const UartHardwareConfig_t *config)
     gpio_default_para_init(&gpio_init_struct);
     usart_enable(config->uart, FALSE);
 
-    /* ---------- Configure TX pin as analog (float) ---------- */
+    /* ---------- Configure TX pin as analog (Input mode) ---------- */
     gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
-    gpio_init_struct.gpio_mode = GPIO_MODE_ANALOG;
+    gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
     gpio_init_struct.gpio_pins = config->tx_pin;
     gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
     gpio_init(config->tx_port, &gpio_init_struct);
 
-    /* ---------- Configure RX pin as UART (MUX mode) ---------- */
+    /* ---------- Configure RX pin as UART (Input mode) ---------- */
     gpio_default_para_init(&gpio_init_struct);
     gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
     gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
     gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
     gpio_init_struct.gpio_pins = config->rx_pin;
-    gpio_init_struct.gpio_pull = GPIO_PULL_UP;
+    gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
     gpio_init(config->rx_port, &gpio_init_struct);
 
     /* ---------- Configure UART ---------- */
@@ -220,4 +274,92 @@ static void InitOneWriteReceive(const UartHardwareConfig_t *config)
     usart_receiver_enable(config->uart, TRUE);
     usart_interrupt_enable(config->uart, USART_RDBF_INT, TRUE);
     usart_enable(config->uart, TRUE);
+}
+
+static void CheckBudConnection(UART_CommContext_t *ctx)
+{
+    gpio_type *port;
+    uint32_t pin;
+
+    if (ctx->uart == user_hardware_settings.left_bud_uart)
+    {
+        port = user_hardware_settings.left_bud_uart_tx_gpio_port;
+        pin = user_hardware_settings.left_bud_uart_tx_gpio_pin;
+    }
+    else if (ctx->uart == user_hardware_settings.right_bud_uart)
+    {
+        port = user_hardware_settings.right_bud_uart_tx_gpio_port;
+        pin = user_hardware_settings.right_bud_uart_tx_gpio_pin;
+    }
+    else
+    {
+        return;
+    }
+
+    Uart_BudsIoState_t pin_state = (Uart_BudsIoState_t)gpio_input_data_bit_read(port, pin);
+
+    // Handle first-time check after power-on:
+    // If state is UNKNOWN, read the current GPIO level directly
+    // and set the initial connection state without waiting for debounce.
+    if (ctx->detect_state == UART_BUDS_IO_UNKNOW)
+    {
+        ctx->detect_state = pin_state;
+        ctx->detect_state_pre = pin_state;
+
+        if (pin_state == UART_BUDS_IO_DISCONNECT)
+        {
+            ctx->Connect = UART_BUDS_CONNT_DISCONNECT;
+            DEBUG_PRINT("%s bud initial state: disconnected\n",
+                        (ctx->uart == user_hardware_settings.left_bud_uart) ? "left" : "right");
+        }
+        else
+        {
+            ctx->Connect = UART_BUDS_CONNT_CONNECT;
+            DEBUG_PRINT("%s bud initial state: connected\n",
+                        (ctx->uart == user_hardware_settings.left_bud_uart) ? "left" : "right");
+        }
+
+        // no need to debounce at first detection
+        return;
+    }
+
+    if (ctx->detect_state != pin_state)
+    {
+        ctx->detect_state = pin_state;
+        ctx->detect_debounce = BUD_INCASE_DEBOUNCE_TIMER;
+    }
+
+    if (ctx->detect_debounce > 0)
+    {
+        ctx->detect_debounce--;
+        if (ctx->detect_debounce == 0)
+        {
+            if (ctx->detect_state != ctx->detect_state_pre)
+            {
+
+                if (ctx->uart == user_hardware_settings.left_bud_uart)
+                {
+                    DEBUG_PRINT("left bud ");
+                }
+                else if (ctx->uart == user_hardware_settings.right_bud_uart)
+                {
+                    DEBUG_PRINT("right bud ");
+                }
+
+                if (ctx->detect_state == UART_BUDS_IO_DISCONNECT)
+                {
+                    ctx->Connect = UART_BUDS_CONNT_DISCONNECT;
+                    UartCommManager_DisconnectReinit(ctx);
+                    DEBUG_PRINT("disconnected\n");
+                }
+                else
+                {
+                    ctx->Connect = UART_BUDS_CONNT_CONNECT;
+                    DEBUG_PRINT("connected\n");
+                }
+
+                ctx->detect_state_pre = ctx->detect_state;
+            }
+        }
+    }
 }

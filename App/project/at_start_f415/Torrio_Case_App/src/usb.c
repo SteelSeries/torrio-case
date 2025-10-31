@@ -38,8 +38,8 @@ void Usb_GpioConfigHardware(const Usb_HardwareSettings_t *hardware_settings)
   memcpy(&user_hardware_settings, hardware_settings, sizeof(Usb_HardwareSettings_t));
 
   crm_periph_clock_enable(user_hardware_settings.usb_detect_gpio_crm_clk, TRUE);
+  crm_periph_clock_enable(user_hardware_settings.usb_otg_pin_sof_gpio_crm_clk, TRUE);
   crm_periph_clock_enable(user_hardware_settings.usb_otg_pin_vbus_gpio_crm_clk, TRUE);
-  crm_periph_clock_enable(user_hardware_settings.usb_detect_gpio_crm_clk, TRUE);
 
   gpio_default_para_init(&gpio_init_struct);
 

@@ -23,8 +23,16 @@
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-static UART_CommContext_t bud_left_ctx;
-static UART_CommContext_t bud_right_ctx;
+static UART_CommContext_t bud_left_ctx = {
+    .Connect = UART_BUDS_CONNT_UNKNOW,
+    .detect_state = UART_BUDS_IO_UNKNOW,
+    .detect_state_pre = UART_BUDS_IO_UNKNOW,
+};
+static UART_CommContext_t bud_right_ctx = {
+    .Connect = UART_BUDS_CONNT_UNKNOW,
+    .detect_state = UART_BUDS_IO_UNKNOW,
+    .detect_state_pre = UART_BUDS_IO_UNKNOW,
+};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -49,12 +57,26 @@ void UartCommManager_Init(void)
     CommInit(&bud_left_ctx, USART2);
     CommInit(&bud_right_ctx, USART3);
     Interrupt_BudsCtxInit();
+    UartDrive_BudsCtxInit();
+}
+
+void UartCommManager_DisconnectReinit(UART_CommContext_t *ctx)
+{
+    CommInit(ctx, ctx->uart);
 }
 
 void UartCommManager_RunningTask(void)
 {
-    CommTask(&bud_left_ctx);
-    CommTask(&bud_right_ctx);
+
+    if (bud_left_ctx.Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        CommTask(&bud_left_ctx);
+    }
+
+    if (bud_right_ctx.Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        CommTask(&bud_right_ctx);
+    }
 
     if (TaskScheduler_AddTask(UartCommManager_RunningTask, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
@@ -95,6 +117,7 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     ctx->direct_len = 0;
     ctx->direct_event_id = 0;
     ctx->direct_timeout_ms = 0;
+    ctx->detect_debounce = 0;
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
 }
@@ -161,7 +184,6 @@ static void CommTask(UART_CommContext_t *ctx)
     {
         if (ctx->packet_ready)
         {
-            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
             ctx->packet_ready = false;
             DEBUG_PRINT("[UART][WAIT] Response packet ready, len=%d\n", ctx->rx_index);
             DEBUG_PRINT("Received data (%d bytes): ", ctx->rx_index);

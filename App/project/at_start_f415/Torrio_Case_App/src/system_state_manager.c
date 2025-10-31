@@ -12,6 +12,7 @@
 #include "lid.h"
 #include "task_scheduler.h"
 #include "uart_comm_manager.h"
+#include "uart_driver.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -103,6 +104,11 @@ void SystemStateManager_SystemStartWork(void)
     if (TaskScheduler_AddTask(UartCommManager_RunningTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
         DEBUG_PRINT("add uart running task fail\n");
+    }
+
+    if (TaskScheduler_AddTask(UartDrive_BudsConnectCheckTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        DEBUG_PRINT("add buds connect check task fail\n");
     }
 }
 

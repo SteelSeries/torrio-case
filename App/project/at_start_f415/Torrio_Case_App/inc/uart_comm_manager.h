@@ -30,6 +30,20 @@ typedef enum
     UART_BUD_UNKNOWN
 } Uart_BudSide_t;
 
+typedef enum
+{
+    UART_BUDS_CONNT_UNKNOW = 0,
+    UART_BUDS_CONNT_DISCONNECT,
+    UART_BUDS_CONNT_CONNECT
+} Uart_BudsConnectState_t;
+
+typedef enum
+{
+    UART_BUDS_IO_DISCONNECT = 0,
+    UART_BUDS_IO_CONNECT,
+    UART_BUDS_IO_UNKNOW,
+} Uart_BudsIoState_t;
+
 typedef struct
 {
     usart_type *uart;
@@ -54,6 +68,11 @@ typedef struct
     uint16_t direct_len;
     uint16_t direct_event_id;
     uint32_t direct_timeout_ms;
+
+    Uart_BudsConnectState_t Connect;
+    Uart_BudsIoState_t detect_state;
+    Uart_BudsIoState_t detect_state_pre;
+    uint16_t detect_debounce;
 } UART_CommContext_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
@@ -63,6 +82,7 @@ typedef struct
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void UartCommManager_Init(void);
+void UartCommManager_DisconnectReinit(UART_CommContext_t *ctx);
 void UartCommManager_RunningTask(void);
 UART_CommContext_t *UartCommManager_GetLeftBudContext(void);
 UART_CommContext_t *UartCommManager_GetRightBudContext(void);
