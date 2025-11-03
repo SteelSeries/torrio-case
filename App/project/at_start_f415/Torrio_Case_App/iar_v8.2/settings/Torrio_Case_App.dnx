@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <settings>
     <Jet>
-        <JetConnSerialNo>AT-Link(WinUSB) CMSIS-DAP:9C69593300C0636C0A177502</JetConnSerialNo>
-        <JetConnFoundProbes />
+        <JetConnSerialNo>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07</JetConnSerialNo>
+        <JetConnFoundProbes>AT-Link-Plus CMSIS-DAP:ECA81400004001210C156C07:AT-Link-Plus(WinUSB) CMSIS-DAP:ECA81400004001210C156C07:</JetConnFoundProbes>
         <PrevWtdReset>Connect during reset</PrevWtdReset>
-        <OnlineReset>Software</OnlineReset>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>0</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
+        <OnlineReset>Software</OnlineReset>
     </Jet>
     <PlDriver>
         <FirstRun>0</FirstRun>
@@ -46,7 +46,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>2003676189</Checksum>
+        <Checksum>2838444141</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -61,6 +61,11 @@
         <Fmt0>{W}1:FW_Updateing_destAdrss	4	0</Fmt0>
         <Fmt1>{W}1:sum_crc32	4	0</Fmt1>
     </watch_formats>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
+        <Category2>_ 2</Category2>
+    </LogFile>
     <Trace1>
         <Enabled>0</Enabled>
         <ShowSource>1</ShowSource>
@@ -91,23 +96,18 @@
         <EventLSU>0</EventLSU>
         <EventSLEEP>0</EventSLEEP>
     </SWOTraceWindow>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ "$PROJ_DIR$\LogFile1.log"</LogFile>
-        <Category2>_ 2</Category2>
-    </LogFile>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints2>
-        <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\app_fw_update.c}.146.5" 0 0 1 "" 0 "" 0</Bp0>
-        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\timer3.c}.61.5" 0 0 1 "" 0 "" 0</Bp1>
+        <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\app_fw_update.c}.146.9" 0 0 1 "" 0 "" 0</Bp0>
+        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\timer3.c}.62.5" 0 0 1 "" 0 "" 0</Bp1>
         <Count>2</Count>
     </Breakpoints2>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>

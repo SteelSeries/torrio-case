@@ -275,7 +275,7 @@ static volatile bool charge_irq_flag = false;
 static flag_status GetSdaState(void);
 static bool match_table(const uint8_t tbl[][2], const uint8_t *read_values);
 static void DetectCurrentTable(void);
-static void ConfigBudDetectResistPin(confirm_state enable);
+static void ConfigBudDetectResistPin(confirm_state state);
 static void StartChipModeCheck(void);
 static void FirstReadVbatProcess(void);
 static void ReadNtcProcess(void);
@@ -344,7 +344,7 @@ void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_setting
     gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
     gpio_init_struct.gpio_pins = user_hardware_settings.busd_detect_resist_gpio_pin;
     gpio_init(user_hardware_settings.busd_detect_resist_gpio_port, &gpio_init_struct);
-    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE);
+    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, TRUE);
 
     gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
     gpio_init_struct.gpio_pins = user_hardware_settings.sy8809_sda_gpio_pin;
@@ -367,7 +367,7 @@ void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_setting
 
 void Sy8809_ReadIrqState(void)
 {
-    charge_irq_flag = true;
+    // charge_irq_flag = true;
 }
 
 const Sy8809_ChargeStatus_t *Sy8809_GetChargeIcStatusInfo(void)
@@ -471,8 +471,9 @@ static void DetectCurrentTable(void)
     DEBUG_PRINT("judge table:%d\n", ChargeIcStatusInfo.current_table);
 }
 
-static void ConfigBudDetectResistPin(confirm_state enable)
+static void ConfigBudDetectResistPin(confirm_state state)
 {
+    // gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, state);
     // if (first_start_state != WDT_WAKE_UP)
     // {
     //     if (gpio_output_data_bit_read(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin) != enable)
@@ -482,7 +483,7 @@ static void ConfigBudDetectResistPin(confirm_state enable)
     // }
     // else
     // {
-    gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE);
+    // gpio_bits_write(user_hardware_settings.busd_detect_resist_gpio_port, user_hardware_settings.busd_detect_resist_gpio_pin, FALSE);
     // }
 }
 

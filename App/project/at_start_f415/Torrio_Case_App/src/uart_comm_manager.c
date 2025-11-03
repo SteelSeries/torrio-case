@@ -9,6 +9,7 @@
 #include "uart_protocol.h"
 #include "uart_command_handler.h"
 #include <string.h>
+#include <stdlib.h>
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -22,8 +23,16 @@
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-static UART_CommContext_t bud_left_ctx;
-static UART_CommContext_t bud_right_ctx;
+static UART_CommContext_t bud_left_ctx = {
+    .Connect = UART_BUDS_CONNT_UNKNOW,
+    .detect_state = UART_BUDS_IO_UNKNOW,
+    .detect_state_pre = UART_BUDS_IO_UNKNOW,
+};
+static UART_CommContext_t bud_right_ctx = {
+    .Connect = UART_BUDS_CONNT_UNKNOW,
+    .detect_state = UART_BUDS_IO_UNKNOW,
+    .detect_state_pre = UART_BUDS_IO_UNKNOW,
+};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -48,12 +57,26 @@ void UartCommManager_Init(void)
     CommInit(&bud_left_ctx, USART2);
     CommInit(&bud_right_ctx, USART3);
     Interrupt_BudsCtxInit();
+    UartDrive_BudsCtxInit();
+}
+
+void UartCommManager_DisconnectReinit(UART_CommContext_t *ctx)
+{
+    CommInit(ctx, ctx->uart);
 }
 
 void UartCommManager_RunningTask(void)
 {
-    CommTask(&bud_left_ctx);
-    CommTask(&bud_right_ctx);
+
+    if (bud_left_ctx.Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        CommTask(&bud_left_ctx);
+    }
+
+    if (bud_right_ctx.Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        CommTask(&bud_right_ctx);
+    }
 
     if (TaskScheduler_AddTask(UartCommManager_RunningTask, 5, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
@@ -88,8 +111,24 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     ctx->sync_detected = false;
     ctx->packet_ready = false;
     ctx->command_id = 0;
+    ctx->direct_mode = false;
+    ctx->direct_pending = false;
+    ctx->direct_data = NULL;
+    ctx->direct_len = 0;
+    ctx->direct_event_id = 0;
+    ctx->direct_timeout_ms = 0;
+    ctx->detect_debounce = 0;
+    ctx->mode = UART_BUDS_WORK_MODE_UNKNOW;
+    memset(ctx->button_io_state, UART_BUDS_BUTTON_IO_UNKNOW, sizeof(ctx->button_io_state));
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
+
+    ctx->mode_type = BUDS_UNKNOW_STATE;
+    ctx->Color_Spin = BUDS_UNKNOW_STATE;
+    memset(ctx->dsp2_version, BUDS_UNKNOW_STATE, sizeof(ctx->dsp2_version));
+    memset(ctx->Version_Headset_Partion, BUDS_UNKNOW_STATE, sizeof(ctx->Version_Headset_Partion));
+    memset(ctx->anc_version_buffer, BUDS_UNKNOW_STATE, sizeof(ctx->anc_version_buffer));
+    memset(ctx->serial_number_buffer, 0x00, sizeof(ctx->serial_number_buffer));
 }
 
 static void CommTask(UART_CommContext_t *ctx)
@@ -98,13 +137,29 @@ static void CommTask(UART_CommContext_t *ctx)
     {
     case UART_STATE_IDLE:
     {
-        if (!UartCommandQueue_IsEmpty(&ctx->cmd_queue))
+        if (ctx->direct_pending)
+        {
+            DEBUG_PRINT("[UART][IDLE] Direct send triggered (event_id=0x%04X, len=%d)\n",
+                        ctx->direct_event_id, ctx->tx_len);
+
+            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
+            UartDrive_SendData(ctx);
+            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_RECEIVE_MODE);
+
+            ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->direct_timeout_ms);
+            ctx->current_timeout_ms = ctx->direct_timeout_ms;
+            ctx->retry_count = 0;
+            ctx->direct_pending = false;
+            ctx->state = UART_STATE_WAITING_RESPONSE;
+
+            DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (direct)\n");
+        }
+        else if (!UartCommandQueue_IsEmpty(&ctx->cmd_queue))
         {
             UartCommandQueue_Command_t cmd;
             if (UartCommandQueue_Dequeue(&ctx->cmd_queue, &cmd))
             {
-                DEBUG_PRINT("[UART][IDLE] Dequeued command -> ID: 0x%02X, Len: %d\n",
-                            cmd.command_id, cmd.length);
+                DEBUG_PRINT("%lu [UART][IDLE] Dequeued command -> ID: 0x%02X, Len: %d\n", Timer2_GetTick(), cmd.command_id, cmd.length);
 
                 DEBUG_PRINT("[UART][IDLE] Data: ");
                 for (uint8_t i = 0; i < cmd.length; i++)
@@ -123,7 +178,7 @@ static void CommTask(UART_CommContext_t *ctx)
                 ctx->current_timeout_ms = cmd.timeout_ms;
                 ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
                 ctx->state = UART_STATE_WAITING_RESPONSE;
-                DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (timeout @ %lu)\n", ctx->timeout_tick);
+                DEBUG_PRINT("%lu [UART][STATE] -> WAITING_RESPONSE (current timeout @ %lu)(timeout @ %lu)\n", Timer2_GetTick(), ctx->current_timeout_ms, ctx->timeout_tick);
             }
             else
             {
@@ -137,7 +192,6 @@ static void CommTask(UART_CommContext_t *ctx)
     {
         if (ctx->packet_ready)
         {
-            UartDrive_SetOneWireMode(ctx, UART_ONEWIRE_SEND_MODE);
             ctx->packet_ready = false;
             DEBUG_PRINT("[UART][WAIT] Response packet ready, len=%d\n", ctx->rx_index);
             DEBUG_PRINT("Received data (%d bytes): ", ctx->rx_index);
@@ -146,16 +200,25 @@ static void CommTask(UART_CommContext_t *ctx)
                 DEBUG_PRINT("%02X ", ctx->rx_buffer[i]);
             }
             DEBUG_PRINT("\n");
-            
+
             UartProtocol_Packet_t rx_packet;
             if (UARTProtocol_UnpackCommand(ctx->rx_buffer, ctx->rx_index, &rx_packet))
             {
-                DEBUG_PRINT("[UART][WAIT] Response OK, EventID=0x%04X, Seq=%d, PayloadLen=%d\n",
-                            rx_packet.event_id, rx_packet.tx_seq, rx_packet.payload_len);
+                DEBUG_PRINT("[UART][WAIT] Response OK, EventID=0x%04X, ReceicedEventID=0x%04X, Seq=%d, PayloadLen=%d\n",
+                            rx_packet.event_id, rx_packet.received_event_id, rx_packet.tx_seq, rx_packet.payload_len);
 
                 UartCommandsHandle_CommandsHandle(ctx, rx_packet);
                 ctx->state = UART_STATE_IDLE;
                 ctx->retry_count = 0;
+
+                if (ctx->direct_mode && ctx->direct_data)
+                {
+                    free(ctx->direct_data);
+                    ctx->direct_data = NULL;
+                    ctx->direct_len = 0;
+                    ctx->direct_mode = false;
+                    ctx->direct_pending = false;
+                }
             }
             else
             {
@@ -201,12 +264,23 @@ static void CommTask(UART_CommContext_t *ctx)
             ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
             ctx->state = UART_STATE_WAITING_RESPONSE;
             DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (retry)\n");
+            DEBUG_PRINT("[UART][STATE] Timeout detected (tick=%lu, limit=%lu current timeout:%lu)\n",
+                        Timer2_GetTick(), ctx->timeout_tick, ctx->current_timeout_ms);
         }
         else
         {
             DEBUG_PRINT("[UART][TIMEOUT] Max retry reached. Reset to IDLE.\n");
+            UartCommandsHandle_CommandsHandleTimeout(ctx);
             ctx->state = UART_STATE_IDLE;
             ctx->retry_count = 0;
+            if (ctx->direct_mode && ctx->direct_data)
+            {
+                free(ctx->direct_data);
+                ctx->direct_data = NULL;
+                ctx->direct_len = 0;
+                ctx->direct_mode = false;
+                ctx->direct_pending = false;
+            }
         }
         break;
     }
@@ -215,6 +289,14 @@ static void CommTask(UART_CommContext_t *ctx)
     {
         DEBUG_PRINT("[UART][ERROR] Communication error detected.\n");
         ctx->state = UART_STATE_IDLE;
+        if (ctx->direct_mode && ctx->direct_data)
+        {
+            free(ctx->direct_data);
+            ctx->direct_data = NULL;
+            ctx->direct_len = 0;
+            ctx->direct_mode = false;
+            ctx->direct_pending = false;
+        }
         break;
     }
 

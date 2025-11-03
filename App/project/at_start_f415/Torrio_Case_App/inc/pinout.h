@@ -48,6 +48,13 @@
 #define BUD_DETECT_RESIST_SWITCH_GPIO       GPIOC                       // PC1
 #define BUD_DETECT_RESIST_SWITCH_CRM_CLK    CRM_GPIOC_PERIPH_CLOCK      // PC1
 
+#define OTG_SOF_PIN        GPIO_PINS_8                 // PA8
+#define OTG_SOF_GPIO       GPIOA                       // PA8
+#define OTG_SOF_CRM_CLK    CRM_GPIOA_PERIPH_CLOCK      // PA8
+
+#define OTG_VBUS_PIN        GPIO_PINS_9                 // PA9
+#define OTG_VBUS_GPIO       GPIOA                       // PA9
+#define OTG_VBUS_CRM_CLK    CRM_GPIOA_PERIPH_CLOCK      // PA9
 
 // NOTE: This configuration was required in early versions of Scala's circuit design,
 // but has since been removed in later versions. It is currently used for experimental purposes only.

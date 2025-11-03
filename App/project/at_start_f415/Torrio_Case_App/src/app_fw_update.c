@@ -6,11 +6,14 @@
 #include "custom_hid_class.h"
 #include "usb.h"
 #include "file_system.h"
+#include "uart_interface.h"
+#include "uart_protocol.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define NULL_FLASH_DATA 0xFFFFFFFF
+#define WRITE_CMD_HEADER_SIZE 9U // Write command header size
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -108,6 +111,28 @@ void AppFwUpdate_CmdCrcCheckHandler(void)
     custom_hid_class_send_report(&otg_core_struct.dev, txBuf, sizeof(txBuf));
 }
 
+void AppFwUpdate_LeftBudWriteFlashTask(void)
+{
+    uint16_t BinLen = user_usb_receive_data[3] | (user_usb_receive_data[4] << 8);
+
+    UartInterface_SendDirect(UART_INTERFACE_BUD_LEFT,
+                             user_usb_receive_data,
+                             BinLen + WRITE_CMD_HEADER_SIZE,
+                             CMD_ONE_WIRE_UART_DATA,
+                             5000,
+                             FILE_ACCESS_OP);
+}
+
+void AppFwUpdate_RightBudWriteFlashTask(void)
+{
+    uint16_t BinLen = user_usb_receive_data[3] | (user_usb_receive_data[4] << 8);
+    UartInterface_SendDirect(UART_INTERFACE_BUD_RIGHT,
+                             user_usb_receive_data,
+                             BinLen + WRITE_CMD_HEADER_SIZE,
+                             CMD_ONE_WIRE_UART_DATA,
+                             5000,
+                             FILE_ACCESS_OP);
+}
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -219,7 +244,7 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     for (i = 0; i < (UPDATE_DATA_LEN / 4); ++i)
     {
         FW_UPDATE_Buffer[i] = 0;
-        FW_UPDATE_Buffer[i] = buffer[k + 9];
+        FW_UPDATE_Buffer[i] = buffer[k + WRITE_CMD_HEADER_SIZE];
         FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 10] << 8);
         FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 11] << 16);
         FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 12] << 24);
@@ -258,7 +283,7 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     {
         for (i = 0; i < gFW_BinLen; ++i)
         {
-            crc_data[i] = buffer[i + 9]; // include CRC of binary last 4 bytes
+            crc_data[i] = buffer[i + WRITE_CMD_HEADER_SIZE]; // include CRC of binary last 4 bytes
         }
         sum_crc32 = Crc32Compute(crc_data, gFW_BinLen - 4, &sum_crc32); // No need last 4 bytes for CRC
     }
@@ -266,7 +291,7 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     {
         for (i = 0; i < UPDATE_DATA_LEN; ++i)
         {
-            crc_data[i] = buffer[i + 9];
+            crc_data[i] = buffer[i + WRITE_CMD_HEADER_SIZE];
         }
         sum_crc32 = Crc32Compute(crc_data, UPDATE_DATA_LEN, &sum_crc32);
     }

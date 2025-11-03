@@ -66,13 +66,13 @@ static const Usb_HardwareSettings_t usb_config =
         .usb_detect_gpio_pin = USB_DET_PIN,
         .usb_detect_gpio_crm_clk = USB_DET_CRM_CLK,
 
-        .usb_otg_pin_sof_gpio_port = BUD_DETECT_RESIST_SWITCH_GPIO,
-        .usb_otg_pin_sof_gpio_pin = BUD_DETECT_RESIST_SWITCH_PIN,
-        .usb_otg_pin_sof_gpio_crm_clk = BUD_DETECT_RESIST_SWITCH_CRM_CLK,
+        .usb_otg_pin_sof_gpio_port = OTG_SOF_GPIO,
+        .usb_otg_pin_sof_gpio_pin = OTG_SOF_PIN,
+        .usb_otg_pin_sof_gpio_crm_clk = OTG_SOF_CRM_CLK,
 
-        .usb_otg_pin_vbus_gpio_port = CHARGER_IRQ_GPIO,
-        .usb_otg_pin_vbus_gpio_pin = CHARGER_IRQ_PIN,
-        .usb_otg_pin_vbus_gpio_crm_clk = CHARGER_IRQ_CRM_CLK,
+        .usb_otg_pin_vbus_gpio_port = OTG_VBUS_GPIO,
+        .usb_otg_pin_vbus_gpio_pin = OTG_VBUS_PIN,
+        .usb_otg_pin_vbus_gpio_crm_clk = OTG_VBUS_CRM_CLK,
 };
 
 static const Adc_HardwareSettings_t adc_config =
@@ -132,7 +132,19 @@ void InitPinout_Init(void)
     Usb_GpioConfigHardware(&usb_config);
     Adc_GpioConfigHardware(&adc_config);
     Lighting_GpioConfigHardware(&pwm_config);
-	UartDrive_GpioConfigHardware(&buds_uart_config);
+    UartDrive_GpioConfigHardware(&buds_uart_config);
+
+    /*===========DEBUG PIN================*/
+    gpio_init_type gpio_initstructure;
+    crm_periph_clock_enable(CRM_GPIOB_PERIPH_CLOCK, TRUE);
+    gpio_default_para_init(&gpio_initstructure);
+    gpio_initstructure.gpio_mode = GPIO_MODE_OUTPUT;
+    gpio_initstructure.gpio_pins = GPIO_PINS_9 | GPIO_PINS_8;
+    gpio_initstructure.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_initstructure.gpio_pull = GPIO_PULL_NONE;
+    gpio_initstructure.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+    gpio_init(GPIOB, &gpio_initstructure);
+    /*====================================*/
 }
 
 void InitPinout_I2c1Init(void)
