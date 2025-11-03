@@ -10,7 +10,10 @@
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
 #define BUD_IO_NUM 3U // has 3 button on each ear
-
+#define BUDS_UNKNOW_STATE 0xFFU
+#define BUDS_VERSTION_DATA_LEN 3U
+#define BUDS_ANC_VERSTION_DATA_LEN 5U
+#define BUDS_SN_DATA_LEN 19U
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -50,14 +53,14 @@ typedef enum
     UART_BUDS_WORK_MODE_APP = 0xAA,
     UART_BUDS_WORK_MODE_BOOTLOADER = 0xBB,
     UART_BUDS_WORK_MODE_FACTORY = 0xFA,
-    UART_BUDS_WORK_MODE_UNKNOW = 0xFF,
+    UART_BUDS_WORK_MODE_UNKNOW = BUDS_UNKNOW_STATE,
 } Uart_BudsWorkMode_t;
 
 typedef enum
 {
     UART_BUDS_BUTTON_IO_LOW = 0,
     UART_BUDS_BUTTON_IO_HIGH,
-    UART_BUDS_BUTTON_IO_UNKNOW = 0xFF,
+    UART_BUDS_BUTTON_IO_UNKNOW = BUDS_UNKNOW_STATE,
 } Uart_BudsButtonIoState_t;
 
 typedef struct
@@ -92,6 +95,14 @@ typedef struct
 
     Uart_BudsWorkMode_t mode;
     Uart_BudsButtonIoState_t button_io_state[BUD_IO_NUM];
+
+    uint8_t Color_Spin;
+    uint8_t mode_type;
+    uint8_t Version_Headset_Partion[BUDS_VERSTION_DATA_LEN];
+    uint8_t dsp2_version[BUDS_VERSTION_DATA_LEN];
+    uint8_t anc_version_buffer[BUDS_ANC_VERSTION_DATA_LEN];
+    uint8_t serial_number_buffer[BUDS_SN_DATA_LEN];
+
 } UART_CommContext_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *

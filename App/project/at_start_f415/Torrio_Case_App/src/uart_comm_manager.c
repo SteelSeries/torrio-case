@@ -122,6 +122,13 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     memset(ctx->button_io_state, UART_BUDS_BUTTON_IO_UNKNOW, sizeof(ctx->button_io_state));
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
+
+    ctx->mode_type = BUDS_UNKNOW_STATE;
+    ctx->Color_Spin = BUDS_UNKNOW_STATE;
+    memset(ctx->dsp2_version, BUDS_UNKNOW_STATE, sizeof(ctx->dsp2_version));
+    memset(ctx->Version_Headset_Partion, BUDS_UNKNOW_STATE, sizeof(ctx->Version_Headset_Partion));
+    memset(ctx->anc_version_buffer, BUDS_UNKNOW_STATE, sizeof(ctx->anc_version_buffer));
+    memset(ctx->serial_number_buffer, 0x00, sizeof(ctx->serial_number_buffer));
 }
 
 static void CommTask(UART_CommContext_t *ctx)

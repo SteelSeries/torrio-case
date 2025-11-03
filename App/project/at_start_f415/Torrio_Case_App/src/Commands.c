@@ -14,6 +14,7 @@
 #include "uart_interface.h"
 #include <stdio.h>
 #include <string.h>
+#include "uart_comm_manager.h"
 #include "lighting.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -163,12 +164,39 @@ static Command_Status_t HandleNoop(const uint8_t command[USB_RECEIVE_LEN])
 
 static Command_Status_t ReadVersion(const uint8_t command[USB_RECEIVE_LEN])
 {
-    uint8_t buff[13] = {0x00};
-    uint8_t temp_buff[12] = {0};
-    buff[0] = VERSION_OP | COMMAND_READ_FLAG;
-    Version_GetArteryVersion(temp_buff, sizeof(temp_buff));
-    memcpy(&buff[1], temp_buff, 8);
-    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    uint8_t uab_send_buff[61] = {0x00};
+    uint8_t version_format_buff[12] = {0};
+    UART_CommContext_t *ctx = NULL;
+
+    uab_send_buff[0] = VERSION_OP | COMMAND_READ_FLAG;
+    // Case version 1~12
+    Version_GetArteryVersion(version_format_buff, sizeof(version_format_buff));
+    memcpy(&uab_send_buff[1], version_format_buff, 8);
+    memset(version_format_buff, 0, sizeof(version_format_buff));
+
+    // Left bud version 13~24
+    ctx = UartCommManager_GetLeftBudContext();
+    Version_GetStrVersion(ctx->Version_Headset_Partion, version_format_buff, sizeof(version_format_buff));
+    memcpy(&uab_send_buff[13], version_format_buff, 8);
+    memset(version_format_buff, 0, sizeof(version_format_buff));
+
+    // Left bud DSP2 version 37~48
+    Version_GetStrVersion(ctx->dsp2_version, version_format_buff, sizeof(version_format_buff));
+    memcpy(&uab_send_buff[37], version_format_buff, 8);
+    memset(version_format_buff, 0, sizeof(version_format_buff));
+
+    // Right bud version 25~36
+    ctx = UartCommManager_GetRightBudContext();
+    Version_GetStrVersion(ctx->Version_Headset_Partion, version_format_buff, sizeof(version_format_buff));
+    memcpy(&uab_send_buff[25], version_format_buff, 8);
+    memset(version_format_buff, 0, sizeof(version_format_buff));
+
+    // Right bud DSP2 version 49~60
+    Version_GetStrVersion(ctx->dsp2_version, version_format_buff, sizeof(version_format_buff));
+    memcpy(&uab_send_buff[49], version_format_buff, 8);
+    memset(version_format_buff, 0, sizeof(version_format_buff));
+
+    custom_hid_class_send_report(&otg_core_struct.dev, uab_send_buff, sizeof(uab_send_buff));
     return COMMAND_STATUS_SUCCESS;
 }
 
@@ -354,11 +382,17 @@ static Command_Status_t Crc32File(const uint8_t command[USB_RECEIVE_LEN])
 static Command_Status_t GetSerialNumber(const uint8_t command[USB_RECEIVE_LEN])
 {
     FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
-    uint8_t buff[58] = {0x00};
+    uint8_t buff[59] = {0x00};
     buff[0] = FAC_SERIAL_OP | COMMAND_READ_FLAG;
     memcpy(&buff[1], data->serial_number, sizeof(data->serial_number));
-    // TODO: need get buds serial number.
-    // left 20~38, right 39~57.
+
+    UART_CommContext_t *ctx = NULL;
+    ctx = UartCommManager_GetLeftBudContext();
+    memcpy(&buff[21], ctx->serial_number_buffer, sizeof(ctx->serial_number_buffer));
+
+    ctx = UartCommManager_GetRightBudContext();
+    memcpy(&buff[40], ctx->serial_number_buffer, sizeof(ctx->serial_number_buffer));
+
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }
@@ -447,13 +481,19 @@ static Command_Status_t ReadColorSpinAndMoldel(const uint8_t command[USB_RECEIVE
 
         case COMMAND_TARGET_LEFT_BUD:
         {
-            // TODO: UART communication to lift bud write color spin and model.
+            UART_CommContext_t *ctx = NULL;
+            ctx = UartCommManager_GetLeftBudContext();
+            buff[2] = ctx->mode_type;
+            buff[3] = ctx->Color_Spin;
             break;
         }
 
         case COMMAND_TARGET_RIGHT_BUD:
         {
-            // TODO: UART communication to lift bud write color spin and model.
+            UART_CommContext_t *ctx = NULL;
+            ctx = UartCommManager_GetRightBudContext();
+            buff[2] = ctx->mode_type;
+            buff[3] = ctx->Color_Spin;
             break;
         }
         }
