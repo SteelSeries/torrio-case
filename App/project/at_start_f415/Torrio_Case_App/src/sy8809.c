@@ -7,6 +7,7 @@
 #include "task_scheduler.h"
 #include "timer2.h"
 #include "usb.h"
+#include "qi.h"
 #include "lid.h"
 #include "system_state_manager.h"
 #include "custom_hid_class.h"
@@ -285,6 +286,7 @@ static void CheckNtcOverTempe(void);
 static void CheckCaseChargeStatus(void);
 static void CheckBudsChargeStatus(void);
 static void UsbModeApplyTable(void);
+static void sy8809_QiInCheckIccTable(void);
 static void NormalModeApplyTable(void);
 static void SettingRegTable5H(void);
 static void SettingRegTable3(void);
@@ -583,12 +585,11 @@ static void UpdateTableByPowerSource(void)
         DEBUG_PRINT("USB table check\n");
         UsbModeApplyTable();
     }
-    // Todo: check Qi chatge whether connect.
-    // else if (QI_Charge_state == QI_CONTACT)
-    // {
-    //     DEBUG_PRINT("Qi table check\n");
-    //     sy8809_QiInCheckIccTable();
-    // }
+    else if (Qi_GetDetectState() == QI_DETECT)
+    {
+        DEBUG_PRINT("Qi table check\n");
+        sy8809_QiInCheckIccTable();
+    }
     else
     {
         DEBUG_PRINT("normal table check\n");
@@ -648,7 +649,7 @@ static void CheckNtcOverTempe(void)
     {
         SettingRegTable6();
         if ((Lid_GetState() == LID_OPEN) &&
-            (Usb_GetUsbDetectState() == USB_UNPLUG))
+            ((Usb_GetUsbDetectState() == USB_UNPLUG) && (Qi_GetDetectState() == QI_NON_DETECT)))
         {
             DEBUG_PRINT("NTC over temptrue enter standby mode\n");
             SystemStateManager_EnterStandbyModeCheck();
@@ -737,11 +738,75 @@ static void UsbModeApplyTable(void)
     }
 }
 
+static void sy8809_QiInCheckIccTable(void)
+{
+    if (((ChargeIcStatusInfo.check_reg_state.reg_0x14 & REG_BIT(4)) == 0) ||
+        ((ChargeIcStatusInfo.check_reg_state.reg_0x14 & REG_BIT(5)) == 0))
+    {
+        // full load
+        switch (ChargeIcStatusInfo.ntc_level)
+        {
+        case SY8809_NTC_LEVEL_10_TO_20:
+        {
+            SettingRegTable5H();
+        }
+        break;
+
+        case SY8809_NTC_LEVEL_20_TO_45:
+        {
+            SettingRegTable5H();
+        }
+        break;
+
+        case SY8809_NTC_LEVEL_0_TO_10:
+        {
+            SettingRegTable5H();
+        }
+        break;
+
+        case SY8809_NTC_LEVEL_45_TO_60:
+        {
+            SettingRegTable5H();
+        }
+        break;
+        }
+    }
+    else
+    {
+        switch (ChargeIcStatusInfo.ntc_level)
+        {
+        case SY8809_NTC_LEVEL_10_TO_20:
+        {
+            SettingRegTableG();
+        }
+        break;
+
+        case SY8809_NTC_LEVEL_20_TO_45:
+        {
+            SettingRegTableG();
+        }
+        break;
+
+        case SY8809_NTC_LEVEL_0_TO_10:
+        {
+            SettingRegTableCEI();
+        }
+        break;
+
+        case SY8809_NTC_LEVEL_45_TO_60:
+        {
+            SettingRegTableDFJ();
+        }
+        break;
+        }
+    }
+}
+
 static void NormalModeApplyTable(void)
 {
     // if ((NTC_over_tempe_alarm == false) && (Case_VBAT_level != BATTERY_LEVEL_POWEROFF))
     // {
-    if (Usb_GetUsbDetectState() == USB_UNPLUG)
+    if (Usb_FirstSetupUsbState() == USB_UNPLUG)
     // (first_start_state == WDT_WAKE_UP))
     {
         if (Lid_GetState() == LID_OPEN)

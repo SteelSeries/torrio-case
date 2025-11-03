@@ -32,9 +32,11 @@
 #define INTERNAL_USB_RESUME_OP 0x0DU  // after suspension, resume from device received
 
 // factory
-#define FAC_GET_BATTERY_AND_NTC 0x72 // factory settings
-#define FAC_SET_CHARGE_STATUS 0x74   // factory settings
-#define FAC_READ_BUDS_DEBUG 0x75     // factory settings
+#define FAC_GET_BATTERY_AND_NTC 	0x72 // factory settings
+#define FAC_SET_CHARGE_STATUS 		0x74 // factory settings
+#define FAC_READ_BUDS_DEBUG 		0x75 // factory settings
+#define FAC_ENTER_MODE       		0x7C // factory settings
+#define FAC_ENTER_KEY       		0xFCAA55 // factory key
 
 // factory settings
 #define FAC_SERIAL_OP 0x13           // factory settings
@@ -77,6 +79,19 @@ typedef enum
     COMMAND_GET_BATTERY_STATUS_COMPLETE
 } Command_GetBatteryStatus_t;
 
+typedef enum
+{
+    COMMAND_FACTORY_NONE = 0x00,
+    COMMAND_FACTORY_MODE_LIGHTING,
+    COMMAND_FACTORY_LED_ON_OFF
+} Command_GetFactoryLighting_t;
+
+typedef enum
+{
+    COMMAND_FACTORY_NON_ENTER = 0x00,
+    COMMAND_FACTORY_MODE,
+} Command_GetFactoryStatus_t;
+
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -85,4 +100,5 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len);
+void Commands_HandleUsbCommand(const uint8_t * in, size_t in_len);
+Command_GetFactoryLighting_t Commands_HandleLightingMode(void);

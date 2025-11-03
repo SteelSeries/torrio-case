@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "at32f415_board.h": "c"
+        "commands.h": "c",
+        "task_scheduler.h": "c",
+        "at32f415_board.h": "c",
+        "system_state_manager.h": "c",
+        "qi.h": "c",
+        "init_pinout.h": "c",
+        "lid.h": "c"
     }
 }

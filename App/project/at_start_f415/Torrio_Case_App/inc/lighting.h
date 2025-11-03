@@ -13,6 +13,7 @@
 #define LIGHTING_BRIGHT_MAX                   PWM_SET_LEVEL
 #define LIGHTING_BRIGHT_MIN                   0
 #define LIGHTING_HOLD_TIME                    300
+#define LIGHTING_BREATH_HOLD_TIME             200
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -22,6 +23,7 @@ typedef enum
   LIGHTING_STABLE,
   LIGHTING_BREATH,
   LIGHTING_BREATH_QUICKLY,
+  LIGHTING_BREATH_QUICKLY_ONCE,
   LIGHTING_BLINK,
   LIGHTING_ILLUM
 } LED_MODE;
@@ -41,14 +43,22 @@ typedef struct
     crm_periph_clock_type lighting_b_gpio_crm_clk;
 
 } Lighting_HardwareSettings_t;
+
+typedef enum
+{
+    LIGHTING_LID_COMPLETE = 0,
+    LIGHTING_LID_NON_COMPLETE,
+    LIGHTING_LID_UNKNOW
+} Lighting_Lid_State_t;
+
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
 extern uint8_t Lighting_Change_Flag;
-extern uint8_t Lighting_Mode;
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_settings);
-void Lighting_Handler(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
-void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
+void Lighting_HandleTask(void);
+void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
+Lighting_Lid_State_t Lighting_LidOffHandle(void);

@@ -8,20 +8,24 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-// Delay interval for battery status update task in milliseconds.
-// This task runs every 120 seconds to read and update battery level.
-#define BATTERY_TASK_UPDATE_INTERVAL_MS 120000U
+
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
+typedef struct
+{
+    gpio_type *qi_gpio_port;
+    uint32_t qi_gpio_pin;
+    crm_periph_clock_type qi_gpio_crm_clk;
+} Qi_HardwareSettings_t;
+
 typedef enum
 {
-    BATTERY_UNKNOWN_LEVEL = 0xFFU,
-    BATTERY_CRITICAL_LEVEL = 9U,
-    BATTERY_LOW_LEVEL = 26U,
-    BATTERY_MEDIUM_LEVEL = 66U,
-    BATTERY_HIGH_LEVEL = 100U
-} Battery_Level_t;
+    QI_NON_DETECT = 0,
+    QI_DETECT,
+    QI_UNKNOW
+} Qi_DetectConnectState_t;
+
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -29,7 +33,7 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Battery_UpdateBatteryStatus(uint16_t vbat_voltage);
-uint8_t Battery_GetBatteryPercent(void);
-void Battery_UpdateStatusTask(void);
-uint16_t Battery_GetBatteryVoltage(void);
+void Qi_GpioConfigHardware(const Qi_HardwareSettings_t *hardware_settings);
+void Qi_StatusCheckTask(void);
+Qi_DetectConnectState_t Qi_GetDetectState(void);
+

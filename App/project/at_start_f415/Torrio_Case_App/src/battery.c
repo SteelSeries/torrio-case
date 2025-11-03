@@ -5,6 +5,7 @@
 #include "sy8809.h"
 #include "sy8809_xsense.h"
 #include "usb.h"
+#include "qi.h"
 #include "task_scheduler.h"
 
 /*************************************************************************************************
@@ -69,9 +70,7 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
     DEBUG_PRINT("battery calculate start\n");
     DEBUG_PRINT("Voltage:%d\n", adc_convert_to_voltage);
     if ((charge_status->case_charge_status == SY8809_CASE_CHARGE_STATUS_CHARGE_DONE) &&
-        (Usb_GetUsbDetectState() == USB_PLUG))
-    // ((Usb_GetUsbDetectState() == USB_PLUG) || (QI_Charge_state == QI_CONTACT)))
-    // todo: check Qi connect status
+        ((Usb_GetUsbDetectState() == USB_PLUG) || (Qi_GetDetectState() == QI_DETECT)))
     {
         Case_VBAT_percent = 100;
         pre_Case_VBAT_percent = Case_VBAT_percent;

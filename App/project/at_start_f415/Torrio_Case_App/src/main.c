@@ -5,6 +5,7 @@
 #include "custom_hid_class.h"
 #include "custom_hid_desc.h"
 #include "usb.h"
+#include "qi.h"
 #include "Commands.h"
 #include "timer2.h"
 #include "timer3.h"
@@ -21,8 +22,8 @@
 #include "system_clock.h"
 #include "lid.h"
 #include "wdt.h"
+#include "button.h"
 #include "uart_comm_manager.h"
-
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -138,9 +139,24 @@ int main(void)
     DEBUG_PRINT("add lid check task fail\n");
   }
 
+  if (TaskScheduler_AddTask(Button_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    printf("add button check task fail\n");
+  }
+
   if (TaskScheduler_AddTask(Usb_StatusCheckTask, 50, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
     DEBUG_PRINT("add USB check task fail\n");
+  }
+
+  if (TaskScheduler_AddTask(Qi_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    DEBUG_PRINT("add Qi check task fail\n");
+  }
+
+  if (TaskScheduler_AddTask(Lighting_HandleTask, 5, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  {
+    DEBUG_PRINT("add lighting handle task fail\n");
   }
 
   DEBUG_PRINT("main loop start\n");

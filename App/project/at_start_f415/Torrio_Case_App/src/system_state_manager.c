@@ -6,6 +6,7 @@
 #include "power_control.h"
 #include "custom_hid_class.h"
 #include "usb.h"
+#include "qi.h"
 #include "battery.h"
 #include "Commands.h"
 #include "sy8809.h"
@@ -87,7 +88,7 @@ void SystemStateManager_SystemStartWork(void)
 
     if (Lid_GetState() == LID_CLOSE)
     {
-        if (Usb_FirstSetupUsbState() == USB_UNPLUG)
+        if ((Usb_FirstSetupUsbState() == USB_UNPLUG) && (Qi_GetDetectState() == QI_NON_DETECT))
         {
             if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
             {
