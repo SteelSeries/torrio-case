@@ -118,6 +118,8 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     ctx->direct_event_id = 0;
     ctx->direct_timeout_ms = 0;
     ctx->detect_debounce = 0;
+    ctx->mode = UART_BUDS_WORK_MODE_UNKNOW;
+    memset(ctx->button_io_state, UART_BUDS_BUTTON_IO_UNKNOW, sizeof(ctx->button_io_state));
     memset(ctx->tx_buffer, 0, sizeof(ctx->tx_buffer));
     memset(ctx->rx_buffer, 0, sizeof(ctx->rx_buffer));
 }
@@ -195,8 +197,8 @@ static void CommTask(UART_CommContext_t *ctx)
             UartProtocol_Packet_t rx_packet;
             if (UARTProtocol_UnpackCommand(ctx->rx_buffer, ctx->rx_index, &rx_packet))
             {
-                DEBUG_PRINT("[UART][WAIT] Response OK, EventID=0x%04X, Seq=%d, PayloadLen=%d\n",
-                            rx_packet.event_id, rx_packet.tx_seq, rx_packet.payload_len);
+                DEBUG_PRINT("[UART][WAIT] Response OK, EventID=0x%04X, ReceicedEventID=0x%04X, Seq=%d, PayloadLen=%d\n",
+                            rx_packet.event_id, rx_packet.received_event_id, rx_packet.tx_seq, rx_packet.payload_len);
 
                 UartCommandsHandle_CommandsHandle(ctx, rx_packet);
                 ctx->state = UART_STATE_IDLE;

@@ -8,6 +8,7 @@
 #include "uart_interface.h"
 #include "usb.h"
 #include "uart_command_handler.h"
+#include "Commands.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -378,17 +379,17 @@ static void SendInitCommand(UartInterface_Port_t target)
     if (Usb_GetUsbDetectState() == USB_PLUG)
     {
         {
-            uint8_t payload[] = {BUD_CMD_PREVENT_SLEEP};
-            UartInterface_SendBudCommand(target, BUD_CMD_PREVENT_SLEEP, payload, sizeof(payload), 1000);
+            uint8_t payload[] = {BUD_CMD_PREVENT_SLEEP | COMMAND_READ_FLAG};
+            UartInterface_SendBudCommand(target, BUD_CMD_PREVENT_SLEEP | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
         {
-            uint8_t payload[] = {BUD_CMD_FACTORY_BUTTON};
-            UartInterface_SendBudCommand(target, BUD_CMD_FACTORY_BUTTON, payload, sizeof(payload), 1000);
+            uint8_t payload[] = {BUD_CMD_BUTTON_AND_MODE | COMMAND_READ_FLAG};
+            UartInterface_SendBudCommand(target, BUD_CMD_BUTTON_AND_MODE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
     }
     else
     {
-        uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF};
-        UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF, payload, sizeof(payload), 1000);
+        uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
+        UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
     }
 }

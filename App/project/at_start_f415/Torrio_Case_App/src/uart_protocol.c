@@ -104,8 +104,9 @@ bool UARTProtocol_UnpackCommand(const uint8_t *in_buf, uint16_t in_len, UartProt
 
     out_packet->tx_seq = in_buf[1];
     out_packet->event_id = (uint16_t)in_buf[4] | ((uint16_t)in_buf[5] << 8);
-    out_packet->payload_len = len_field - 2;
-    memcpy(out_packet->payload, &in_buf[6], out_packet->payload_len);
+    out_packet->received_event_id = (uint16_t)in_buf[6] | ((uint16_t)in_buf[7] << 8);
+    out_packet->payload_len = len_field - 4;
+    memcpy(out_packet->payload, &in_buf[8], out_packet->payload_len);
 
     DEBUG_PRINT("[UART][Unpack] Success: tx_seq=%d, event_id=0x%04X, payload_len=%d\n",
                 out_packet->tx_seq, out_packet->event_id, out_packet->payload_len);

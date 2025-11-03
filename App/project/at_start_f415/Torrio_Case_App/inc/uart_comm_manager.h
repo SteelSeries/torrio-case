@@ -9,6 +9,7 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
+#define BUD_IO_NUM 3U // has 3 button on each ear
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
@@ -44,6 +45,21 @@ typedef enum
     UART_BUDS_IO_UNKNOW,
 } Uart_BudsIoState_t;
 
+typedef enum
+{
+    UART_BUDS_WORK_MODE_APP = 0xAA,
+    UART_BUDS_WORK_MODE_BOOTLOADER = 0xBB,
+    UART_BUDS_WORK_MODE_FACTORY = 0xFA,
+    UART_BUDS_WORK_MODE_UNKNOW = 0xFF,
+} Uart_BudsWorkMode_t;
+
+typedef enum
+{
+    UART_BUDS_BUTTON_IO_LOW = 0,
+    UART_BUDS_BUTTON_IO_HIGH,
+    UART_BUDS_BUTTON_IO_UNKNOW = 0xFF,
+} Uart_BudsButtonIoState_t;
+
 typedef struct
 {
     usart_type *uart;
@@ -73,6 +89,9 @@ typedef struct
     Uart_BudsIoState_t detect_state;
     Uart_BudsIoState_t detect_state_pre;
     uint16_t detect_debounce;
+
+    Uart_BudsWorkMode_t mode;
+    Uart_BudsButtonIoState_t button_io_state[BUD_IO_NUM];
 } UART_CommContext_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *

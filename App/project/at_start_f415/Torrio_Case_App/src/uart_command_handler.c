@@ -6,6 +6,7 @@
 #include "Commands.h"
 #include "custom_hid_class.h"
 #include "usb.h"
+#include "uart_interface.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -43,6 +44,7 @@ static Command_Status_t EraseFile(const uint8_t command[CMD_MAX_DATA_LEN], UART_
 static Command_Status_t WriteFile(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
 static Command_Status_t Crc32File(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
 static Command_Status_t RecoveryAndReset(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
+static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx);
 
 static Command_Status_t EraseFileTimeoutHandle(UART_CommContext_t *ctx);
 static Command_Status_t WriteFileTimeoutHandle(UART_CommContext_t *ctx);
@@ -56,25 +58,25 @@ static uint8_t buffer[CMD_MAX_DATA_LEN] = {0};
 
 static const cmd_handler_t handler_table[] =
     {
-        {.op = NO_OP,                   .read = HandleNoop,             .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = NO_OP,                   .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         // info
-        {.op = VERSION_OP,              .read = ReadVersion,            .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = VERSION_OP,              .read = ReadVersion,                .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         // factory
-        {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,   .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,             .write = FactorySetBatteryChargeStatus,     .timeout = TimeoutHandleNoop},
+        {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,       .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,                 .write = FactorySetBatteryChargeStatus,     .timeout = TimeoutHandleNoop},
 
         // mcu control
-        {.op = RESET_OP,                .read = HandleNoop,             .write = RecoveryAndReset,                  .timeout = TimeoutHandleNoop},
+        {.op = RESET_OP,                .read = HandleNoop,                 .write = RecoveryAndReset,                  .timeout = TimeoutHandleNoop},
 
         // file/firmware update
-        {.op = ERASE_FILE_OP,           .read = HandleNoop,             .write = EraseFile,                         .timeout = EraseFileTimeoutHandle},
-        {.op = FILE_ACCESS_OP,          .read = HandleNoop,             .write = WriteFile,                         .timeout = WriteFileTimeoutHandle},
-        {.op = FILE_CRC32_OP,           .read = Crc32File,              .write = HandleNoop,                        .timeout = Crc32FileTimeoutHandle},
+        {.op = ERASE_FILE_OP,           .read = HandleNoop,                 .write = EraseFile,                         .timeout = EraseFileTimeoutHandle},
+        {.op = FILE_ACCESS_OP,          .read = HandleNoop,                 .write = WriteFile,                         .timeout = WriteFileTimeoutHandle},
+        {.op = FILE_CRC32_OP,           .read = Crc32File,                  .write = HandleNoop,                        .timeout = Crc32FileTimeoutHandle},
 
         // internal
-        {.op = BUD_CMD_PREVENT_SLEEP,   .read = HandleNoop,             .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_FACTORY_BUTTON,  .read = HandleNoop,             .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_DEEP_POWER_OFF,  .read = HandleNoop,             .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_PREVENT_SLEEP,   .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_BUTTON_AND_MODE, .read = ReadBudsButtonAndMode,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_DEEP_POWER_OFF,  .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
     };
 // clang-format on
 
@@ -85,7 +87,7 @@ void UartCommandsHandle_CommandsHandle(UART_CommContext_t *ctx, UartProtocol_Pac
 {
     Command_Status_t status = COMMAND_STATUS_ERROR_NO_HANDLER;
 
-    memcpy(buffer, &rx_packet.payload[2], rx_packet.payload_len);
+    memcpy(buffer, rx_packet.payload, rx_packet.payload_len);
 
     uint8_t command = ctx->command_id;
     uint8_t op = command & (~COMMAND_READ_FLAG);
@@ -249,5 +251,56 @@ static Command_Status_t Crc32FileTimeoutHandle(UART_CommContext_t *ctx)
     txBuf[0] = FILE_CRC32_OP | COMMAND_READ_FLAG;
     txBuf[1] = FLASH_WRITE_ERRORS;
     custom_hid_class_send_report(&otg_core_struct.dev, txBuf, sizeof(txBuf));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx)
+{
+    UartInterface_Port_t target;
+    ctx->mode = (Uart_BudsWorkMode_t)command[0];
+    ctx->button_io_state[0] = (Uart_BudsButtonIoState_t)command[1];
+    ctx->button_io_state[1] = (Uart_BudsButtonIoState_t)command[2];
+    ctx->button_io_state[2] = (Uart_BudsButtonIoState_t)command[3];
+
+    if (ctx->side == UART_BUD_LEFT)
+    {
+        target = UART_INTERFACE_BUD_LEFT;
+    }
+    else if (ctx->side == UART_BUD_RIGHT)
+    {
+        target = UART_INTERFACE_BUD_RIGHT;
+    }
+    else
+    {
+        return COMMAND_STATUS_SUCCESS;
+    }
+
+    if (ctx->mode == UART_BUDS_WORK_MODE_APP)
+    {
+        {
+            uint8_t payload[] = {BUD_CMD_GET_FW_VERSION};
+            UartInterface_SendBudCommand(target, BUD_CMD_GET_FW_VERSION, payload, sizeof(payload), 1000);
+        }
+        {
+            uint8_t payload[] = {BUD_CMD_GET_MODEL_AND_COLOR | COMMAND_READ_FLAG};
+            UartInterface_SendBudCommand(target, BUD_CMD_GET_MODEL_AND_COLOR | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+        }
+        {
+            uint8_t payload[] = {BUD_CMD_READ_SERIAL_NUMBER, 1};
+            UartInterface_SendBudCommand(target, BUD_CMD_READ_SERIAL_NUMBER, payload, sizeof(payload), 1000);
+        }
+        {
+            uint8_t payload[] = {BUD_CMD_READ_SERIAL_NUMBER, 2};
+            UartInterface_SendBudCommand(target, BUD_CMD_READ_SERIAL_NUMBER, payload, sizeof(payload), 1000);
+        }
+        {
+            uint8_t payload[] = {BUD_CMD_READ_BUD_STATE | COMMAND_READ_FLAG};
+            UartInterface_SendBudCommand(target, BUD_CMD_READ_BUD_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+        }
+        {
+            uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
+            UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+        }
+    }
     return COMMAND_STATUS_SUCCESS;
 }

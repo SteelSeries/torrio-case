@@ -23,6 +23,7 @@ typedef enum
 typedef struct
 {
     uint16_t event_id;
+    uint16_t received_event_id;
     uint8_t tx_seq;
     uint8_t payload[CMD_MAX_DATA_LEN];
     uint16_t payload_len;
