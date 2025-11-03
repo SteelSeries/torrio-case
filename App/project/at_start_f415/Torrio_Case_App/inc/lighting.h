@@ -61,5 +61,4 @@ extern uint8_t Lighting_Change_Flag;
 void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_settings);
 void Lighting_HandleTask(void);
 void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
-void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB);
 Lighting_Lid_State_t Lighting_LidOffHandle(void);

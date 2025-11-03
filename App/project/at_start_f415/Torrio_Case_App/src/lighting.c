@@ -29,6 +29,8 @@ static uint16_t breath_rising = LIGHTING_BRIGHT_MAX;
 static uint16_t breath_hold_bright = LIGHTING_BRIGHT_MAX + LIGHTING_BREATH_HOLD_TIME;
 static uint16_t breath_falling = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_BREATH_HOLD_TIME;
 static uint16_t breath_hold_dark = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_BREATH_HOLD_TIME * 2;
+static uint16_t breath_interval = 4;
+static uint16_t breath_quick_interval = 8;
 
 static uint16_t light_max = 0;
 static uint16_t light_min = LIGHTING_BRIGHT_MAX;
@@ -40,6 +42,9 @@ static uint16_t illum_rising = LIGHTING_BRIGHT_MAX; //illum_rising - illum_val =
 static uint16_t illum_hold_bright = LIGHTING_BRIGHT_MAX + LIGHTING_HOLD_TIME; //illum_hold_bright - illum_val = led hold bright time
 static uint16_t illum_falling = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_HOLD_TIME; //illum_falling - illum_val = led falling time
 static uint16_t illum_hold_dark = LIGHTING_BRIGHT_MAX * 2 + LIGHTING_HOLD_TIME * 2; //illum_hold_dark - illum_val = led hold dark time
+static uint16_t illum_falling_interval = 42;
+static uint16_t illum_rising_interval = 21;
+static uint16_t illum_hold_interval = 2;
 
 static uint16_t r_en, g_en, b_en;
 
@@ -168,22 +173,6 @@ void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint1
     }   
 }
 
-void Lighting_LEDOnOffSetting(uint16_t PwmR, uint16_t PwmG, uint16_t PwmB)
-{
-    bool R,G,B;
-    Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
-    if(Lighting_Change_Flag == LIGHTING_CHANGE_TRUE)
-    {
-        breath_val = 0;
-        illum_val = 0;
-        Lighting_Change_Flag = LIGHTING_CHANGE_FALSE;
-    }
-    R = (PwmR == 1)? true:false;
-    G = (PwmG == 1)? true:false;  
-    B = (PwmB == 1)? true:false;
-  PwmHandler(R*LIGHTING_BRIGHT_MAX, G*LIGHTING_BRIGHT_MAX, B*LIGHTING_BRIGHT_MAX);
-}
-
 void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_settings)
 {
     memcpy(&user_hardware_settings, hardware_settings, sizeof(Lighting_HardwareSettings_t));
@@ -226,22 +215,22 @@ static void IllumHandler(void)
     else if((illum_val >= illum_falling) && (illum_val < illum_hold_dark))
     {
       illum_reg = light_max;
-      illum_val += 2;
+      illum_val += illum_hold_interval;
     }
     else if((illum_val >= illum_hold_bright) && (illum_val < illum_falling))
     {
       illum_reg = illum_falling - illum_val;
-      illum_val += 42;
+      illum_val += illum_falling_interval;
     }
     else if((illum_val >= illum_rising) && (illum_val < illum_hold_bright))
     {
       illum_reg = light_min;
-      illum_val += 2;
+      illum_val += illum_hold_interval;
     }
     else if(illum_val < illum_rising)
     {
       illum_reg = illum_val;
-      illum_val += 21;
+      illum_val += illum_rising_interval;
     }
     PwmHandler(illum_reg * r_en, illum_reg * g_en, illum_reg * b_en);
 }
@@ -257,22 +246,22 @@ static void BreathHandler(void)
     else if((breath_val >= breath_falling) && (breath_val < breath_hold_dark))
     {
       breath_reg = light_max;
-      breath_val += 4;
+      breath_val += breath_interval;
     }
     else if((breath_val >= breath_hold_bright) && (breath_val < breath_falling))
     {
       breath_reg = breath_falling - breath_val;
-      breath_val += 4;
+      breath_val += breath_interval;
     }
     else if((breath_val >= breath_rising) && (breath_val < breath_hold_bright))
     {
       breath_reg = light_min;
-      breath_val += 4;
+      breath_val += breath_interval;
     }
     else if(breath_val < breath_rising)
     {
       breath_reg = breath_val;
-      breath_val += 4;
+      breath_val += breath_interval;
     }
     PwmHandler(breath_reg * r_en, breath_reg * g_en, breath_reg * b_en);
 }
@@ -288,22 +277,22 @@ static void BreathQuickHandler(void)
     else if((breath_val >= breath_falling) && (breath_val < breath_hold_dark))
     {
       breath_reg = light_max;
-      breath_val += 8;
+      breath_val += breath_quick_interval;
     }
     else if((breath_val >= breath_hold_bright) && (breath_val < breath_falling))
     {
       breath_reg = breath_falling - breath_val;
-      breath_val += 8;
+      breath_val += breath_quick_interval;
     }
     else if((breath_val >= breath_rising) && (breath_val < breath_hold_bright))
     {
       breath_reg = light_min;
-      breath_val += 8;
+      breath_val += breath_quick_interval;
     }
     else if(breath_val < breath_rising)
     {
       breath_reg = breath_val;
-      breath_val += 8;
+      breath_val += breath_quick_interval;
     }
     PwmHandler(breath_reg * r_en, breath_reg * g_en, breath_reg * b_en);
 }
@@ -320,22 +309,22 @@ static void BreathQuickOnceHandler(void)
     else if((breath_val >= breath_falling) && (breath_val < breath_hold_dark))
     {
       breath_reg = light_max;
-      breath_val += 8;
+      breath_val += breath_quick_interval;
     }
     else if((breath_val >= breath_hold_bright) && (breath_val < breath_falling))
     {
       breath_reg = breath_falling - breath_val;
-      breath_val += 8;
+      breath_val += breath_quick_interval;
     }
     else if((breath_val >= breath_rising) && (breath_val < breath_hold_bright))
     {
       breath_reg = light_min;
-      breath_val += 8;
+      breath_val += breath_quick_interval;
     }
     else if(breath_val < breath_rising)
     {
       breath_reg = breath_val;
-      breath_val += 8;
+      breath_val += breath_quick_interval;
     }
     PwmHandler(breath_reg * r_en, breath_reg * g_en, breath_reg * b_en);
 }
