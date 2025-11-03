@@ -74,9 +74,10 @@ static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIV
 static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
-static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE]);
+static Command_Status_t HandleLedDebugCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static void HandleLightingDebugCommand(uint8_t command,uint8_t r,uint8_t g,uint8_t b);
 static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECEIVE_LEN]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -108,10 +109,13 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
         {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
         {.op = FAC_READ_BUDS_DEBUG, .read = FactoryDebugReadBuds, .write = HandleNoop},
+        {.op = FAC_ENTER_MODE, .read = HandleFactoryEnterCommand, .write = HandleNoop},
 
         // Case/Buds
         {.op = GET_BATTERY_INFO, .read = GetBatteryStatus, .write = HandleNoop},
 };
+static Command_GetFactoryLighting_t fac_lighting_mode = COMMAND_FACTORY_NONE;
+static Command_GetFactoryStatus_t fac_mode = COMMAND_FACTORY_NON_ENTER;
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -148,6 +152,11 @@ void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
         snprintf((char *)buff, sizeof(buff), "USB COMMAND ERROR CMD:%02X\n", command);
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     }
+}
+
+Command_GetFactoryLighting_t Commands_HandleLightingMode(void)
+{
+  return fac_lighting_mode;
 }
 
 /*************************************************************************************************
@@ -577,7 +586,11 @@ static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_
     {
     case COMMAND_TARGET_CASE:
     {
-        Lighting_LEDOnOffSetting(command[2], command[3], command[4]);
+        if(fac_mode == COMMAND_FACTORY_MODE)
+        {
+            fac_lighting_mode = COMMAND_FACTORY_LED_ON_OFF;
+            Lighting_Handler(LIGHTING_STABLE,command[2], command[3], command[4]);
+        }
         break;
     }
     case COMMAND_TARGET_LEFT_BUD:
@@ -602,3 +615,33 @@ static void HandleLightingDebugCommand(uint8_t command,uint8_t r,uint8_t g,uint8
     Lighting_Handler(command, r, g, b);
 }
 
+static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint32_t fac_key = ((uint32_t)command[1] << 16) |
+                       ((uint32_t)command[2] << 8)  |
+                       ((uint32_t)command[3]);
+
+    if (fac_key == FAC_ENTER_KEY)
+    {
+        switch (command[4])
+        {
+        case COMMAND_TARGET_CASE:
+        {
+            fac_lighting_mode = COMMAND_FACTORY_MODE_LIGHTING;
+            fac_mode = COMMAND_FACTORY_MODE;
+            break;
+        }
+        case COMMAND_TARGET_LEFT_BUD:
+        {
+            break;                   
+        }
+        case COMMAND_TARGET_RIGHT_BUD:
+        {
+            break;                   
+        }
+        default:
+            break;
+        }
+    }
+    return COMMAND_STATUS_SUCCESS;
+}

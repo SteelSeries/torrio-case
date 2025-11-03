@@ -90,18 +90,18 @@ void Lid_StatusCheckTask(void)
     {
       pre_lid_state = lid_state;
       DEBUG_PRINT("Lid state changed to: %s\n", lid_state == LID_OPEN ? "OPEN" : "CLOSED");
-      if (pre_lid_state == LID_CLOSE)
-      {
-        if (((Usb_FirstSetupUsbState() == USB_UNPLUG) && (Qi_GetDetectState() == QI_NON_DETECT)) && (Lighting_LidOffHandle() == LIGHTING_BREATH_COMPLETE))
-        {
-          if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
-          {
-            DEBUG_PRINT("add enter standby task fail\n");
-          }
-        }
-      }
     }
     is_debounce_check = false;
+  }
+  if (pre_lid_state == LID_CLOSE)
+  {
+    if (((Usb_FirstSetupUsbState() == USB_UNPLUG) && (Qi_GetDetectState() == QI_NON_DETECT)) && (Lighting_LidOffHandle() == LIGHTING_LID_COMPLETE))
+    {
+      if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+      {
+        DEBUG_PRINT("add enter standby task fail\n");
+      }
+    }
   }
 }
 

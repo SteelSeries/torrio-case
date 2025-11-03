@@ -154,7 +154,7 @@ int main(void)
     DEBUG_PRINT("add Qi check task fail\n");
   }
 
-  if (TaskScheduler_AddTask(Lighting_HandleTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  if (TaskScheduler_AddTask(Lighting_HandleTask, 5, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
     DEBUG_PRINT("add lighting handle task fail\n");
   }

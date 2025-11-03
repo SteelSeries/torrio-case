@@ -5,6 +5,7 @@
         "at32f415_board.h": "c",
         "system_state_manager.h": "c",
         "qi.h": "c",
-        "init_pinout.h": "c"
+        "init_pinout.h": "c",
+        "lid.h": "c"
     }
 }
