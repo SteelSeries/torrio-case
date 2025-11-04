@@ -3,6 +3,7 @@
  *************************************************************************************************/
 #include "bootloader.h"
 #include "command.h"
+#include "file_system.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -23,9 +24,9 @@ typedef void (*pFunction)(void);
 static uint32_t i;
 static uint16_t gFW_BinLen = 0;
 static uint16_t gFW_FirstBinLen = 0;
-static uint8_t Read_flash_data[READ_FLASH_BUFFER_LEN];
-static uint32_t Read_flash_address = 0;
-static uint8_t Read_flashAdrss_tab[4] = {0};
+// static uint8_t Read_flash_data[READ_FLASH_BUFFER_LEN];
+// static uint32_t Read_flash_address = 0;
+// static uint8_t Read_flashAdrss_tab[4] = {0};
 static uint32_t sum_crc32;
 static uint8_t crc_data[BUFFER_LEN];
 /*************************************************************************************************
@@ -105,7 +106,7 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
     FW_Updateing_destAdrss |= (uint32_t)(buffer[6] << 8);
     FW_Updateing_destAdrss |= (uint32_t)(buffer[7] << 16);
     FW_Updateing_destAdrss |= (uint32_t)(buffer[8] << 24);
-    FW_Updateing_destAdrss += APP_FLASH_START_ADDRESS;
+    FW_Updateing_destAdrss += DUAL_IMG_START_ADDRESS;
     for (i = 0; i < (BUFFER_LEN / 4); ++i)
     {
         if (FW_UPDATE_Buffer[i] != NULL_FLASH_DATA)
@@ -115,19 +116,19 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
                 return ERROR;
             }
         }
-        
+
         if (FW_UPDATE_Buffer[i] != *(uint32_t *)FW_Updateing_destAdrss)
         {
             return ERROR;
         }
         FW_Updateing_destAdrss += 4;
-        if (FW_Updateing_destAdrss >= APP_FLASH_END_ADDRESS) // if this address of last page to break the program.
+        if (FW_Updateing_destAdrss >= DUAL_IMG_END_ADDRESS) // if this address of last page to break the program.
         {
             break;
         }
     }
 
-    if (FW_Updateing_destAdrss >= APP_FLASH_END_ADDRESS) // if this address of last page to break the program.
+    if (FW_Updateing_destAdrss >= DUAL_IMG_END_ADDRESS) // if this address of last page to break the program.
     {
         for (i = 0; i < gFW_BinLen; ++i)
         {
@@ -149,6 +150,7 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len)
 
 void Bootloader_CmdCrcCheckHandler(uint8_t *buff)
 {
+    bool crc_check_flag = false;
     buff[1] = FLASH_OPERATION_SUCCESS;
     buff[2] = crc_data[gFW_BinLen - 4];
     buff[3] = crc_data[gFW_BinLen - 3];
@@ -162,53 +164,61 @@ void Bootloader_CmdCrcCheckHandler(uint8_t *buff)
     {
         if (buff[i] != buff[i + 4])
         {
-            DEBUG_PRINT("CRC check fail\n");
+            DEBUG_PRINT("USB CRC fail\n");
             EraseDualImageFlashProcess();
+            crc_check_flag = true;
+            break;
         }
     }
+
+    if (crc_check_flag == false)
+    {
+        FileSystem_MarkDualImageReadyToMigrate();
+    }
 }
-error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
-{
-    uint8_t command[IN_MAXPACKET_SIZE];
-    uint16_t Read_Flash_len = (command[4] << 8) + command[3];
 
-    memcpy(command, in, IN_MAXPACKET_SIZE);
+// error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
+// {
+//     uint8_t command[IN_MAXPACKET_SIZE];
+//     uint16_t Read_Flash_len = (command[4] << 8) + command[3];
 
-    for (int i = 0; i < 4; ++i)
-    {
-        Read_flashAdrss_tab[i] = command[i + 5];
-    }
+//     memcpy(command, in, IN_MAXPACKET_SIZE);
 
-    Read_flash_address = (uint32_t)(Read_flashAdrss_tab[0]);
-    Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[1] << 8);
-    Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[2] << 16);
-    Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[3] << 24);
+//     for (int i = 0; i < 4; ++i)
+//     {
+//         Read_flashAdrss_tab[i] = command[i + 5];
+//     }
 
-    if ((Read_flash_address >= FLASH_BASE) && (Read_flash_address <= DUAL_IMG_END_ADDRESS))
-    {
-        buff[1] = FLASH_WRITE_ERRORS;
-    }
+//     Read_flash_address = (uint32_t)(Read_flashAdrss_tab[0]);
+//     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[1] << 8);
+//     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[2] << 16);
+//     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[3] << 24);
 
-    ReadFlash(Read_flash_address, Read_flash_data, Read_Flash_len);
+//     if ((Read_flash_address >= FLASH_BASE) && (Read_flash_address <= DUAL_IMG_END_ADDRESS))
+//     {
+//         buff[1] = FLASH_WRITE_ERRORS;
+//     }
 
-    buff[0] = WRITE_READ_FLASH_BLOCK;
+//     ReadFlash(Read_flash_address, Read_flash_data, Read_Flash_len);
 
-    for (int i = 0; i < Read_Flash_len; ++i)
-    {
-        buff[i + 2] = Read_flash_data[i];
-    }
-    return SUCCESS;
-}
+//     buff[0] = WRITE_READ_FLASH_BLOCK;
+
+//     for (int i = 0; i < Read_Flash_len; ++i)
+//     {
+//         buff[i + 2] = Read_flash_data[i];
+//     }
+//     return SUCCESS;
+// }
 
 bool Bootloader_CheckBackDoor(void)
 {
     if (gpio_input_data_bit_read(GPIOC, GPIO_PINS_10) == RESET)
     {
-        DEBUG_PRINT("back door enter\n");
+        DEBUG_PRINT("enter\n");
         return true;
     }
     // todo: check back door state, and change GPIO to PC15.
-    DEBUG_PRINT("back door exit\n");
+    DEBUG_PRINT("exit\n");
     return false;
 }
 
@@ -236,6 +246,7 @@ bool Bootloader_CheckAppCodeComplete(void)
     ReadFlash(APP_FLASH_END_ADDRESS - 4, FLASH_ReadCRC, 4);
     for (uint8_t i = 0; i < 4; i++)
     {
+
         if (FLASH_ReadCRC[i] == 0Xff)
         {
             null_count++;
@@ -244,12 +255,16 @@ bool Bootloader_CheckAppCodeComplete(void)
 
     if (null_count == 4)
     {
-        DEBUG_PRINT("CRC fail\n");
+        DEBUG_PRINT("CRC fail %02X %02X %02X %02X\n",
+                    FLASH_ReadCRC[0],
+                    FLASH_ReadCRC[1],
+                    FLASH_ReadCRC[2],
+                    FLASH_ReadCRC[3]);
         return false;
     }
     else
     {
-        DEBUG_PRINT("CRC pass\n");
+        DEBUG_PRINT(" pass\n");
         return true;
     }
 }
@@ -257,7 +272,6 @@ bool Bootloader_CheckAppCodeComplete(void)
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-
 static uint16_t ReadFlashHalfWord(uint32_t faddr)
 {
     return *(vu8 *)faddr;
@@ -278,15 +292,15 @@ static error_status EraseDualImageFlashProcess(void)
     uint32_t start_sector, end_sector;
     uint32_t sector;
 
-    if ((APP_FLASH_START_ADDRESS < FLASH_BASE) || (APP_FLASH_START_ADDRESS % SECTOR_SIZE) ||
-        (APP_FLASH_END_ADDRESS > (FLASH_BASE + 128U * 1024U)) ||
-        (APP_FLASH_END_ADDRESS <= APP_FLASH_START_ADDRESS))
+    if ((DUAL_IMG_START_ADDRESS < FLASH_BASE) || (DUAL_IMG_START_ADDRESS % SECTOR_SIZE) ||
+        (DUAL_IMG_END_ADDRESS > (FLASH_BASE + 128U * 1024U)) ||
+        (DUAL_IMG_END_ADDRESS <= DUAL_IMG_START_ADDRESS))
     {
         return ERROR;
     }
 
-    start_sector = ((APP_FLASH_START_ADDRESS - FLASH_BASE) / SECTOR_SIZE);
-    end_sector = ((APP_FLASH_END_ADDRESS - FLASH_BASE) / SECTOR_SIZE);
+    start_sector = ((DUAL_IMG_START_ADDRESS - FLASH_BASE) / SECTOR_SIZE);
+    end_sector = ((DUAL_IMG_END_ADDRESS - FLASH_BASE) / SECTOR_SIZE);
 
     flash_unlock();
 

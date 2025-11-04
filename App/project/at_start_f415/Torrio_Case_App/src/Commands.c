@@ -106,12 +106,12 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_LEDRGB_OP,         .read = HandleNoop,                     .write = HandleLedDebugCommand},
 
         // factory
-        {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
-        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
-        {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
-        {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
-        {.op = FAC_READ_BUDS_DEBUG, .read = FactoryDebugReadBuds, .write = HandleNoop},
-        {.op = FAC_ENTER_MODE, .read = HandleFactoryEnterCommand, .write = HandleNoop},
+        {.op = FAC_SERIAL_OP,           .read = GetSerialNumber,                .write = SetSerialNumber},
+        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel,         .write = WriteColorSpinAndMoldel},
+        {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc,       .write = HandleNoop},
+        {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,                     .write = FactorySetBatteryChargeStatus},
+        {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,           .write = HandleNoop},
+        {.op = FAC_ENTER_MODE,          .read = HandleFactoryEnterCommand,      .write = HandleNoop},
 
         // Case/Buds
         {.op = GET_BATTERY_INFO, .read = GetBatteryStatus, .write = HandleNoop},

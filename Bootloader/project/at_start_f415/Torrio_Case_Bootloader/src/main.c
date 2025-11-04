@@ -80,6 +80,12 @@ int main(void)
 
   while (1)
   {
+    if (Usb_GetUsbDetectState() != USB_PLUG)
+    {
+      gCurrentMode = NORMAL_MODE;
+      SS_RESET_FLAG = true;
+    }
+
     if (SS_RESET_FLAG)
     {
       SS_RESET_FLAG = false;
