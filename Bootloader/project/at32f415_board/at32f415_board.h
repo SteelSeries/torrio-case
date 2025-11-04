@@ -81,7 +81,7 @@ typedef enum
 #endif
 
 /**************** define print uart ******************/
-#define SCALA_BOARD
+// #define SCALA_BOARD
 #ifndef SCALA_BOARD
 // dev board debug uart.
 #define PRINT_UART USART1

@@ -207,7 +207,7 @@ void UartDrive_RxIrqHandler(UART_CommContext_t *ctx, uint8_t data)
 
 void UartDrive_BudsConnectCheckTask(void)
 {
-    // CheckBudConnection(user_left_bud_ctx);
+    CheckBudConnection(user_left_bud_ctx);
     CheckBudConnection(user_right_bud_ctx);
 
     if (TaskScheduler_AddTask(UartDrive_BudsConnectCheckTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
