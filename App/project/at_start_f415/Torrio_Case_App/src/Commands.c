@@ -76,7 +76,7 @@ static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEI
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t HandleLedDebugCommand(const uint8_t command[USB_RECEIVE_LEN]);
-static void HandleLightingDebugCommand(uint8_t command,uint8_t r,uint8_t g,uint8_t b);
+static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, uint8_t b);
 static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECEIVE_LEN]);
 
@@ -106,16 +106,17 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_LEDRGB_OP,         .read = HandleNoop,                     .write = HandleLedDebugCommand},
 
         // factory
-        {.op = FAC_SERIAL_OP, .read = GetSerialNumber, .write = SetSerialNumber},
-        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel, .write = WriteColorSpinAndMoldel},
-        {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc, .write = HandleNoop},
-        {.op = FAC_SET_CHARGE_STATUS, .read = HandleNoop, .write = FactorySetBatteryChargeStatus},
-        {.op = FAC_READ_BUDS_DEBUG, .read = FactoryDebugReadBuds, .write = HandleNoop},
-        {.op = FAC_ENTER_MODE, .read = HandleFactoryEnterCommand, .write = HandleNoop},
+        {.op = FAC_SERIAL_OP,           .read = GetSerialNumber,                .write = SetSerialNumber},
+        {.op = FAC_MODEL_COLOR_SPIN_OP, .read = ReadColorSpinAndMoldel,         .write = WriteColorSpinAndMoldel},
+        {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc,       .write = HandleNoop},
+        {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,                     .write = FactorySetBatteryChargeStatus},
+        {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,           .write = HandleNoop},
+        {.op = FAC_ENTER_MODE,          .read = HandleFactoryEnterCommand,      .write = HandleNoop},
 
         // Case/Buds
         {.op = GET_BATTERY_INFO, .read = GetBatteryStatus, .write = HandleNoop},
 };
+// clang-format on
 static Command_GetFactoryLighting_t fac_lighting_mode = COMMAND_FACTORY_NONE;
 static Command_GetFactoryStatus_t fac_mode = COMMAND_FACTORY_NON_ENTER;
 
@@ -158,7 +159,7 @@ void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
 
 Command_GetFactoryLighting_t Commands_HandleLightingMode(void)
 {
-  return fac_lighting_mode;
+    return fac_lighting_mode;
 }
 
 /*************************************************************************************************
@@ -658,10 +659,10 @@ static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_
     {
     case COMMAND_TARGET_CASE:
     {
-        if(fac_mode == COMMAND_FACTORY_MODE)
+        if (fac_mode == COMMAND_FACTORY_MODE)
         {
             fac_lighting_mode = COMMAND_FACTORY_LED_ON_OFF;
-            Lighting_Handler(LIGHTING_STABLE,command[2], command[3], command[4]);
+            Lighting_Handler(LIGHTING_STABLE, command[2], command[3], command[4]);
         }
         break;
     }
@@ -690,7 +691,7 @@ static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, ui
 static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECEIVE_LEN])
 {
     uint32_t fac_key = ((uint32_t)command[1] << 16) |
-                       ((uint32_t)command[2] << 8)  |
+                       ((uint32_t)command[2] << 8) |
                        ((uint32_t)command[3]);
 
     if (fac_key == FAC_ENTER_KEY)
@@ -705,11 +706,11 @@ static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECE
         }
         case COMMAND_TARGET_LEFT_BUD:
         {
-            break;                   
+            break;
         }
         case COMMAND_TARGET_RIGHT_BUD:
         {
-            break;                   
+            break;
         }
         default:
             break;

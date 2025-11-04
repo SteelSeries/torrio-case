@@ -57,7 +57,6 @@ static Command_Status_t Crc32FileTimeoutHandle(UART_CommContext_t *ctx);
  *************************************************************************************************/
 static uint8_t buffer[CMD_MAX_DATA_LEN] = {0};
 // clang-format off
-
 static const cmd_handler_t handler_table[] =
     {
         {.op = NO_OP,                           .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},

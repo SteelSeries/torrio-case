@@ -38,6 +38,7 @@ static uint8_t crc_data[UPDATE_DATA_LEN];
 static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc);
 static error_status EraseDualImageFlashProcess(void);
 static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len);
+static void ClearCrc32Calculate(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -89,6 +90,7 @@ void AppFwUpdate_CmdWriteFlashHandler(void)
 void AppFwUpdate_CmdCrcCheckHandler(void)
 {
     uint8_t txBuf[10] = {0x00};
+    bool crc_check_flag = false;
     txBuf[0] = FILE_CRC32_OP | COMMAND_READ_FLAG;
     txBuf[1] = FLASH_OPERATION_SUCCESS;
     txBuf[2] = crc_data[gFW_BinLen - 4];
@@ -99,15 +101,21 @@ void AppFwUpdate_CmdCrcCheckHandler(void)
     txBuf[7] = (sum_crc32 >> 8);
     txBuf[8] = (sum_crc32 >> 16);
     txBuf[9] = (sum_crc32 >> 24);
+
     for (uint8_t i = 2; i < 6; i++)
     {
         if (txBuf[i] != txBuf[i + 4])
         {
             DEBUG_PRINT("CRC check fail\n");
             EraseDualImageFlashProcess();
+            crc_check_flag = true;
+            break;
         }
     }
-    FileSystem_MarkDualImageReadyToMigrate();
+    if (crc_check_flag == false)
+    {
+        FileSystem_MarkDualImageReadyToMigrate();
+    }
     custom_hid_class_send_report(&otg_core_struct.dev, txBuf, sizeof(txBuf));
 }
 
@@ -157,6 +165,7 @@ static error_status EraseDualImageFlashProcess(void)
     flash_status_type status = FLASH_OPERATE_DONE;
     uint32_t start_sector, end_sector;
     uint32_t sector;
+    ClearCrc32Calculate();
 
     if ((DUAL_IMG_START_ADDRESS < FLASH_BASE) || (DUAL_IMG_START_ADDRESS % SECTOR_SIZE) ||
         (DUAL_IMG_END_ADDRESS > (FLASH_BASE + 128U * 1024U)) ||
@@ -297,4 +306,10 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     }
     flash_lock();
     return SUCCESS;
+}
+
+static void ClearCrc32Calculate(void)
+{
+    sum_crc32 = 0;
+    memset(crc_data, 0, sizeof(crc_data));
 }
