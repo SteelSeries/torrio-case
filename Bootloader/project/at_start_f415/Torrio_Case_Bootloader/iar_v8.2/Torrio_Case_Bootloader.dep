@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>5</fileVersion>
-    <fileChecksum>2343439376</fileChecksum>
+    <fileChecksum>992441209</fileChecksum>
     <configuration>
         <name>Torrio_Case_Bootloader</name>
         <outputs>
@@ -357,7 +357,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 62 21 66 39 18 71 25 31 38 84 67 69 44 34 51 10 6 33 79 82 64 43 22 32 81 110 73 63 16 68 15 117 7 14 114 40 74 106 30 96 83 41 23 85 19</file>
+                    <file> 62 21 66 39 18 71 25 31 38 84 67 69 44 34 51 10 6 33 79 82 64 43 22 32 81 110 73 63 16 68 15 117 7 14 114 40 74 106 30 96 83 41 23 85 19 29</file>
                 </tool>
             </inputs>
         </file>
@@ -912,12 +912,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\Torrio_Case_Bootloader_Debug\Exe\Torrio_Case_Bootloader.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 67</file>
-                </tool>
-            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>

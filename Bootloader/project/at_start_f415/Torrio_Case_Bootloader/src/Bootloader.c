@@ -24,11 +24,13 @@ typedef void (*pFunction)(void);
 static uint32_t i;
 static uint16_t gFW_BinLen = 0;
 static uint16_t gFW_FirstBinLen = 0;
-// static uint8_t Read_flash_data[READ_FLASH_BUFFER_LEN];
-// static uint32_t Read_flash_address = 0;
-// static uint8_t Read_flashAdrss_tab[4] = {0};
 static uint32_t sum_crc32 = 0;
 static uint8_t crc_data[BUFFER_LEN] = {0};
+#ifndef DEBUG
+static uint8_t Read_flash_data[READ_FLASH_BUFFER_LEN];
+static uint32_t Read_flash_address = 0;
+static uint8_t Read_flashAdrss_tab[4] = {0};
+#endif
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -178,38 +180,40 @@ void Bootloader_CmdCrcCheckHandler(uint8_t *buff)
     }
 }
 
-// error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
-// {
-//     uint8_t command[IN_MAXPACKET_SIZE];
-//     uint16_t Read_Flash_len = (command[4] << 8) + command[3];
+#ifndef DEBUG
+error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
+{
+    uint8_t command[IN_MAXPACKET_SIZE];
+    uint16_t Read_Flash_len = (command[4] << 8) + command[3];
 
-//     memcpy(command, in, IN_MAXPACKET_SIZE);
+    memcpy(command, in, IN_MAXPACKET_SIZE);
 
-//     for (int i = 0; i < 4; ++i)
-//     {
-//         Read_flashAdrss_tab[i] = command[i + 5];
-//     }
+    for (int i = 0; i < 4; ++i)
+    {
+        Read_flashAdrss_tab[i] = command[i + 5];
+    }
 
-//     Read_flash_address = (uint32_t)(Read_flashAdrss_tab[0]);
-//     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[1] << 8);
-//     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[2] << 16);
-//     Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[3] << 24);
+    Read_flash_address = (uint32_t)(Read_flashAdrss_tab[0]);
+    Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[1] << 8);
+    Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[2] << 16);
+    Read_flash_address |= (uint32_t)(Read_flashAdrss_tab[3] << 24);
 
-//     if ((Read_flash_address >= FLASH_BASE) && (Read_flash_address <= DUAL_IMG_END_ADDRESS))
-//     {
-//         buff[1] = FLASH_WRITE_ERRORS;
-//     }
+    if ((Read_flash_address >= FLASH_BASE) && (Read_flash_address <= DUAL_IMG_END_ADDRESS))
+    {
+        buff[1] = FLASH_WRITE_ERRORS;
+    }
 
-//     ReadFlash(Read_flash_address, Read_flash_data, Read_Flash_len);
+    ReadFlash(Read_flash_address, Read_flash_data, Read_Flash_len);
 
-//     buff[0] = WRITE_READ_FLASH_BLOCK;
+    buff[0] = WRITE_READ_FLASH_BLOCK;
 
-//     for (int i = 0; i < Read_Flash_len; ++i)
-//     {
-//         buff[i + 2] = Read_flash_data[i];
-//     }
-//     return SUCCESS;
-// }
+    for (int i = 0; i < Read_Flash_len; ++i)
+    {
+        buff[i + 2] = Read_flash_data[i];
+    }
+    return SUCCESS;
+}
+#endif
 
 bool Bootloader_CheckBackDoor(void)
 {
@@ -265,7 +269,7 @@ bool Bootloader_CheckAppCodeComplete(void)
     }
     else
     {
-        DEBUG_PRINT(" pass\n");
+        DEBUG_PRINT("pass\n");
         return true;
     }
 }
@@ -293,7 +297,7 @@ static error_status EraseDualImageFlashProcess(void)
     uint32_t start_sector, end_sector;
     uint32_t sector;
     ClearCrc32Calculate();
-    
+
     if ((DUAL_IMG_START_ADDRESS < FLASH_BASE) || (DUAL_IMG_START_ADDRESS % SECTOR_SIZE) ||
         (DUAL_IMG_END_ADDRESS > (FLASH_BASE + 128U * 1024U)) ||
         (DUAL_IMG_END_ADDRESS <= DUAL_IMG_START_ADDRESS))
