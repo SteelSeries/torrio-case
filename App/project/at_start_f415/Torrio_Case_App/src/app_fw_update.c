@@ -90,6 +90,7 @@ void AppFwUpdate_CmdWriteFlashHandler(void)
 void AppFwUpdate_CmdCrcCheckHandler(void)
 {
     uint8_t txBuf[10] = {0x00};
+    bool crc_check_flag = false;
     txBuf[0] = FILE_CRC32_OP | COMMAND_READ_FLAG;
     txBuf[1] = FLASH_OPERATION_SUCCESS;
     txBuf[2] = crc_data[gFW_BinLen - 4];
@@ -100,49 +101,23 @@ void AppFwUpdate_CmdCrcCheckHandler(void)
     txBuf[7] = (sum_crc32 >> 8);
     txBuf[8] = (sum_crc32 >> 16);
     txBuf[9] = (sum_crc32 >> 24);
+
     for (uint8_t i = 2; i < 6; i++)
     {
         if (txBuf[i] != txBuf[i + 4])
         {
             DEBUG_PRINT("CRC check fail\n");
             EraseDualImageFlashProcess();
+            crc_check_flag = true;
+            break;
         }
     }
-    FileSystem_MarkDualImageReadyToMigrate();
+    if (crc_check_flag == false)
+    {
+        FileSystem_MarkDualImageReadyToMigrate();
+    }
     custom_hid_class_send_report(&otg_core_struct.dev, txBuf, sizeof(txBuf));
 }
-
-// void AppFwUpdate_CmdCrcCheckHandler(void)
-// {
-//     uint8_t txBuf[10] = {0x00};
-//     bool crc_check_flag = false;
-//     txBuf[0] = FILE_CRC32_OP | COMMAND_READ_FLAG;
-//     txBuf[1] = FLASH_OPERATION_SUCCESS;
-//     txBuf[2] = crc_data[gFW_BinLen - 4];
-//     txBuf[3] = crc_data[gFW_BinLen - 3];
-//     txBuf[4] = crc_data[gFW_BinLen - 2];
-//     txBuf[5] = crc_data[gFW_BinLen - 1];
-//     txBuf[6] = sum_crc32;
-//     txBuf[7] = (sum_crc32 >> 8);
-//     txBuf[8] = (sum_crc32 >> 16);
-//     txBuf[9] = (sum_crc32 >> 24);
-
-//     for (uint8_t i = 2; i < 6; i++)
-//     {
-//         if (txBuf[i] != txBuf[i + 4])
-//         {
-//             DEBUG_PRINT("CRC check fail\n");
-//             EraseDualImageFlashProcess();
-//             crc_check_flag = true;
-//             break;
-//         }
-//     }
-//     if (crc_check_flag == false)
-//     {
-//         FileSystem_MarkDualImageReadyToMigrate();
-//     }
-//     custom_hid_class_send_report(&otg_core_struct.dev, txBuf, sizeof(txBuf));
-// }
 
 void AppFwUpdate_LeftBudWriteFlashTask(void)
 {
