@@ -38,6 +38,7 @@ static uint8_t crc_data[UPDATE_DATA_LEN];
 static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc);
 static error_status EraseDualImageFlashProcess(void);
 static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len);
+static void ClearCrc32Calculate(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -189,6 +190,7 @@ static error_status EraseDualImageFlashProcess(void)
     flash_status_type status = FLASH_OPERATE_DONE;
     uint32_t start_sector, end_sector;
     uint32_t sector;
+    ClearCrc32Calculate();
 
     if ((DUAL_IMG_START_ADDRESS < FLASH_BASE) || (DUAL_IMG_START_ADDRESS % SECTOR_SIZE) ||
         (DUAL_IMG_END_ADDRESS > (FLASH_BASE + 128U * 1024U)) ||
@@ -329,4 +331,10 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     }
     flash_lock();
     return SUCCESS;
+}
+
+static void ClearCrc32Calculate(void)
+{
+    sum_crc32 = 0;
+    memset(crc_data, 0, sizeof(crc_data));
 }

@@ -27,8 +27,8 @@ static uint16_t gFW_FirstBinLen = 0;
 // static uint8_t Read_flash_data[READ_FLASH_BUFFER_LEN];
 // static uint32_t Read_flash_address = 0;
 // static uint8_t Read_flashAdrss_tab[4] = {0};
-static uint32_t sum_crc32;
-static uint8_t crc_data[BUFFER_LEN];
+static uint32_t sum_crc32 = 0;
+static uint8_t crc_data[BUFFER_LEN] = {0};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -36,6 +36,7 @@ static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t cons
 static error_status EraseDualImageFlashProcess(void);
 static void ReadFlash(uint32_t ReadAddr, uint8_t *pBuffer, uint16_t NumToRead);
 static uint16_t ReadFlashHalfWord(uint32_t faddr);
+static void ClearCrc32Calculate(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -291,7 +292,8 @@ static error_status EraseDualImageFlashProcess(void)
     flash_status_type status = FLASH_OPERATE_DONE;
     uint32_t start_sector, end_sector;
     uint32_t sector;
-
+    ClearCrc32Calculate();
+    
     if ((DUAL_IMG_START_ADDRESS < FLASH_BASE) || (DUAL_IMG_START_ADDRESS % SECTOR_SIZE) ||
         (DUAL_IMG_END_ADDRESS > (FLASH_BASE + 128U * 1024U)) ||
         (DUAL_IMG_END_ADDRESS <= DUAL_IMG_START_ADDRESS))
@@ -342,6 +344,12 @@ static error_status EraseDualImageFlashProcess(void)
     /* Lock flash after operation */
     flash_lock();
     return SUCCESS;
+}
+
+static void ClearCrc32Calculate(void)
+{
+    sum_crc32 = 0;
+    memset(crc_data, 0, sizeof(crc_data));
 }
 
 static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc)
