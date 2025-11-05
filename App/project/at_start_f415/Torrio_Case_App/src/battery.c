@@ -7,6 +7,10 @@
 #include "usb.h"
 #include "qi.h"
 #include "task_scheduler.h"
+#include "uart_comm_manager.h"
+#include "uart_command_handler.h"
+#include "uart_interface.h"
+#include "Commands.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -29,19 +33,30 @@ static const uint16_t battery_voltage_table[] = {3510, 3590, 3610, 3630, 3650,
                                                  CASE_MAX_VBAT};
 static uint8_t pre_Case_VBAT_percent = BATTERY_UNKNOWN_LEVEL;
 static uint16_t adc_convert_to_voltage = 0;
-
+static UART_CommContext_t *user_left_bud_ctx = NULL;
+static UART_CommContext_t *user_right_bud_ctx = NULL;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
+static void SendBudBatteryCommandIfConnected(UART_CommContext_t *ctx);
+
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+void Battery_BudsCtxInit(void)
+{
+    user_left_bud_ctx = UartCommManager_GetLeftBudContext();
+    user_right_bud_ctx = UartCommManager_GetRightBudContext();
+}
+
 void Battery_UpdateStatusTask(void)
 {
     Sy8809Xsense_XsenseRead_t Pending_temp = {0};
     Pending_temp.is_command_read = false;
     Pending_temp.Pending = SY8809_XSENSE_VBAT;
     Sy8809Xsense_SetPendingXsense(Pending_temp);
+    SendBudBatteryCommandIfConnected(user_left_bud_ctx);
+    SendBudBatteryCommandIfConnected(user_right_bud_ctx);
     if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
         DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
@@ -138,3 +153,26 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static void SendBudBatteryCommandIfConnected(UART_CommContext_t *ctx)
+{
+    UartInterface_Port_t target;
+
+    if (ctx->side == UART_BUD_LEFT)
+    {
+        target = UART_INTERFACE_BUD_LEFT;
+    }
+    else if (ctx->side == UART_BUD_RIGHT)
+    {
+        target = UART_INTERFACE_BUD_RIGHT;
+    }
+    else
+    {
+        return;
+    }
+
+    if (ctx->Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        uint8_t payload[] = {BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG};
+        UartInterface_SendBudCommand(target, BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+    }
+}

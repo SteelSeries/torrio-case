@@ -103,6 +103,9 @@ typedef struct
     uint8_t anc_version_buffer[BUDS_ANC_VERSTION_DATA_LEN];
     uint8_t serial_number_buffer[BUDS_SN_DATA_LEN];
 
+    uint8_t battery_level;
+    uint16_t vbat;
+    uint16_t ntc;
 } UART_CommContext_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *

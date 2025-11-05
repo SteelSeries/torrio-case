@@ -53,12 +53,27 @@ void SystemStateManager_ReadBatteryAndNtcHandle(void)
     uint8_t buff[13] = {0x00};
     uint16_t case_battery_voltage = Battery_GetBatteryVoltage();
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
+    UART_CommContext_t *ctx = NULL;
 
     buff[0] = FAC_GET_BATTERY_AND_NTC | COMMAND_READ_FLAG;
     buff[1] = (uint8_t)case_battery_voltage & 0x00FF;
     buff[2] = (uint8_t)((case_battery_voltage >> 8) & 0x00FF);
     buff[3] = charge_status->check_reg_state.reg_0x16;
-    // Todo: need add buds battery and NTC data.
+
+    ctx = UartCommManager_GetLeftBudContext();
+    buff[5] = (uint8_t)((ctx->vbat & 0xFF00) >> 8);
+    buff[6] = (uint8_t)(ctx->vbat & 0x00FF);
+
+    buff[7] = (uint8_t)((ctx->ntc & 0xFF00) >> 8);
+    buff[8] = (uint8_t)(ctx->ntc & 0x00FF);
+
+    ctx = UartCommManager_GetRightBudContext();
+    buff[9] = (uint8_t)((ctx->vbat & 0xFF00) >> 8);
+    buff[10] = (uint8_t)(ctx->vbat & 0x00FF);
+
+    buff[11] = (uint8_t)((ctx->ntc & 0xFF00) >> 8);
+    buff[12] = (uint8_t)(ctx->ntc & 0x00FF);
+
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
 
@@ -68,11 +83,20 @@ void SystemStateManager_GetBatteryStatusHandle(void)
     uint8_t buff[7] = {0x00};
     uint8_t case_battery_level = Battery_GetBatteryPercent();
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
+    UART_CommContext_t *ctx = NULL;
 
     buff[0] = GET_BATTERY_INFO | COMMAND_READ_FLAG;
     buff[1] = case_battery_level;
     buff[2] = ConvertCaseChargeStatusToCmd(charge_status->case_charge_status);
+
+    ctx = UartCommManager_GetLeftBudContext();
+    buff[3] = ctx->battery_level;
+
     buff[4] = ConvertBudChargeStatusToCmd(charge_status->left_bud_charge_status);
+
+    ctx = UartCommManager_GetRightBudContext();
+    buff[5] = ctx->battery_level;
+
     buff[6] = ConvertBudChargeStatusToCmd(charge_status->right_bud_charge_status);
 
     // Todo: need add buds battery level and charging status data.

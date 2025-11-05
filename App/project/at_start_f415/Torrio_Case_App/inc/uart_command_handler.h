@@ -11,15 +11,14 @@
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
 // clang-format off
-#define BUD_CMD_PREVENT_SLEEP       0x50
-#define BUD_CMD_BUTTON_AND_MODE     0x71
-#define BUD_CMD_DEEP_POWER_OFF      0x77
-#define BUD_CMD_GET_FW_VERSION      0x10
-#define BUD_CMD_GET_MODEL_AND_COLOR 0x6C
-#define BUD_CMD_READ_SERIAL_NUMBER  0x12
-#define BUD_CMD_READ_BUD_STATE      0x7B
-
-
+#define BUD_CMD_PREVENT_SLEEP           0x50U
+#define BUD_CMD_BUTTON_AND_MODE         0x71U
+#define BUD_CMD_DEEP_POWER_OFF          0x77U
+#define BUD_CMD_FW_VERSION              0x10U
+#define BUD_CMD_MODEL_AND_COLOR         0x6CU
+#define BUD_CMD_SERIAL_NUMBER           0x12U
+#define BUD_CMD_BUD_STATE               0x7BU
+#define BUD_CMD_BATTERY_STATE           0x65U
 // clang-format on
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *

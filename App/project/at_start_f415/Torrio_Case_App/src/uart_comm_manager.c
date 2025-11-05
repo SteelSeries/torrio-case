@@ -8,6 +8,7 @@
 #include "at32f415_int.h"
 #include "uart_protocol.h"
 #include "uart_command_handler.h"
+#include "battery.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -58,6 +59,7 @@ void UartCommManager_Init(void)
     CommInit(&bud_right_ctx, USART3);
     Interrupt_BudsCtxInit();
     UartDrive_BudsCtxInit();
+    Battery_BudsCtxInit();
 }
 
 void UartCommManager_DisconnectReinit(UART_CommContext_t *ctx)
@@ -128,7 +130,11 @@ static void CommInit(UART_CommContext_t *ctx, usart_type *usart_x)
     memset(ctx->dsp2_version, BUDS_UNKNOW_STATE, sizeof(ctx->dsp2_version));
     memset(ctx->Version_Headset_Partion, BUDS_UNKNOW_STATE, sizeof(ctx->Version_Headset_Partion));
     memset(ctx->anc_version_buffer, BUDS_UNKNOW_STATE, sizeof(ctx->anc_version_buffer));
-    memset(ctx->serial_number_buffer, 0x00, sizeof(ctx->serial_number_buffer));
+    memset(ctx->serial_number_buffer, BUDS_UNKNOW_STATE, sizeof(ctx->serial_number_buffer));
+
+    ctx->battery_level = BUDS_UNKNOW_STATE;
+    memset(&ctx->vbat, BUDS_UNKNOW_STATE, sizeof(ctx->vbat));
+    memset(&ctx->ntc, BUDS_UNKNOW_STATE, sizeof(ctx->ntc));
 }
 
 static void CommTask(UART_CommContext_t *ctx)
