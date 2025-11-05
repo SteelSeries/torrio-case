@@ -380,11 +380,11 @@ static void SendInitCommand(UartInterface_Port_t target)
     {
         {
             uint8_t payload[] = {BUD_CMD_PREVENT_SLEEP | COMMAND_READ_FLAG};
-            UartInterface_SendBudCommand(target, BUD_CMD_PREVENT_SLEEP | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+            UartInterface_SendBudCommand(target, BUD_CMD_PREVENT_SLEEP | COMMAND_READ_FLAG, payload, sizeof(payload), 100);
         }
         {
             uint8_t payload[] = {BUD_CMD_BUTTON_AND_MODE | COMMAND_READ_FLAG};
-            UartInterface_SendBudCommand(target, BUD_CMD_BUTTON_AND_MODE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+            UartInterface_SendBudCommand(target, BUD_CMD_BUTTON_AND_MODE | COMMAND_READ_FLAG, payload, sizeof(payload), 100);
         }
     }
     else

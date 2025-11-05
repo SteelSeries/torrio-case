@@ -65,8 +65,8 @@ Step 6: APP clears dual_image_copy_flag
 //  0x0800 3801 - 0x0800 3801 : Flash 1(user data)(color)
 //  0x0800 3802 - 0x0800 3802 : Flash 1(user data)(shipping flag)
 //  0x0800 3803 - 0x0800 3803 : Flash 1(user data)(dual Image Copy Flag)
-//  0x0800 3804 - 0x0800 3C16 : Flash 18(user data)(SN)
-//  0x0800 3C16 - 0x0800 3FFF : Flash (user data)(Not used yet)
+//  0x0800 3804 - 0x0800 3817 : Flash 19(user data)(SN)
+//  0x0800 3818 - 0x0800 3FFF : Flash (user data)(Not used yet)
 //  0x0800 4000 - 0x0801 1FFF : App code(56K)
 //  0x0801 2000 - 0x0801 FFFF : Dual img code(56K)
 

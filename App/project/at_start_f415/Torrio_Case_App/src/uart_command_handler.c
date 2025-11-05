@@ -47,6 +47,7 @@ static Command_Status_t RecoveryAndReset(const uint8_t command[CMD_MAX_DATA_LEN]
 static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx, UartProtocol_Packet_t packet);
 static Command_Status_t ReadBudsColorAndMode(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx, UartProtocol_Packet_t packet);
 static Command_Status_t ReadBudsSerialNumber(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx, UartProtocol_Packet_t packet);
+static Command_Status_t ReadBudsBatteryStatus(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx, UartProtocol_Packet_t packet);
 
 static Command_Status_t EraseFileTimeoutHandle(UART_CommContext_t *ctx);
 static Command_Status_t WriteFileTimeoutHandle(UART_CommContext_t *ctx);
@@ -61,7 +62,7 @@ static const cmd_handler_t handler_table[] =
     {
         {.op = NO_OP,                           .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         // info
-        {.op = BUD_CMD_GET_FW_VERSION,          .read = HandleNoop,                 .write = ReadVersion,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_FW_VERSION,              .read = HandleNoop,                 .write = ReadVersion,                        .timeout = TimeoutHandleNoop},
         // factory
         {.op = FAC_READ_BUDS_DEBUG,             .read = FactoryDebugReadBuds,       .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         {.op = FAC_SET_CHARGE_STATUS,           .read = HandleNoop,                 .write = FactorySetBatteryChargeStatus,     .timeout = TimeoutHandleNoop},
@@ -78,9 +79,9 @@ static const cmd_handler_t handler_table[] =
         {.op = BUD_CMD_PREVENT_SLEEP,           .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         {.op = BUD_CMD_BUTTON_AND_MODE,         .read = ReadBudsButtonAndMode,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         {.op = BUD_CMD_DEEP_POWER_OFF,          .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_GET_MODEL_AND_COLOR,     .read = ReadBudsColorAndMode,       .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_READ_SERIAL_NUMBER,      .read = HandleNoop,                 .write = ReadBudsSerialNumber,                        .timeout = TimeoutHandleNoop},
-        
+        {.op = BUD_CMD_MODEL_AND_COLOR,         .read = ReadBudsColorAndMode,       .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_SERIAL_NUMBER,           .read = HandleNoop,                 .write = ReadBudsSerialNumber,              .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_BATTERY_STATE,           .read = ReadBudsBatteryStatus,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
     };
 // clang-format on
 
@@ -195,8 +196,8 @@ static Command_Status_t ReadVersion(const uint8_t command[CMD_MAX_DATA_LEN], UAR
         ctx->mode = (Uart_BudsWorkMode_t)command[4];
         if (ctx->mode == UART_BUDS_WORK_MODE_APP)
         {
-            uint8_t payload[] = {BUD_CMD_GET_FW_VERSION, 1};
-            UartInterface_SendBudCommand(target, BUD_CMD_GET_FW_VERSION, payload, sizeof(payload), 1000);
+            uint8_t payload[] = {BUD_CMD_FW_VERSION, 1};
+            UartInterface_SendBudCommand(target, BUD_CMD_FW_VERSION, payload, sizeof(payload), 1000);
         }
     }
     else if (packet.payload_len == 6)
@@ -304,28 +305,32 @@ static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA
     if (ctx->mode == UART_BUDS_WORK_MODE_APP)
     {
         {
-            uint8_t payload[] = {BUD_CMD_GET_FW_VERSION, 0};
-            UartInterface_SendBudCommand(target, BUD_CMD_GET_FW_VERSION, payload, sizeof(payload), 1000);
+            uint8_t payload[] = {BUD_CMD_FW_VERSION, 0};
+            UartInterface_SendBudCommand(target, BUD_CMD_FW_VERSION, payload, sizeof(payload), 1000);
         }
         {
-            uint8_t payload[] = {BUD_CMD_GET_MODEL_AND_COLOR | COMMAND_READ_FLAG};
-            UartInterface_SendBudCommand(target, BUD_CMD_GET_MODEL_AND_COLOR | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+            uint8_t payload[] = {BUD_CMD_MODEL_AND_COLOR | COMMAND_READ_FLAG};
+            UartInterface_SendBudCommand(target, BUD_CMD_MODEL_AND_COLOR | COMMAND_READ_FLAG, payload, sizeof(payload), 100);
         }
         {
-            uint8_t payload[] = {BUD_CMD_READ_SERIAL_NUMBER, 1};
-            UartInterface_SendBudCommand(target, BUD_CMD_READ_SERIAL_NUMBER, payload, sizeof(payload), 1000);
+            uint8_t payload[] = {BUD_CMD_SERIAL_NUMBER, 1};
+            UartInterface_SendBudCommand(target, BUD_CMD_SERIAL_NUMBER, payload, sizeof(payload), 1000);
         }
         {
-            uint8_t payload[] = {BUD_CMD_READ_SERIAL_NUMBER, 2};
-            UartInterface_SendBudCommand(target, BUD_CMD_READ_SERIAL_NUMBER, payload, sizeof(payload), 1000);
+            uint8_t payload[] = {BUD_CMD_SERIAL_NUMBER, 2};
+            UartInterface_SendBudCommand(target, BUD_CMD_SERIAL_NUMBER, payload, sizeof(payload), 1000);
         }
         {
-            uint8_t payload[] = {BUD_CMD_READ_BUD_STATE | COMMAND_READ_FLAG};
-            UartInterface_SendBudCommand(target, BUD_CMD_READ_BUD_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+            uint8_t payload[] = {BUD_CMD_BUD_STATE | COMMAND_READ_FLAG};
+            UartInterface_SendBudCommand(target, BUD_CMD_BUD_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
         {
             uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
             UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+        }
+        {
+            uint8_t payload[] = {BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG};
+            UartInterface_SendBudCommand(target, BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
     }
     return COMMAND_STATUS_SUCCESS;
@@ -348,6 +353,33 @@ static Command_Status_t ReadBudsSerialNumber(const uint8_t command[CMD_MAX_DATA_
     {
         memcpy(&ctx->serial_number_buffer[10], command, 9);
     }
+
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t ReadBudsBatteryStatus(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx, UartProtocol_Packet_t packet)
+{
+
+    if (ctx->side == UART_BUD_LEFT)
+    {
+        DEBUG_PRINT("[ReadBudsBatteryStatus] Side: LEFT\n");
+    }
+    else if (ctx->side == UART_BUD_RIGHT)
+    {
+        DEBUG_PRINT("[ReadBudsBatteryStatus] Side: RIGHT\n");
+    }
+    else
+    {
+        DEBUG_PRINT("[ReadBudsBatteryStatus] Side: UNKNOWN (%d)\n", ctx->side);
+    }
+
+    ctx->ntc = ((uint16_t)command[0] << 8) | command[1];
+    ctx->vbat = ((uint16_t)command[3] << 8) | command[4];
+    ctx->battery_level = command[5];
+
+    DEBUG_PRINT("[ReadBudsBatteryStatus] NTC: %u (0x%04X)\n", ctx->ntc, ctx->ntc);
+    DEBUG_PRINT("[ReadBudsBatteryStatus] VBAT: %u (0x%04X)\n", ctx->vbat, ctx->vbat);
+    DEBUG_PRINT("[ReadBudsBatteryStatus] Battery Level: %u%%\n", ctx->battery_level);
 
     return COMMAND_STATUS_SUCCESS;
 }
