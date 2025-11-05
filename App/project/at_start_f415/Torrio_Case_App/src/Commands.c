@@ -114,7 +114,7 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_ENTER_MODE,          .read = HandleFactoryEnterCommand,      .write = HandleNoop},
 
         // Case/Buds
-        {.op = GET_BATTERY_INFO, .read = GetBatteryStatus, .write = HandleNoop},
+        {.op = GET_BATTERY_INFO,        .read = GetBatteryStatus,               .write = HandleNoop},
 };
 // clang-format on
 static Command_GetFactoryLighting_t fac_lighting_mode = COMMAND_FACTORY_NONE;
@@ -397,10 +397,10 @@ static Command_Status_t GetSerialNumber(const uint8_t command[USB_RECEIVE_LEN])
 
     UART_CommContext_t *ctx = NULL;
     ctx = UartCommManager_GetLeftBudContext();
-    memcpy(&buff[21], ctx->serial_number_buffer, sizeof(ctx->serial_number_buffer));
+    memcpy(&buff[20], ctx->serial_number_buffer, sizeof(ctx->serial_number_buffer));
 
     ctx = UartCommManager_GetRightBudContext();
-    memcpy(&buff[40], ctx->serial_number_buffer, sizeof(ctx->serial_number_buffer));
+    memcpy(&buff[39], ctx->serial_number_buffer, sizeof(ctx->serial_number_buffer));
 
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
@@ -432,7 +432,7 @@ static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN])
             {
             case COMMAND_TARGET_CASE:
             {
-                uint8_t new_serial[18] = {0};
+                uint8_t new_serial[CASE_SN_DATA_LEN] = {0};
                 memcpy(new_serial, &command[6], sizeof(new_serial));
                 FileSystem_UpdateSerialNumber(new_serial);
                 break;
@@ -455,9 +455,7 @@ static Command_Status_t SetSerialNumber(const uint8_t command[USB_RECEIVE_LEN])
 
     if (is_ret == true)
     {
-        uint8_t buff[2] = {0x00};
-        buff[0] = FAC_SERIAL_OP;
-        buff[1] = FLASH_WRITE_ERRORS;
+        uint8_t buff[] = {FAC_SERIAL_OP, FLASH_WRITE_ERRORS};
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     }
     return COMMAND_STATUS_SUCCESS;
@@ -516,14 +514,11 @@ static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIV
     Command_Target_t target = (Command_Target_t)command[1];
     if (target > COMMAND_TARGET_RIGHT_BUD)
     {
-        uint8_t buff[2] = {0x00};
-        buff[0] = FAC_MODEL_COLOR_SPIN_OP;
-        buff[1] = FLASH_WRITE_ERRORS;
+        uint8_t buff[] = {FAC_MODEL_COLOR_SPIN_OP, FLASH_WRITE_ERRORS};
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     }
     else
     {
-
         switch (target)
         {
         case COMMAND_TARGET_CASE:
@@ -562,9 +557,7 @@ static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_
     Command_Target_t target = (Command_Target_t)command[1];
     if (target > COMMAND_TARGET_RIGHT_BUD)
     {
-        uint8_t buff[2] = {0x00};
-        buff[0] = FAC_SET_CHARGE_STATUS;
-        buff[1] = FLASH_WRITE_ERRORS;
+        uint8_t buff[] = {FAC_SET_CHARGE_STATUS, FLASH_WRITE_ERRORS};
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     }
     else
@@ -602,18 +595,14 @@ static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_L
     Command_Target_t target = (Command_Target_t)command[1];
     if ((target != COMMAND_TARGET_RIGHT_BUD) && (target != COMMAND_TARGET_LEFT_BUD))
     {
-        uint8_t buff[2] = {0x00};
-        buff[0] = FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG;
-        buff[1] = FLASH_WRITE_ERRORS;
+        uint8_t buff[] = {FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG, FLASH_WRITE_ERRORS};
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
         return COMMAND_STATUS_SUCCESS;
     }
 
     if ((command[2] < BUD_DEBUG_PAYLOAD_MIN) || (command[2] > BUD_DEBUG_PAYLOAD_MAX))
     {
-        uint8_t buff[2] = {0};
-        buff[0] = FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG;
-        buff[1] = FLASH_WRITE_ERRORS;
+        uint8_t buff[] = {FAC_READ_BUDS_DEBUG | COMMAND_READ_FLAG, FLASH_WRITE_ERRORS};
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
         return COMMAND_STATUS_SUCCESS;
     }
