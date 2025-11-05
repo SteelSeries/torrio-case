@@ -81,6 +81,14 @@
 #define I2C1_SDA_GPIO_PORT                  GPIOB                       // PB7
 #define I2C1_SDA_GPIO_CLK                   CRM_GPIOB_PERIPH_CLOCK      // PB7
 
+#define I2C2_SCL_PIN                        GPIO_PINS_6                 // PF6
+#define I2C2_SCL_GPIO_PORT                  GPIOF                       // PF6
+#define I2C2_SCL_GPIO_CLK                   CRM_GPIOF_PERIPH_CLOCK      // PF6
+
+#define I2C2_SDA_PIN                        GPIO_PINS_7                 // PF7
+#define I2C2_SDA_GPIO_PORT                  GPIOF                       // PF7
+#define I2C2_SDA_GPIO_CLK                   CRM_GPIOF_PERIPH_CLOCK      // PF7
+
 #define PWM_R_PIN                           GPIO_PINS_6                 // PA6
 #define PWM_R_GPIO_PORT                     GPIOA                       // PA6
 #define PWM_R_GPIO_CLK                      CRM_TMR3_PERIPH_CLOCK      // PA6
@@ -97,6 +105,11 @@
 #define I2C1_CLK                            CRM_I2C1_PERIPH_CLOCK
 
 #define I2C1_SPEED                          100000
+
+#define I2C2_PORT                           I2C2
+#define I2C2_CLK                            CRM_I2C2_PERIPH_CLOCK
+
+#define I2C2_SPEED                          100000
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *

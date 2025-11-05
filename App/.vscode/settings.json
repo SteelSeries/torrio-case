@@ -6,6 +6,8 @@
         "system_state_manager.h": "c",
         "qi.h": "c",
         "init_pinout.h": "c",
-        "lid.h": "c"
+        "lid.h": "c",
+        "sy8809_table.h": "c",
+        "i2c2.h": "c"
     }
 }

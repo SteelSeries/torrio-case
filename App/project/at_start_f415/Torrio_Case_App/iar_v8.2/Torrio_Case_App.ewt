@@ -2983,6 +2983,12 @@
             <name>$PROJ_DIR$\..\src\i2c1.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\i2c2.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c_comm.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\init_pinout.c</name>
         </file>
         <file>

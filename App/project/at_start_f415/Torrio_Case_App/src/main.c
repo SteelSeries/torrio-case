@@ -21,6 +21,8 @@
 #include "file_system.h"
 #include "system_clock.h"
 #include "lid.h"
+#include "i2c1.h"
+#include "i2c2.h"
 #include "wdt.h"
 #include "button.h"
 #include "uart_comm_manager.h"
@@ -131,8 +133,11 @@ int main(void)
 
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {
-    DEBUG_PRINT("add sy8809 task fail\n");
+     DEBUG_PRINT("add sy8809 task fail\n");
   }
+  InitPinout_I2c1Init();
+  InitPinout_I2c2Init();
+  I2c2_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, 0x00);
 
   if (TaskScheduler_AddTask(Lid_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {

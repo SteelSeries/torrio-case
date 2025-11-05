@@ -5,6 +5,7 @@
 #include "pinout.h"
 #include "lid.h"
 #include "i2c1.h"
+#include "i2c2.h"
 #include "usb.h"
 #include "qi.h"
 #include "sy8809.h"
@@ -59,6 +60,22 @@ static const I2c1_HardwareSettings_t i2c1_config =
         .i2c1_crm_clk = I2C1_CLK,
 
         .i2c1_speed = I2C1_SPEED,
+};
+
+static const I2c2_HardwareSettings_t i2c2_config =
+    {
+        .i2c2_sda_gpio_port = I2C2_SDA_GPIO_PORT,
+        .i2c2_sda_gpio_pin = I2C2_SDA_PIN,
+        .i2c2_sda_gpio_crm_clk = I2C2_SDA_GPIO_CLK,
+
+        .i2c2_scl_gpio_port = I2C2_SCL_GPIO_PORT,
+        .i2c2_scl_gpio_pin = I2C2_SCL_PIN,
+        .i2c2_scl_gpio_crm_clk = I2C2_SCL_GPIO_CLK,
+
+        .i2c2_port = I2C2_PORT,
+        .i2c2_crm_clk = I2C2_CLK,
+
+        .i2c2_speed = I2C2_SPEED,
 };
 
 static const Sy8809_HardwareSettings_t sy8809_config =
@@ -168,6 +185,11 @@ void InitPinout_Init(void)
 void InitPinout_I2c1Init(void)
 {
     I2c1_GpioConfigHardware(&i2c1_config);
+}
+
+void InitPinout_I2c2Init(void)
+{
+    I2c2_GpioConfigHardware(&i2c2_config);
 }
 
 /*************************************************************************************************
