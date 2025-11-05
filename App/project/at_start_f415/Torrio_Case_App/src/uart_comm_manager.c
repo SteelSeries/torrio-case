@@ -287,15 +287,27 @@ static void CommTask(UART_CommContext_t *ctx)
 
     case UART_STATE_ERROR:
     {
-        DEBUG_PRINT("[UART][ERROR] Communication error detected.\n");
-        ctx->state = UART_STATE_IDLE;
-        if (ctx->direct_mode && ctx->direct_data)
+        DEBUG_PRINT("[UART][ERROR] Communication error detected (retry=%d)\n", ctx->retry_count);
+        if (++ctx->retry_count < 3)
         {
-            free(ctx->direct_data);
-            ctx->direct_data = NULL;
-            ctx->direct_len = 0;
-            ctx->direct_mode = false;
-            ctx->direct_pending = false;
+            ctx->timeout_tick = Timer2_GetTick() + MS_TO_TICKS(ctx->current_timeout_ms);
+            ctx->state = UART_STATE_WAITING_RESPONSE;
+            DEBUG_PRINT("[UART][STATE] -> WAITING_RESPONSE (keep listening)\n");
+        }
+        else
+        {
+            DEBUG_PRINT("[UART][TIMEOUT] Max retry reached. Reset to IDLE.\n");
+            UartCommandsHandle_CommandsHandleTimeout(ctx);
+            ctx->state = UART_STATE_IDLE;
+            ctx->retry_count = 0;
+            if (ctx->direct_mode && ctx->direct_data)
+            {
+                free(ctx->direct_data);
+                ctx->direct_data = NULL;
+                ctx->direct_len = 0;
+                ctx->direct_mode = false;
+                ctx->direct_pending = false;
+            }
         }
         break;
     }
