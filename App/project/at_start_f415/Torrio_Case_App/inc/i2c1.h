@@ -37,6 +37,4 @@ extern i2c_handle_type hi2cx;
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
 void I2c1_GpioConfigHardware(const I2c1_HardwareSettings_t *hardware_settings);
-I2c1_HardwareSettings_t const *I2c1_setting(void);
-i2c_status_type I2c1_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff);
-i2c_status_type I2c1_WriteReg(uint16_t address, uint8_t reg, uint8_t data);
+I2c1_HardwareSettings_t const *I2c1_UserSetting(void);

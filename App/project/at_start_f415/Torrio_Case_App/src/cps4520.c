@@ -4,7 +4,7 @@
 #include "cps4520.h"
 #include "cps4520_table.h"
 #include "usb.h"
-#include "i2c2.h"
+#include "i2c_comm.h"
 #include "task_scheduler.h"
 #include "system_state_manager.h"
 #include "Commands.h"
@@ -108,11 +108,11 @@ void Cps4520_InitReg(void)
   if(cps4520_init_flag == false)
   {
     SettingRegTableInit();
-    I2c2_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x13, cps4520_reg13_rx_buff);
+    I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x13, cps4520_reg13_rx_buff);
     DEBUG_PRINT("CPS4520_REG_0x13: %02X\n", cps4520_reg13_rx_buff[0]);
-    I2c2_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x15, cps4520_reg15_rx_buff);
+    I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x15, cps4520_reg15_rx_buff);
     DEBUG_PRINT("CPS4520_REG_0x15: %02X\n", cps4520_reg15_rx_buff[0]);
-    I2c2_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x14, cps4520_reg14_rx_buff);
+    I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x14, cps4520_reg14_rx_buff);
     DEBUG_PRINT("CPS4520_REG_0x14: %02X\n", cps4520_reg14_rx_buff[0]);
     if(cps4520_reg15_rx_buff[0] == 0x01 && cps4520_reg14_rx_buff[0] == 0x8A && cps4520_reg13_rx_buff[0] == 0x21)
     {
@@ -136,8 +136,9 @@ static void SettingRegTableInit(void)
 
     for (uint8_t i = 0; i < CPS4520_REG_TABLE_LEN; i++)
     {
-        I2c2_WriteReg(CPS4520_I2C_SLAVE_ADDRESS,
-                      cps4520_reg_init_list[i][0],
-                      cps4520_reg_init_list[i][1]);
+        I2cComm_WriteReg(
+                        CPS4520_I2C_SLAVE_ADDRESS,
+                        cps4520_reg_init_list[i][0],
+                        cps4520_reg_init_list[i][1]);
     }
 }

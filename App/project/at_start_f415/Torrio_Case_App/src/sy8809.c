@@ -3,7 +3,7 @@
  *************************************************************************************************/
 #include "sy8809.h"
 #include "init_pinout.h"
-#include "i2c1.h"
+#include "i2c_comm.h"
 #include "task_scheduler.h"
 #include "timer2.h"
 #include "usb.h"
@@ -379,12 +379,12 @@ const Sy8809_ChargeStatus_t *Sy8809_GetChargeIcStatusInfo(void)
 
 i2c_status_type Sy8809_DebugRegWrite(const uint8_t reg, const uint8_t value)
 {
-    return I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS, reg, value);
+    return I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS, reg, value);
 }
 
 void Sy8809_DebugRegRead(const uint8_t reg, uint8_t *buff)
 {
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, reg, buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, reg, buff);
 }
 
 void Sy8809_StartWorkTask(void)
@@ -408,16 +408,16 @@ void Sy8809_ChargeStatusSet(Sy8809_ChargeControl_t status)
     if (status == SY8809_CHARGE_STOP)
     {
         uint8_t sy8809_reg_rx_buff[1] = {0};
-        I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x22, sy8809_reg_rx_buff);
+        I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x22, sy8809_reg_rx_buff);
         sy8809_0x22_chgconfig_temp = sy8809_reg_rx_buff[1];
 
-        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+        I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                       SY8809_REG_0x22,
                       0x00);
     }
     else
     {
-        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+        I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                       SY8809_REG_0x22,
                       sy8809_0x22_chgconfig_temp);
     }
@@ -449,7 +449,7 @@ static void DetectCurrentTable(void)
     uint8_t read_values[NUM_CHECK_REGS] = {0};
     for (uint8_t i = 0; i < NUM_CHECK_REGS; i++)
     {
-        I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, current_table_check_addrs[i], sy8809_reg_rx_buff);
+        I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, current_table_check_addrs[i], sy8809_reg_rx_buff);
         read_values[i] = sy8809_reg_rx_buff[0];
     }
 
@@ -493,7 +493,7 @@ static void StartChipModeCheck(void)
 {
     DEBUG_PRINT("%d sy8809 check chip\n", Timer2_GetTick());
     uint8_t sy8809_reg_rx_buff[1] = {0};
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
     if ((sy8809_reg_rx_buff[0] & REG_BIT(0)) == SET_REG_BIT(0))
     {
         DEBUG_PRINT("check 0x15 is start woking\n");
@@ -610,15 +610,15 @@ static void UpdateStatusRegisters(void)
 {
     uint8_t sy8809_reg_rx_buff[1] = {0};
     DEBUG_PRINT("start read 8809 int state\n");
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x12, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x12, sy8809_reg_rx_buff);
     ChargeIcStatusInfo.check_reg_state.reg_0x12 = sy8809_reg_rx_buff[0];
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x13, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x13, sy8809_reg_rx_buff);
     ChargeIcStatusInfo.check_reg_state.reg_0x13 = sy8809_reg_rx_buff[0];
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
     ChargeIcStatusInfo.check_reg_state.reg_0x15 = sy8809_reg_rx_buff[0];
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x14, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x14, sy8809_reg_rx_buff);
     ChargeIcStatusInfo.check_reg_state.reg_0x14 = sy8809_reg_rx_buff[0];
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x16, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x16, sy8809_reg_rx_buff);
     ChargeIcStatusInfo.check_reg_state.reg_0x16 = sy8809_reg_rx_buff[0];
 
     uint8_t sy8809_debug_read_reg_table[] = {0x10, 0x11, 0x12, 0x13, 0x14,
@@ -630,7 +630,7 @@ static void UpdateStatusRegisters(void)
     DEBUG_PRINT("sy8809 debug ");
     for (size_t i = 0; i < sizeof(sy8809_debug_read_reg_table); i++)
     {
-        I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff);
+        I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, sy8809_debug_read_reg_table[i], sy8809_reg_rx_buff);
         if ((i % 10) == 0)
         {
             DEBUG_PRINT("\n");
@@ -841,7 +841,7 @@ static void SettingRegTable5H(void)
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_table5H_list[i][0],
                           sy8809_reg_table5H_list[i][1]);
         }
@@ -865,7 +865,7 @@ static void SettingRegTable3(void)
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_table3_list[i][0],
                           sy8809_reg_table3_list[i][1]);
         }
@@ -881,7 +881,7 @@ static void SettingRegTable4(void)
 
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_table4_list[i][0],
                           sy8809_reg_table4_list[i][1]);
         }
@@ -898,7 +898,7 @@ static void SettingRegTableA(void)
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_tableA_list[i][0],
                           sy8809_reg_tableA_list[i][1]);
         }
@@ -914,7 +914,7 @@ static void SettingRegTableB(void)
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_tableB_list[i][0],
                           sy8809_reg_tableB_list[i][1]);
         }
@@ -930,7 +930,7 @@ static void SettingRegTableCEI(void)
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_tableCEI_list[i][0],
                           sy8809_reg_tableCEI_list[i][1]);
         }
@@ -946,7 +946,7 @@ static void SettingRegTableDFJ(void)
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_tableDFJ_list[i][0],
                           sy8809_reg_tableDFJ_list[i][1]);
         }
@@ -962,7 +962,7 @@ static void SettingRegTable6(void)
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_table6_list[i][0],
                           sy8809_reg_table6_list[i][1]);
         }
@@ -978,7 +978,7 @@ static void SettingRegTableG(void)
         ConfigBudDetectResistPin(TRUE);
         for (uint8_t i = 0; i < SY8809_REG_TABLE_LEN; i++)
         {
-            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+            I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                           sy8809_reg_tableG_list[i][0],
                           sy8809_reg_tableG_list[i][1]);
         }
