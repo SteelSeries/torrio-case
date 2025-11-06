@@ -79,6 +79,8 @@ static Command_Status_t HandleLedDebugCommand(const uint8_t command[USB_RECEIVE_
 static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, uint8_t b);
 static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t SetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t GetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -112,6 +114,7 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,                     .write = FactorySetBatteryChargeStatus},
         {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,           .write = HandleNoop},
         {.op = FAC_ENTER_MODE,          .read = HandleFactoryEnterCommand,      .write = HandleNoop},
+        {.op = FAC_PRESET_CHARGE,       .read = GetPresetChargeMode,            .write = SetPresetChargeMode},
 
         // Case/Buds
         {.op = GET_BATTERY_INFO,        .read = GetBatteryStatus,               .write = HandleNoop},
@@ -705,5 +708,34 @@ static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECE
             break;
         }
     }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t SetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN])
+{
+    if (command[1] == 0)
+    {
+        FileSystem_MarkPresetChargeActive(PRESET_CHARGE_EXIT);
+    }
+    else
+    {
+        FileSystem_MarkPresetChargeActive(PRESET_CHARGE_ACTIVE);
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t GetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint8_t buff[2] = {0};
+    buff[0] = FAC_PRESET_CHARGE | COMMAND_READ_FLAG;
+    if (FileSystem_GetUserData()->presetChargeState == PRESET_CHARGE_ACTIVE)
+    {
+        buff[1] = 0x01;
+    }
+    else
+    {
+        buff[1] = 0x00;
+    }
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }
