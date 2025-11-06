@@ -4,7 +4,7 @@
 #include "sy8809_xsense.h"
 #include "timer4.h"
 #include "task_scheduler.h"
-#include "i2c1.h"
+#include "i2c_comm.h"
 #include "sy8809.h"
 #include "adc.h"
 #include "custom_hid_class.h"
@@ -173,7 +173,7 @@ static void XsenseClear(void)
     DEBUG_PRINT("[%s]\n", __func__);
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
 
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   ENXSENSE_DISABLED);
 
@@ -182,7 +182,7 @@ static void XsenseClear(void)
 
     case SY8809_XSENSE_NTC:
     {
-        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+        I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                       SY8809_REG_0x36,
                       0x10);
         break;
@@ -190,7 +190,7 @@ static void XsenseClear(void)
 
     case SY8809_XSENSE_VBAT:
     {
-        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+        I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                       SY8809_REG_0x22,
                       charge_status->check_reg_state.reg_0x22);
         break;
@@ -265,16 +265,16 @@ static void SetXsenseOutputNtc(void)
     uint8_t sy8809_reg_rx_buff[1] = {0};
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
 
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, sy8809_reg_rx_buff);
     charge_status->check_reg_state.reg_0x15 = sy8809_reg_rx_buff[0];
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x12, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x12, sy8809_reg_rx_buff);
     charge_status->check_reg_state.reg_0x12 = sy8809_reg_rx_buff[0];
 
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x36,
                   0x1C);
 
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_NTC));
 }
@@ -283,7 +283,7 @@ static void SetXsenseOutputIbat(void)
 {
     DEBUG_PRINT("set read IBAT\n");
 
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_IBAT));
 }
@@ -292,7 +292,7 @@ static void SetXsenseOutputIvor(void)
 {
     DEBUG_PRINT("set read IVOR\n");
 
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_IVOR));
 }
@@ -301,7 +301,7 @@ static void SetXsenseOutputIvol(void)
 {
     DEBUG_PRINT("set read IVOL\n");
 
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_IVOL));
 }
@@ -309,7 +309,7 @@ static void SetXsenseOutputIvol(void)
 static void SetXsenseOutputIvin(void)
 {
     DEBUG_PRINT("set read IVIN\n");
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_IVIN));
 }
@@ -320,19 +320,19 @@ static void SetXsenseOutputVbat(void)
     uint8_t sy8809_reg_rx_buff[1] = {0};
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
 
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x12, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x12, sy8809_reg_rx_buff);
     charge_status->check_reg_state.reg_0x12 = sy8809_reg_rx_buff[0];
 
-    I2c1_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x22, sy8809_reg_rx_buff);
+    I2cComm_ReadReg(SY8809_I2C_SLAVE_ADDRESS, SY8809_REG_0x22, sy8809_reg_rx_buff);
     charge_status->check_reg_state.reg_0x22 = sy8809_reg_rx_buff[0];
 
     // set xSense output vbat
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_VBAT_DIV4));
 
     // stop case battery charge
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x22,
                   0x00);
 }
@@ -340,7 +340,7 @@ static void SetXsenseOutputVbat(void)
 static void SetXsenseOutputVbin(void)
 {
     DEBUG_PRINT("set read VBIN\n");
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigure(ENXSENSE_ENABLED, XSENSE_GAIN_1, XSENSE_CH_VIN_DIV8));
 }
@@ -349,7 +349,7 @@ static void SetXsenseReset(void)
 {
     DEBUG_PRINT("set xSense reset\n");
 
-    I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+    I2cComm_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
                   SY8809_REG_0x31,
                   XsenseConfigureClear());
 }
