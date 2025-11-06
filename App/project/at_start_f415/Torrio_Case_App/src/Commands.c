@@ -16,6 +16,7 @@
 #include <string.h>
 #include "uart_comm_manager.h"
 #include "lighting.h"
+#include "uart_command_handler.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -558,14 +559,14 @@ static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEI
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN])
 {
     Command_Target_t target = (Command_Target_t)command[1];
-    if (target > COMMAND_TARGET_RIGHT_BUD)
+    uint8_t charge_mode = command[2];
+    if ((target > COMMAND_TARGET_RIGHT_BUD) || (charge_mode > SY8809_CHARGE_STAR))
     {
         uint8_t buff[] = {FAC_SET_CHARGE_STATUS, FLASH_WRITE_ERRORS};
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     }
     else
     {
-
         switch (target)
         {
         case COMMAND_TARGET_CASE:
@@ -576,16 +577,15 @@ static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_
 
         case COMMAND_TARGET_LEFT_BUD:
         {
-            uint8_t payload[] = {FAC_SET_CHARGE_STATUS, command[2]};
-            UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, FAC_SET_CHARGE_STATUS, payload, sizeof(payload), 10000);
+            uint8_t payload[] = {BUD_CMD_CHARGE_SETING | COMMAND_READ_FLAG, command[2]};
+            UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, BUD_CMD_CHARGE_SETING | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
             break;
         }
 
         case COMMAND_TARGET_RIGHT_BUD:
         {
-
-            uint8_t payload[] = {FAC_SET_CHARGE_STATUS, command[2]};
-            UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, FAC_SET_CHARGE_STATUS, payload, sizeof(payload), 10000);
+            uint8_t payload[] = {BUD_CMD_CHARGE_SETING | COMMAND_READ_FLAG, command[2]};
+            UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, BUD_CMD_CHARGE_SETING | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
             break;
         }
         }

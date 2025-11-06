@@ -62,29 +62,28 @@ static uint8_t buffer[CMD_MAX_DATA_LEN] = {0};
 // clang-format off
 static const cmd_handler_t handler_table[] =
     {
-        {.op = NO_OP,                           .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = NO_OP,                           .read = HandleNoop,                         .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         // info
-        {.op = BUD_CMD_FW_VERSION,              .read = HandleNoop,                 .write = ReadVersion,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_FW_VERSION,              .read = HandleNoop,                         .write = ReadVersion,                       .timeout = TimeoutHandleNoop},
         // factory
-        {.op = FAC_READ_BUDS_DEBUG,             .read = FactoryDebugReadBuds,       .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = FAC_SET_CHARGE_STATUS,           .read = HandleNoop,                 .write = FactorySetBatteryChargeStatus,     .timeout = TimeoutHandleNoop},
+        {.op = FAC_READ_BUDS_DEBUG,             .read = FactoryDebugReadBuds,               .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
 
         // mcu control
-        {.op = RESET_OP,                        .read = HandleNoop,                 .write = RecoveryAndReset,                  .timeout = TimeoutHandleNoop},
+        {.op = RESET_OP,                        .read = HandleNoop,                         .write = RecoveryAndReset,                  .timeout = TimeoutHandleNoop},
 
         // file/firmware update
-        {.op = ERASE_FILE_OP,                   .read = HandleNoop,                 .write = EraseFile,                         .timeout = EraseFileTimeoutHandle},
-        {.op = FILE_ACCESS_OP,                  .read = HandleNoop,                 .write = WriteFile,                         .timeout = WriteFileTimeoutHandle},
-        {.op = FILE_CRC32_OP,                   .read = Crc32File,                  .write = HandleNoop,                        .timeout = Crc32FileTimeoutHandle},
+        {.op = ERASE_FILE_OP,                   .read = HandleNoop,                         .write = EraseFile,                         .timeout = EraseFileTimeoutHandle},
+        {.op = FILE_ACCESS_OP,                  .read = HandleNoop,                         .write = WriteFile,                         .timeout = WriteFileTimeoutHandle},
+        {.op = FILE_CRC32_OP,                   .read = Crc32File,                          .write = HandleNoop,                        .timeout = Crc32FileTimeoutHandle},
 
         // internal
-        {.op = BUD_CMD_PREVENT_SLEEP,           .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_BUTTON_AND_MODE,         .read = ReadBudsButtonAndMode,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_DEEP_POWER_OFF,          .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_MODEL_AND_COLOR,         .read = ReadBudsColorAndMode,       .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_SERIAL_NUMBER,           .read = HandleNoop,                 .write = ReadBudsSerialNumber,              .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_BATTERY_STATE,           .read = ReadBudsBatteryStatus,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
-        {.op = BUD_CMD_CHARGE_SETING,           .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_PREVENT_SLEEP,           .read = HandleNoop,                         .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_BUTTON_AND_MODE,         .read = ReadBudsButtonAndMode,              .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_DEEP_POWER_OFF,          .read = HandleNoop,                         .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_MODEL_AND_COLOR,         .read = ReadBudsColorAndMode,               .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_SERIAL_NUMBER,           .read = HandleNoop,                         .write = ReadBudsSerialNumber,              .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_BATTERY_STATE,           .read = ReadBudsBatteryStatus,              .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_CHARGE_SETING,           .read = FactorySetBatteryChargeStatus,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
     };
 // clang-format on
 
