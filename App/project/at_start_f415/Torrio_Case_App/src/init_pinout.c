@@ -172,6 +172,7 @@ void InitPinout_Init(void)
 	Button_GpioConfigHardware(&button_config);
     Cps4520_GpioConfigHardware(&CPS4520_config);
     UartDrive_GpioConfigHardware(&buds_uart_config);
+    I2c2_GpioConfigHardware(&i2c2_config);
 
     /*===========DEBUG PIN================*/
     gpio_init_type gpio_initstructure;
@@ -189,11 +190,6 @@ void InitPinout_Init(void)
 void InitPinout_I2c1Init(void)
 {
     I2c1_GpioConfigHardware(&i2c1_config);
-}
-
-void InitPinout_I2c2Init(void)
-{
-    I2c2_GpioConfigHardware(&i2c2_config);
 }
 
 /*************************************************************************************************

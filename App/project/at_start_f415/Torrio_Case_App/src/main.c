@@ -135,7 +135,6 @@ int main(void)
   {
      DEBUG_PRINT("add sy8809 task fail\n");
   }
-  InitPinout_I2c2Init();
 
   if (TaskScheduler_AddTask(Lid_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
