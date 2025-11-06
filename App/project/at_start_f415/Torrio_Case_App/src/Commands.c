@@ -651,9 +651,9 @@ static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN])
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_OUT_MAXPACKET_SIZE])
+static Command_Status_t HandleLedDebugCommand(const uint8_t command[USB_RECEIVE_LEN])
 {
-    uint8_t buff = 0x00;
+    uint8_t buff[1] = {0};
     switch (command[1])
     {
     case COMMAND_TARGET_CASE:
@@ -676,8 +676,8 @@ static Command_Status_t HandleLedDebugCommand(const uint8_t command[USBD_CUSTOM_
     default:
         break;
     }
-    buff = DEBUG_LEDRGB_OP;
-    custom_hid_class_send_report(&otg_core_struct.dev, &buff, sizeof(buff));
+    buff[0] = DEBUG_LEDRGB_OP;
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }
 
