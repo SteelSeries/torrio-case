@@ -8,6 +8,8 @@
 #include "usb.h"
 #include "uart_interface.h"
 #include <string.h>
+#include "battery.h"
+#include "file_system.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -82,6 +84,7 @@ static const cmd_handler_t handler_table[] =
         {.op = BUD_CMD_MODEL_AND_COLOR,         .read = ReadBudsColorAndMode,       .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         {.op = BUD_CMD_SERIAL_NUMBER,           .read = HandleNoop,                 .write = ReadBudsSerialNumber,              .timeout = TimeoutHandleNoop},
         {.op = BUD_CMD_BATTERY_STATE,           .read = ReadBudsBatteryStatus,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_CHARGE_SETING,           .read = HandleNoop,                 .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
     };
 // clang-format on
 
@@ -359,27 +362,48 @@ static Command_Status_t ReadBudsSerialNumber(const uint8_t command[CMD_MAX_DATA_
 
 static Command_Status_t ReadBudsBatteryStatus(const uint8_t command[CMD_MAX_DATA_LEN], UART_CommContext_t *ctx, UartProtocol_Packet_t packet)
 {
-
+    UartInterface_Port_t target;
     if (ctx->side == UART_BUD_LEFT)
     {
+        target = UART_INTERFACE_BUD_LEFT;
         DEBUG_PRINT("[ReadBudsBatteryStatus] Side: LEFT\n");
     }
     else if (ctx->side == UART_BUD_RIGHT)
     {
+        target = UART_INTERFACE_BUD_RIGHT;
         DEBUG_PRINT("[ReadBudsBatteryStatus] Side: RIGHT\n");
     }
     else
     {
         DEBUG_PRINT("[ReadBudsBatteryStatus] Side: UNKNOWN (%d)\n", ctx->side);
+        return COMMAND_STATUS_SUCCESS;
     }
 
     ctx->ntc = ((uint16_t)command[0] << 8) | command[1];
     ctx->vbat = ((uint16_t)command[3] << 8) | command[4];
     ctx->battery_level = command[5];
 
-    DEBUG_PRINT("[ReadBudsBatteryStatus] NTC: %u (0x%04X)\n", ctx->ntc, ctx->ntc);
-    DEBUG_PRINT("[ReadBudsBatteryStatus] VBAT: %u (0x%04X)\n", ctx->vbat, ctx->vbat);
-    DEBUG_PRINT("[ReadBudsBatteryStatus] Battery Level: %u%%\n", ctx->battery_level);
+    DEBUG_PRINT("NTC: %u (0x%04X)\n", ctx->ntc, ctx->ntc);
+    DEBUG_PRINT("VBAT: %u (0x%04X)\n", ctx->vbat, ctx->vbat);
+    DEBUG_PRINT("Battery Level: %u%%\n", ctx->battery_level);
+
+    if (FileSystem_GetUserData()->presetChargeState == PRESET_CHARGE_ACTIVE)
+    {
+        if (ctx->vbat >= BUDS_PRESET_CHARGE_STOP_VOLTAGE)
+        {
+            if (target == UART_INTERFACE_BUD_LEFT)
+            {
+                Battery_GetPresetChargeState()->left_bud_charge_status = BATTERY_PRESET_CHARGE_DONE;
+            }
+            else if (target == UART_INTERFACE_BUD_RIGHT)
+            {
+                Battery_GetPresetChargeState()->right_bud_charge_status = BATTERY_PRESET_CHARGE_DONE;
+            }
+            uint8_t payload[] = {BUD_CMD_CHARGE_SETING | COMMAND_READ_FLAG, 0x00};
+            UartInterface_SendBudCommand(target, BUD_CMD_CHARGE_SETING | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+            DEBUG_PRINT("Stop charge command sent to target %d.\n", target);
+        }
+    }
 
     return COMMAND_STATUS_SUCCESS;
 }

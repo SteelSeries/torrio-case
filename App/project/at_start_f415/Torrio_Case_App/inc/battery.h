@@ -11,6 +11,7 @@
 // Delay interval for battery status update task in milliseconds.
 // This task runs every 120 seconds to read and update battery level.
 #define BATTERY_TASK_UPDATE_INTERVAL_MS 120000U
+#define BUDS_PRESET_CHARGE_STOP_VOLTAGE 4250
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
