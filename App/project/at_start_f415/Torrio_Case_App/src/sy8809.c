@@ -21,7 +21,7 @@
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 #define NUM_CHECK_REGS ARRAY_SIZE(current_table_check_list)
 #define SY8809_REG_0x16_NTC_MASK 0x0FU // Mask for bits [3:0] indicating NTC level
-
+#define SY8809_IRQ_DEBOUNCE_DELAY_MS 2
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -260,16 +260,16 @@ static Sy8809_ChargeStatus_t ChargeIcStatusInfo = {
     .current_table = SY8809_REG_UNKNOWN,
     .ntc_level = SY8809_NTC_LEVEL_UNKNOW,
 };
-/*
- * Flag set by the Charge IC IRQ interrupt.
- *
- * When the external interrupt (IRQ pin) from the Charge IC is triggered,
- * this flag will be set to true. The main loop should check this flag
- * periodically to determine when it needs to read and process the
- * updated charging status from the Charge IC.
- */
-static volatile bool charge_irq_flag = false;
 
+static bool is_irq_change = false;
+
+// debounce_pending flag
+// -------------------------------------------------------------
+//     This flag indicates whether a debounce check task is already pending.
+//     When set to true, new interrupts will not schedule another debounce task
+//     until the current one finishes. This prevents multiple redundant tasks
+//     being added during signal bouncing.
+static volatile bool debounce_pending = false;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -297,6 +297,7 @@ static void SettingRegTableCEI(void);
 static void SettingRegTableDFJ(void);
 static void SettingRegTable6(void);
 static void SettingRegTableG(void);
+static void ChargeIrqDebounceCheck(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -369,7 +370,19 @@ void Sy8809_GpioConfigHardware(const Sy8809_HardwareSettings_t *hardware_setting
 
 void Sy8809_ReadIrqState(void)
 {
-    // charge_irq_flag = true;
+    // Only schedule debounce task if one is not already pending.
+    if (!debounce_pending)
+    {
+        debounce_pending = true; // mark debounce task as active
+
+        // Add a debounce check task to be executed after 2ms delay
+        if (TaskScheduler_AddTask(ChargeIrqDebounceCheck, SY8809_IRQ_DEBOUNCE_DELAY_MS,
+                                  TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
+        {
+            DEBUG_PRINT("add debounce task fail\n");
+            debounce_pending = false; // reset flag if scheduling failed
+        }
+    }
 }
 
 const Sy8809_ChargeStatus_t *Sy8809_GetChargeIcStatusInfo(void)
@@ -389,10 +402,10 @@ void Sy8809_DebugRegRead(const uint8_t reg, uint8_t *buff)
 
 void Sy8809_StartWorkTask(void)
 {
-    if (charge_irq_flag == true)
+    if (is_irq_change == true)
     {
-        DEBUG_PRINT("charge_irq_flag detected \n");
-        charge_irq_flag = false;
+        DEBUG_PRINT("is_irq_change detected \n");
+        is_irq_change = false;
         UpdateTableByPowerSource();
     }
 
@@ -982,5 +995,20 @@ static void SettingRegTableG(void)
                           sy8809_reg_tableG_list[i][0],
                           sy8809_reg_tableG_list[i][1]);
         }
+    }
+}
+
+static void ChargeIrqDebounceCheck(void)
+{
+    // Mark that debounce checking is complete,
+    // allowing new interrupts to schedule again.
+    debounce_pending = false;
+
+    flag_status irq_state = gpio_input_data_bit_read(user_hardware_settings.sy8809_irq_gpio_port,
+                                                     user_hardware_settings.sy8809_irq_gpio_pin);
+
+    if (irq_state == RESET)
+    {
+        is_irq_change = true;
     }
 }
