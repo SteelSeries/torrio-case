@@ -22,4 +22,5 @@
  *************************************************************************************************/
 void InitPinout_Init(void);
 void InitPinout_I2c1Init(void);
+void InitPinout_I2c2Init(void);
 

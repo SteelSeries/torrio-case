@@ -15,17 +15,21 @@
  *************************************************************************************************/
 typedef struct
 {
-    gpio_type *qi_gpio_port;
-    uint32_t qi_gpio_pin;
-    crm_periph_clock_type qi_gpio_crm_clk;
-} Qi_HardwareSettings_t;
+    gpio_type *cps4520_detect_gpio_port;
+    uint32_t cps4520_detect_gpio_pin;
+    crm_periph_clock_type cps4520_detect_gpio_crm_clk;
+
+    gpio_type *cps4520_int_gpio_port;
+    uint32_t cps4520_int_gpio_pin;
+    crm_periph_clock_type cps4520_int_gpio_crm_clk;
+} Cps4520_HardwareSettings_t;
 
 typedef enum
 {
-    QI_NON_DETECT = 0,
-    QI_DETECT,
-    QI_UNKNOW
-} Qi_DetectConnectState_t;
+    CPS4520_NON_DETECT = 0,
+    CPS4520_DETECT,
+    CPS4520_UNKNOW
+} Cps4520_DetectConnectState_t;
 
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
@@ -34,7 +38,8 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Qi_GpioConfigHardware(const Qi_HardwareSettings_t *hardware_settings);
-void Qi_StatusCheckTask(void);
-Qi_DetectConnectState_t Qi_GetDetectState(void);
+void Cps4520_GpioConfigHardware(const Cps4520_HardwareSettings_t *hardware_settings);
+void Cps4520_DetectStatusCheckTask(void);
+void Cps4520_InitReg(void);
+Cps4520_DetectConnectState_t Cps4520_GetDetectState(void);
 

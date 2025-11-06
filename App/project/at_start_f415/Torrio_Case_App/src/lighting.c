@@ -7,7 +7,7 @@
 #include "task_scheduler.h"
 #include <string.h>
 #include "usb.h"
-#include "qi.h"
+#include "cps4520.h"
 #include "lid.h"
 #include "battery.h"
 #include "commands.h"
@@ -99,7 +99,7 @@ void Lighting_HandleTask(void)
     {
         BatteryChargingSetting();
     }
-    else if (Qi_GetDetectState() == QI_DETECT)
+    else if (Cps4520_GetDetectState() == CPS4520_DETECT)
     {
         BatteryChargingSetting();
     }

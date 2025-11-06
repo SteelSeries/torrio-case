@@ -7,7 +7,7 @@
 #include "i2c1.h"
 #include "i2c2.h"
 #include "usb.h"
-#include "qi.h"
+#include "cps4520.h"
 #include "sy8809.h"
 #include "adc.h"
 #include "lighting.h"
@@ -39,11 +39,15 @@ static const Button_HardwareSettings_t button_config =
         .button_gpio_crm_clk = BUTTON_CRM_CLK,
 };
 
-static const Qi_HardwareSettings_t qi_config =
+static const Cps4520_HardwareSettings_t CPS4520_config =
     {
-        .qi_gpio_port = QI_CHARGE_DETECT_GPIO,
-        .qi_gpio_pin = QI_CHARGE_DETECT_PIN,
-        .qi_gpio_crm_clk = QI_CHARGE_DETECT_CRM_CLK,
+        .cps4520_detect_gpio_port = CPS4520_CHARGE_DETECT_GPIO,
+        .cps4520_detect_gpio_pin = CPS4520_CHARGE_DETECT_PIN,
+        .cps4520_detect_gpio_crm_clk = CPS4520_CHARGE_DETECT_CRM_CLK,
+
+        .cps4520_int_gpio_port = CPS4520_CHARGE_INT_GPIO,
+        .cps4520_int_gpio_pin = CPS4520_CHARGE_INT_PIN,
+        .cps4520_int_gpio_crm_clk = CPS4520_CHARGE_INT_CRM_CLK,
 };
 
 static const I2c1_HardwareSettings_t i2c1_config =
@@ -166,7 +170,7 @@ void InitPinout_Init(void)
     Adc_GpioConfigHardware(&adc_config);
     Lighting_GpioConfigHardware(&pwm_config);
 	Button_GpioConfigHardware(&button_config);
-    Qi_GpioConfigHardware(&qi_config);
+    Cps4520_GpioConfigHardware(&CPS4520_config);
     UartDrive_GpioConfigHardware(&buds_uart_config);
 
     /*===========DEBUG PIN================*/

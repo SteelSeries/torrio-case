@@ -7,7 +7,7 @@
 #include "task_scheduler.h"
 #include "timer2.h"
 #include "usb.h"
-#include "qi.h"
+#include "cps4520.h"
 #include "lid.h"
 #include "system_state_manager.h"
 #include "custom_hid_class.h"
@@ -585,7 +585,7 @@ static void UpdateTableByPowerSource(void)
         DEBUG_PRINT("USB table check\n");
         UsbModeApplyTable();
     }
-    else if (Qi_GetDetectState() == QI_DETECT)
+    else if (Cps4520_GetDetectState() == CPS4520_DETECT)
     {
         DEBUG_PRINT("Qi table check\n");
         sy8809_QiInCheckIccTable();
@@ -649,7 +649,7 @@ static void CheckNtcOverTempe(void)
     {
         SettingRegTable6();
         if ((Lid_GetState() == LID_OPEN) &&
-            ((Usb_GetUsbDetectState() == USB_UNPLUG) && (Qi_GetDetectState() == QI_NON_DETECT)))
+            ((Usb_GetUsbDetectState() == USB_UNPLUG) && (Cps4520_GetDetectState() == CPS4520_NON_DETECT)))
         {
             DEBUG_PRINT("NTC over temptrue enter standby mode\n");
             SystemStateManager_EnterStandbyModeCheck();

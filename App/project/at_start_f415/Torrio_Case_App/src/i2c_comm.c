@@ -4,7 +4,7 @@
 #include "i2c1.h"
 #include "sy8809.h"
 #include "i2c2.h"
-#include "qi.h"
+#include "cps4520.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *

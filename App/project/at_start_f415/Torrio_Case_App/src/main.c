@@ -5,7 +5,7 @@
 #include "custom_hid_class.h"
 #include "custom_hid_desc.h"
 #include "usb.h"
-#include "qi.h"
+#include "cps4520.h"
 #include "Commands.h"
 #include "timer2.h"
 #include "timer3.h"
@@ -135,9 +135,7 @@ int main(void)
   {
      DEBUG_PRINT("add sy8809 task fail\n");
   }
-  InitPinout_I2c1Init();
   InitPinout_I2c2Init();
-  I2c2_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, SY8809_REG_0x15, 0x00);
 
   if (TaskScheduler_AddTask(Lid_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
@@ -154,7 +152,7 @@ int main(void)
     DEBUG_PRINT("add USB check task fail\n");
   }
 
-  if (TaskScheduler_AddTask(Qi_StatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
+  if (TaskScheduler_AddTask(Cps4520_DetectStatusCheckTask, 10, TASK_RUN_FOREVER, TASK_START_DELAYED) != TASK_OK)
   {
     DEBUG_PRINT("add Qi check task fail\n");
   }

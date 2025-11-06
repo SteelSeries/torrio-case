@@ -69,9 +69,13 @@
 #define OPEN_LID_MOS_SWITCH_CRM_CLK         CRM_GPIOC_PERIPH_CLOCK      // PC2
 #endif
 
-#define QI_CHARGE_DETECT_PIN                GPIO_PINS_13                // PB13
-#define QI_CHARGE_DETECT_GPIO               GPIOB                       // PB13
-#define QI_CHARGE_DETECT_CRM_CLK            CRM_GPIOB_PERIPH_CLOCK      // PB13
+#define CPS4520_CHARGE_DETECT_PIN           GPIO_PINS_13                // PB13
+#define CPS4520_CHARGE_DETECT_GPIO          GPIOB                       // PB13
+#define CPS4520_CHARGE_DETECT_CRM_CLK       CRM_GPIOB_PERIPH_CLOCK      // PB13
+
+#define CPS4520_CHARGE_INT_PIN              GPIO_PINS_5                 // PB5
+#define CPS4520_CHARGE_INT_GPIO             GPIOB                       // PB5
+#define CPS4520_CHARGE_INT_CRM_CLK          CRM_GPIOB_PERIPH_CLOCK      // PB5
 
 #define I2C1_SCL_PIN                        GPIO_PINS_6                 // PB6
 #define I2C1_SCL_GPIO_PORT                  GPIOB                       // PB6
