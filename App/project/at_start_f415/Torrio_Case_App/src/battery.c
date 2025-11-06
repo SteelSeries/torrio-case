@@ -11,12 +11,14 @@
 #include "uart_command_handler.h"
 #include "uart_interface.h"
 #include "Commands.h"
+#include "file_system.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define CASE_MAX_VBAT 4340
 #define CASE_MIN_VBAT 3500
+#define CASE_PRESET_CHARGE_STOP_VOLTAGE 4250
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -35,6 +37,9 @@ static uint8_t pre_Case_VBAT_percent = BATTERY_UNKNOWN_LEVEL;
 static uint16_t adc_convert_to_voltage = 0;
 static UART_CommContext_t *user_left_bud_ctx = NULL;
 static UART_CommContext_t *user_right_bud_ctx = NULL;
+static Battery_PresetChargeData_t preset_charge_state = {.case_charge_status = BATTERY_PRESET_CHARGE_ACTIVE,
+                                                         .left_bud_charge_status = BATTERY_PRESET_CHARGE_ACTIVE,
+                                                         .right_bud_charge_status = BATTERY_PRESET_CHARGE_ACTIVE};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -43,6 +48,11 @@ static void SendBudBatteryCommandIfConnected(UART_CommContext_t *ctx);
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+Battery_PresetChargeData_t *Battery_GetPresetChargeState(void)
+{
+    return &preset_charge_state;
+}
+
 void Battery_BudsCtxInit(void)
 {
     user_left_bud_ctx = UartCommManager_GetLeftBudContext();
@@ -148,6 +158,27 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
             }
         }
     }
+
+    if (FileSystem_GetUserData()->presetChargeState == PRESET_CHARGE_ACTIVE)
+    {
+        DEBUG_PRINT("Preset charge mode is ACTIVE. Current voltage: %d mV\n", adc_convert_to_voltage);
+
+        if (adc_convert_to_voltage >= CASE_PRESET_CHARGE_STOP_VOLTAGE)
+        {
+            preset_charge_state.case_charge_status = BATTERY_PRESET_CHARGE_DONE;
+            DEBUG_PRINT("Voltage reached stop threshold. Marking case charge as DONE.\n");
+        }
+        else
+        {
+            preset_charge_state.case_charge_status = BATTERY_PRESET_CHARGE_ACTIVE;
+            DEBUG_PRINT("Voltage below threshold. Case is still charging (ACTIVE).\n");
+        }
+    }
+    else
+    {
+        DEBUG_PRINT("Preset charge mode is not active.\n");
+    }
+
     DEBUG_PRINT("percent:%d\n", pre_Case_VBAT_percent);
 }
 /*************************************************************************************************

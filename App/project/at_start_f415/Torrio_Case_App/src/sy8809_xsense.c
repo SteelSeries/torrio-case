@@ -11,6 +11,7 @@
 #include "Commands.h"
 #include "usb.h"
 #include "battery.h"
+#include "file_system.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -190,9 +191,28 @@ static void XsenseClear(void)
 
     case SY8809_XSENSE_VBAT:
     {
-        I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
-                      SY8809_REG_0x22,
-                      charge_status->check_reg_state.reg_0x22);
+        bool need_write = true;
+        if (FileSystem_GetUserData()->presetChargeState == PRESET_CHARGE_ACTIVE &&
+            Battery_GetPresetChargeState()->case_charge_status == BATTERY_PRESET_CHARGE_DONE)
+        {
+            need_write = false;
+        }
+
+        if (need_write)
+        {
+            I2c1_WriteReg(SY8809_I2C_SLAVE_ADDRESS,
+                          SY8809_REG_0x22,
+                          charge_status->check_reg_state.reg_0x22);
+
+            DEBUG_PRINT("[VBAT] I2C write executed (preset=%02X, case_state=%d)\n",
+                        FileSystem_GetUserData()->presetChargeState,
+                        Battery_GetPresetChargeState()->case_charge_status);
+        }
+        else
+        {
+            DEBUG_PRINT("[VBAT] Skip I2C write (PresetCharge=ACTIVE, Case=CHARGE_DONE)\n");
+        }
+
         break;
     }
 

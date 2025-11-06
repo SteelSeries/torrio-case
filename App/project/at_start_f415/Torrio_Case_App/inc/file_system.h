@@ -63,7 +63,7 @@ typedef enum
 {
     PRESET_CHARGE_ACTIVE = 0xAA,
     PRESET_CHARGE_EXIT = 0xEE
-} FileSystem_PresetChargeState_t;
+} FileSystem_PresetChargeMode_t;
 
 typedef struct
 {
@@ -88,4 +88,4 @@ void FileSystem_UpdateSerialNumber(const uint8_t *new_serial);
 void FileSystem_UpdateColorSpinAndModel(const uint8_t model_value, const uint8_t color_value);
 void FileSystem_MarkDualImageReadyToMigrate(void);
 void FileSystem_CheckImageCopyFlag(void);
-void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeState_t state);
+void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeMode_t state);

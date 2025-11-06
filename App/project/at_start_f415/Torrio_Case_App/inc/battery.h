@@ -22,6 +22,19 @@ typedef enum
     BATTERY_MEDIUM_LEVEL = 66U,
     BATTERY_HIGH_LEVEL = 100U
 } Battery_Level_t;
+
+typedef enum
+{
+    BATTERY_PRESET_CHARGE_ACTIVE = 0x00,
+    BATTERY_PRESET_CHARGE_DONE,
+} Battery_PresetChargeState_t;
+
+typedef struct
+{
+    Battery_PresetChargeState_t case_charge_status;
+    Battery_PresetChargeState_t left_bud_charge_status;
+    Battery_PresetChargeState_t right_bud_charge_status;
+} Battery_PresetChargeData_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -29,6 +42,7 @@ typedef enum
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
+Battery_PresetChargeData_t *Battery_GetPresetChargeState(void);
 void Battery_UpdateBatteryStatus(uint16_t vbat_voltage);
 uint8_t Battery_GetBatteryPercent(void);
 void Battery_UpdateStatusTask(void);

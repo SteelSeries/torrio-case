@@ -77,7 +77,7 @@ void FileSystem_CheckImageCopyFlag(void)
     }
 }
 
-void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeState_t state)
+void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeMode_t state)
 {
     FileSystem_UserDataUpdate_t update = {0};
     update.field_mask = UPDATE_FIELD_PRESET_CHARGE;
