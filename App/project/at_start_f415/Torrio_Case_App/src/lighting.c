@@ -11,6 +11,9 @@
 #include "lid.h"
 #include "battery.h"
 #include "commands.h"
+#include "battery.h"
+#include "file_system.h"
+
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -106,6 +109,17 @@ void Lighting_HandleTask(void)
     else
     {
         PwmHandler(LIGHTING_LED_OFF, LIGHTING_LED_OFF, LIGHTING_LED_OFF);
+    }
+
+    if (FileSystem_GetUserData()->presetChargeState == PRESET_CHARGE_ACTIVE)
+    {
+      Battery_PresetChargeData_t *preset = Battery_GetPresetChargeState();
+      if ((preset->case_charge_status == BATTERY_PRESET_CHARGE_ACTIVE) &&
+          (preset->left_bud_charge_status == BATTERY_PRESET_CHARGE_ACTIVE) &&
+          (preset->right_bud_charge_status == BATTERY_PRESET_CHARGE_ACTIVE))
+      {
+        // todo: LED display preset charge completes lighting effect.
+      }
     }
 }
 
