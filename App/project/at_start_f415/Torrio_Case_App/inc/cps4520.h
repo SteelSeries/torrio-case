@@ -8,35 +8,38 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
+#define CPS4520_I2C_SLAVE_ADDRESS (0x30 << 1)  // 7-bit address shifted for R/W bit
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
 typedef struct
 {
-    gpio_type *i2c1_sda_gpio_port;
-    gpio_type *i2c1_scl_gpio_port;
+    gpio_type *cps4520_detect_gpio_port;
+    uint32_t cps4520_detect_gpio_pin;
+    crm_periph_clock_type cps4520_detect_gpio_crm_clk;
 
-    uint32_t i2c1_sda_gpio_pin;
-    uint32_t i2c1_scl_gpio_pin;
+    gpio_type *cps4520_int_gpio_port;
+    uint32_t cps4520_int_gpio_pin;
+    crm_periph_clock_type cps4520_int_gpio_crm_clk;
+} Cps4520_HardwareSettings_t;
 
-    crm_periph_clock_type i2c1_sda_gpio_crm_clk;
-    crm_periph_clock_type i2c1_scl_gpio_crm_clk;
+typedef enum
+{
+    CPS4520_NON_DETECT = 0,
+    CPS4520_DETECT,
+    CPS4520_UNKNOW
+} Cps4520_DetectConnectState_t;
 
-    i2c_type *i2c1_port;
-    crm_periph_clock_type i2c1_crm_clk;
-    uint32_t i2c1_speed;
-
-} I2c1_HardwareSettings_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
-extern i2c_handle_type hi2cx;
 
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void I2c1_GpioConfigHardware(const I2c1_HardwareSettings_t *hardware_settings);
-I2c1_HardwareSettings_t const *I2c1_setting(void);
-i2c_status_type I2c1_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff);
-i2c_status_type I2c1_WriteReg(uint16_t address, uint8_t reg, uint8_t data);
+void Cps4520_GpioConfigHardware(const Cps4520_HardwareSettings_t *hardware_settings);
+void Cps4520_DetectStatusCheckTask(void);
+void Cps4520_InitReg(void);
+Cps4520_DetectConnectState_t Cps4520_GetDetectState(void);
+

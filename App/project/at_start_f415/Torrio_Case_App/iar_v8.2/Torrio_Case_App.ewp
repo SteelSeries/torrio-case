@@ -1341,7 +1341,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>11111110</state>
+                    <state>10010100</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -1424,7 +1424,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>3</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -1433,7 +1433,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>3</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCPosIndRopi</name>
@@ -2266,10 +2266,19 @@
             <name>$PROJ_DIR$\..\src\Commands.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\src\cps4520.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\src\file_system.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\i2c1.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c2.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c_comm.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\init_pinout.c</name>
@@ -2285,9 +2294,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\power_control.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\qi.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\sy8809.c</name>

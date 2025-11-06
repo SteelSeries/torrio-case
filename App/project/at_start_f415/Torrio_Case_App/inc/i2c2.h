@@ -14,26 +14,29 @@
  *************************************************************************************************/
 typedef struct
 {
-    gpio_type *qi_gpio_port;
-    uint32_t qi_gpio_pin;
-    crm_periph_clock_type qi_gpio_crm_clk;
-} Qi_HardwareSettings_t;
+    gpio_type *i2c2_sda_gpio_port;
+    gpio_type *i2c2_scl_gpio_port;
 
-typedef enum
-{
-    QI_NON_DETECT = 0,
-    QI_DETECT,
-    QI_UNKNOW
-} Qi_DetectConnectState_t;
+    uint32_t i2c2_sda_gpio_pin;
+    uint32_t i2c2_scl_gpio_pin;
 
+    crm_periph_clock_type i2c2_sda_gpio_crm_clk;
+    crm_periph_clock_type i2c2_scl_gpio_crm_clk;
+
+    i2c_type *i2c2_port;
+    crm_periph_clock_type i2c2_crm_clk;
+    uint32_t i2c2_speed;
+
+} I2c2_HardwareSettings_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
+extern i2c_handle_type hi2c2x;
 
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Qi_GpioConfigHardware(const Qi_HardwareSettings_t *hardware_settings);
-void Qi_StatusCheckTask(void);
-Qi_DetectConnectState_t Qi_GetDetectState(void);
-
+void I2c2_GpioConfigHardware(const I2c2_HardwareSettings_t *hardware_settings);
+I2c2_HardwareSettings_t const *I2c2_setting(void);
+i2c_status_type I2c2_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff);
+i2c_status_type I2c2_WriteReg(uint16_t address, uint8_t reg, uint8_t data);

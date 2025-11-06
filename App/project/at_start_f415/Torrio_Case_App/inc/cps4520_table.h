@@ -8,35 +8,83 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
+#define CPS4520_REG_TABLE_LEN 3
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
-typedef struct
+typedef enum
 {
-    gpio_type *i2c1_sda_gpio_port;
-    gpio_type *i2c1_scl_gpio_port;
+    CPS4520_REG_0x0D = 0x0D,
+    CPS4520_REG_0x0E,
+    CPS4520_REG_0x10 = 0x10,
+    CPS4520_REG_0x11,
+    CPS4520_REG_0x12,
+    CPS4520_REG_0x13,
+    CPS4520_REG_0x14,
+    CPS4520_REG_0x15,
+    CPS4520_REG_0x16,
+    CPS4520_REG_0x17,
+    CPS4520_REG_0x18,
+    CPS4520_REG_0x19,
+    CPS4520_REG_0x1A,
+    CPS4520_REG_0x1B,
+    CPS4520_REG_0x1C,
+    CPS4520_REG_0x1D,
+    CPS4520_REG_0x1E,
+    CPS4520_REG_0x1F,
+    CPS4520_REG_0x20 = 0x20,
+    CPS4520_REG_0x21,
+    CPS4520_REG_0x22,
+    CPS4520_REG_0x23,
+    CPS4520_REG_0x24,
+    CPS4520_REG_0x25,
+    CPS4520_REG_0x26,
+    CPS4520_REG_0x27,
+    CPS4520_REG_0x28,
+    CPS4520_REG_0x29,
+    CPS4520_REG_0x2A,
+    CPS4520_REG_0x2B,
+    CPS4520_REG_0x2C,
+    CPS4520_REG_0x2D,
+    CPS4520_REG_0x2E,
+    CPS4520_REG_0x2F,
+    CPS4520_REG_0x30 = 0x30,
+    CPS4520_REG_0x31,
+    CPS4520_REG_0x32,
+    CPS4520_REG_0x33,
+    CPS4520_REG_0x34,
+    CPS4520_REG_0x35,
+    CPS4520_REG_0x36,
+    CPS4520_REG_0x37,
+    CPS4520_REG_0x38,
+    CPS4520_REG_0x39,
+    CPS4520_REG_0x3A,
+    CPS4520_REG_0x3B,
+    CPS4520_REG_0x3C,
+    CPS4520_REG_0x3D,
+    CPS4520_REG_0x3E,
+    CPS4520_REG_0x3F,
+    CPS4520_REG_0x40 = 0x40,
+    CPS4520_REG_0x41,
+    CPS4520_REG_0x42,
+    CPS4520_REG_0x45 = 0x45,
+    CPS4520_REG_0x47 = 0x47,
+    CPS4520_REG_0x48,
+    CPS4520_REG_0x49,
+    CPS4520_REG_0x4A,
+    CPS4520_REG_0x5C = 0x5C,
+    CPS4520_REG_0x61 = 0x61,
+    CPS4520_REG_0x62 = 0x62,
+    CPS4520_REG_0x63 = 0x63
+} CPS4520_Reg_t;
 
-    uint32_t i2c1_sda_gpio_pin;
-    uint32_t i2c1_scl_gpio_pin;
 
-    crm_periph_clock_type i2c1_sda_gpio_crm_clk;
-    crm_periph_clock_type i2c1_scl_gpio_crm_clk;
 
-    i2c_type *i2c1_port;
-    crm_periph_clock_type i2c1_crm_clk;
-    uint32_t i2c1_speed;
-
-} I2c1_HardwareSettings_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
-extern i2c_handle_type hi2cx;
 
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void I2c1_GpioConfigHardware(const I2c1_HardwareSettings_t *hardware_settings);
-I2c1_HardwareSettings_t const *I2c1_setting(void);
-i2c_status_type I2c1_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff);
-i2c_status_type I2c1_WriteReg(uint16_t address, uint8_t reg, uint8_t data);

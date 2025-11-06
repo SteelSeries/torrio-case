@@ -1,79 +1,89 @@
 /*************************************************************************************************
  *                                         INCLUDES                                              *
  *************************************************************************************************/
-#include "qi.h"
-#include "usb.h"
-#include "task_scheduler.h"
-#include "system_state_manager.h"
-#include "Commands.h"
+#include "i2c2.h"
+#include "cps4520.h"
+#include "pinout.h"
 #include <string.h>
-#include "custom_hid_class.h"
-
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
+#define I2C_TIMEOUT 0xFFFFFFFF
+
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
-static Qi_HardwareSettings_t user_hardware_settings = {0};
-static Qi_DetectConnectState_t qi_state = QI_UNKNOW;
-static Qi_DetectConnectState_t pre_qi_state = QI_UNKNOW;
+static I2c2_HardwareSettings_t user_hardware_settings = {0};
+i2c_handle_type hi2c2x = {0};
+static const I2c2_HardwareSettings_t i2c2_config =
+    {
+        .i2c2_sda_gpio_port = I2C2_SDA_GPIO_PORT,
+        .i2c2_sda_gpio_pin = I2C2_SDA_PIN,
+        .i2c2_sda_gpio_crm_clk = I2C2_SDA_GPIO_CLK,
+
+        .i2c2_scl_gpio_port = I2C2_SCL_GPIO_PORT,
+        .i2c2_scl_gpio_pin = I2C2_SCL_PIN,
+        .i2c2_scl_gpio_crm_clk = I2C2_SCL_GPIO_CLK,
+
+        .i2c2_port = I2C2_PORT,
+        .i2c2_crm_clk = I2C2_CLK,
+
+        .i2c2_speed = I2C2_SPEED,
+};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-void Qi_GpioConfigHardware(const Qi_HardwareSettings_t *hardware_settings)
+void I2c2_GpioConfigHardware(const I2c2_HardwareSettings_t *hardware_settings)
 {
-  gpio_init_type gpio_init_struct;
-  memcpy(&user_hardware_settings, hardware_settings, sizeof(Qi_HardwareSettings_t));
-
-  crm_periph_clock_enable(user_hardware_settings.qi_gpio_crm_clk, TRUE);
-
-  gpio_default_para_init(&gpio_init_struct);
-
-  gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
-  gpio_init_struct.gpio_pins = user_hardware_settings.qi_gpio_pin;
-  gpio_init_struct.gpio_pull = GPIO_PULL_DOWN;
-  gpio_init(user_hardware_settings.qi_gpio_port, &gpio_init_struct);
+    memcpy(&user_hardware_settings, hardware_settings, sizeof(I2c2_HardwareSettings_t));
+    hi2c2x.i2cx = user_hardware_settings.i2c2_port;
+    i2c_config(&hi2c2x);
 }
 
-void Qi_StatusCheckTask(void)
+I2c2_HardwareSettings_t const *I2c2_setting(void)
 {
-  static bool is_debounce_check = false;
-  qi_state = (Qi_DetectConnectState_t)gpio_input_data_bit_read(user_hardware_settings.qi_gpio_port, user_hardware_settings.qi_gpio_pin);
+    return &i2c2_config;
+}
 
-  if (is_debounce_check == false)
-  {
-    if (qi_state != pre_qi_state)
+i2c_status_type I2c2_ReadReg(uint16_t address, uint8_t reg, uint8_t *i2c_rx_buff)
+{
+    i2c_status_type i2c_status;
+    uint8_t reg_tx_buff[] = {reg};
+    /* start the request reception process */
+    if ((i2c_status = i2c_master_transmit(&hi2c2x, address, reg_tx_buff, sizeof(reg_tx_buff), I2C_TIMEOUT)) != I2C_OK)
     {
-      is_debounce_check = true;
+        return i2c_status;
     }
-  }
-  else
-  {
-    if (qi_state != pre_qi_state)
+
+    /* start the request reception process */
+    if ((i2c_status = i2c_master_receive(&hi2c2x, address, i2c_rx_buff, sizeof(i2c_rx_buff), I2C_TIMEOUT)) != I2C_OK)
     {
-      pre_qi_state = qi_state;
-      DEBUG_PRINT("Qi state changed to: %s\n", qi_state == QI_DETECT ? "DETECT" : "NON_DETECT");
+        return i2c_status;
     }
-    is_debounce_check = false;
-  }
+
+    return i2c_status;
 }
 
-Qi_DetectConnectState_t Qi_GetDetectState(void)
+i2c_status_type I2c2_WriteReg(uint16_t address, uint8_t reg, uint8_t data)
 {
-  return pre_qi_state;
+    i2c_status_type i2c_status;
+    uint8_t reg_tx_buff[] = {reg, data};
+    /* start the request reception process */
+    if ((i2c_status = i2c_master_transmit(&hi2c2x, address, reg_tx_buff, sizeof(reg_tx_buff), I2C_TIMEOUT)) != I2C_OK)
+    {
+        return i2c_status;
+    }
+    return i2c_status;
 }
-
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/

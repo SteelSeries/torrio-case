@@ -5,8 +5,9 @@
 #include "pinout.h"
 #include "lid.h"
 #include "i2c1.h"
+#include "i2c2.h"
 #include "usb.h"
-#include "qi.h"
+#include "cps4520.h"
 #include "sy8809.h"
 #include "adc.h"
 #include "lighting.h"
@@ -38,11 +39,15 @@ static const Button_HardwareSettings_t button_config =
         .button_gpio_crm_clk = BUTTON_CRM_CLK,
 };
 
-static const Qi_HardwareSettings_t qi_config =
+static const Cps4520_HardwareSettings_t CPS4520_config =
     {
-        .qi_gpio_port = QI_CHARGE_DETECT_GPIO,
-        .qi_gpio_pin = QI_CHARGE_DETECT_PIN,
-        .qi_gpio_crm_clk = QI_CHARGE_DETECT_CRM_CLK,
+        .cps4520_detect_gpio_port = CPS4520_CHARGE_DETECT_GPIO,
+        .cps4520_detect_gpio_pin = CPS4520_CHARGE_DETECT_PIN,
+        .cps4520_detect_gpio_crm_clk = CPS4520_CHARGE_DETECT_CRM_CLK,
+
+        .cps4520_int_gpio_port = CPS4520_CHARGE_INT_GPIO,
+        .cps4520_int_gpio_pin = CPS4520_CHARGE_INT_PIN,
+        .cps4520_int_gpio_crm_clk = CPS4520_CHARGE_INT_CRM_CLK,
 };
 
 static const I2c1_HardwareSettings_t i2c1_config =
@@ -59,6 +64,22 @@ static const I2c1_HardwareSettings_t i2c1_config =
         .i2c1_crm_clk = I2C1_CLK,
 
         .i2c1_speed = I2C1_SPEED,
+};
+
+static const I2c2_HardwareSettings_t i2c2_config =
+    {
+        .i2c2_sda_gpio_port = I2C2_SDA_GPIO_PORT,
+        .i2c2_sda_gpio_pin = I2C2_SDA_PIN,
+        .i2c2_sda_gpio_crm_clk = I2C2_SDA_GPIO_CLK,
+
+        .i2c2_scl_gpio_port = I2C2_SCL_GPIO_PORT,
+        .i2c2_scl_gpio_pin = I2C2_SCL_PIN,
+        .i2c2_scl_gpio_crm_clk = I2C2_SCL_GPIO_CLK,
+
+        .i2c2_port = I2C2_PORT,
+        .i2c2_crm_clk = I2C2_CLK,
+
+        .i2c2_speed = I2C2_SPEED,
 };
 
 static const Sy8809_HardwareSettings_t sy8809_config =
@@ -149,8 +170,9 @@ void InitPinout_Init(void)
     Adc_GpioConfigHardware(&adc_config);
     Lighting_GpioConfigHardware(&pwm_config);
 	Button_GpioConfigHardware(&button_config);
-    Qi_GpioConfigHardware(&qi_config);
+    Cps4520_GpioConfigHardware(&CPS4520_config);
     UartDrive_GpioConfigHardware(&buds_uart_config);
+    I2c2_GpioConfigHardware(&i2c2_config);
 
     /*===========DEBUG PIN================*/
     gpio_init_type gpio_initstructure;

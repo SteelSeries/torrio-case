@@ -69,9 +69,13 @@
 #define OPEN_LID_MOS_SWITCH_CRM_CLK         CRM_GPIOC_PERIPH_CLOCK      // PC2
 #endif
 
-#define QI_CHARGE_DETECT_PIN                GPIO_PINS_13                // PB13
-#define QI_CHARGE_DETECT_GPIO               GPIOB                       // PB13
-#define QI_CHARGE_DETECT_CRM_CLK            CRM_GPIOB_PERIPH_CLOCK      // PB13
+#define CPS4520_CHARGE_DETECT_PIN           GPIO_PINS_13                // PB13
+#define CPS4520_CHARGE_DETECT_GPIO          GPIOB                       // PB13
+#define CPS4520_CHARGE_DETECT_CRM_CLK       CRM_GPIOB_PERIPH_CLOCK      // PB13
+
+#define CPS4520_CHARGE_INT_PIN              GPIO_PINS_5                 // PB5
+#define CPS4520_CHARGE_INT_GPIO             GPIOB                       // PB5
+#define CPS4520_CHARGE_INT_CRM_CLK          CRM_GPIOB_PERIPH_CLOCK      // PB5
 
 #define I2C1_SCL_PIN                        GPIO_PINS_6                 // PB6
 #define I2C1_SCL_GPIO_PORT                  GPIOB                       // PB6
@@ -80,6 +84,14 @@
 #define I2C1_SDA_PIN                        GPIO_PINS_7                 // PB7
 #define I2C1_SDA_GPIO_PORT                  GPIOB                       // PB7
 #define I2C1_SDA_GPIO_CLK                   CRM_GPIOB_PERIPH_CLOCK      // PB7
+
+#define I2C2_SCL_PIN                        GPIO_PINS_6                 // PF6
+#define I2C2_SCL_GPIO_PORT                  GPIOF                       // PF6
+#define I2C2_SCL_GPIO_CLK                   CRM_GPIOF_PERIPH_CLOCK      // PF6
+
+#define I2C2_SDA_PIN                        GPIO_PINS_7                 // PF7
+#define I2C2_SDA_GPIO_PORT                  GPIOF                       // PF7
+#define I2C2_SDA_GPIO_CLK                   CRM_GPIOF_PERIPH_CLOCK      // PF7
 
 #define PWM_R_PIN                           GPIO_PINS_6                 // PA6
 #define PWM_R_GPIO_PORT                     GPIOA                       // PA6
@@ -97,6 +109,11 @@
 #define I2C1_CLK                            CRM_I2C1_PERIPH_CLOCK
 
 #define I2C1_SPEED                          100000
+
+#define I2C2_PORT                           I2C2
+#define I2C2_CLK                            CRM_I2C2_PERIPH_CLOCK
+
+#define I2C2_SPEED                          100000
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *

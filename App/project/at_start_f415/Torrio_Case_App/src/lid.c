@@ -6,7 +6,7 @@
 #include "system_state_manager.h"
 #include "task_scheduler.h"
 #include "usb.h"
-#include "qi.h"
+#include "cps4520.h"
 #include "lighting.h"
 #include <string.h>
 
@@ -95,7 +95,7 @@ void Lid_StatusCheckTask(void)
   }
   if (pre_lid_state == LID_CLOSE)
   {
-    if (((Usb_FirstSetupUsbState() == USB_UNPLUG) && (Qi_GetDetectState() == QI_NON_DETECT)) && (Lighting_LidOffHandle() == LIGHTING_LID_COMPLETE))
+    if (((Usb_FirstSetupUsbState() == USB_UNPLUG) && (Cps4520_GetDetectState() == CPS4520_NON_DETECT)) && (Lighting_LidOffHandle() == LIGHTING_LID_COMPLETE))
     {
       if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
       {
