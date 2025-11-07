@@ -79,6 +79,7 @@ int main(void)
   DEBUG_PRINT("Color              : %02X\n", data->color);
   DEBUG_PRINT("Shipping Flag      : %02X\n", data->shipping_flag);
   DEBUG_PRINT("Dual Image CopyFlg : %02X\n", data->dual_image_copy_flag);
+  DEBUG_PRINT("Preset Charge State: 0x%02X\n", data->presetChargeState);
 
   DEBUG_PRINT("Serial Number      : ");
   for (uint8_t i = 0; i < sizeof(data->serial_number); i++)

@@ -77,6 +77,14 @@ void FileSystem_CheckImageCopyFlag(void)
     }
 }
 
+void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeMode_t state)
+{
+    FileSystem_UserDataUpdate_t update = {0};
+    update.field_mask = UPDATE_FIELD_PRESET_CHARGE;
+    update.presetChargeState = (uint8_t)state;
+    UpdateUserData(&update);
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -113,6 +121,11 @@ static void UpdateUserData(const FileSystem_UserDataUpdate_t *update)
     if (update->field_mask & UPDATE_FIELD_SERIAL_NUMBER)
     {
         memcpy(user_data_ram.serial_number, update->serial_number, sizeof(user_data_ram.serial_number));
+    }
+
+    if (update->field_mask & UPDATE_FIELD_PRESET_CHARGE)
+    {
+        user_data_ram.presetChargeState = update->presetChargeState;
     }
 
     EraseFlashRegion(USER_DATA_START_ADDRESS, USER_DATA_END_ADDRESS);

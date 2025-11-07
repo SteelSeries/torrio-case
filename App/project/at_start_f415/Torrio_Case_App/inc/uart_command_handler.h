@@ -19,6 +19,7 @@
 #define BUD_CMD_SERIAL_NUMBER           0x12U
 #define BUD_CMD_BUD_STATE               0x7BU
 #define BUD_CMD_BATTERY_STATE           0x65U
+#define BUD_CMD_CHARGE_SETING           0x67U
 // clang-format on
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *

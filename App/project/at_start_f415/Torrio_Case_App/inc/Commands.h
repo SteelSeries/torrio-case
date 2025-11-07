@@ -37,6 +37,7 @@
 #define FAC_READ_BUDS_DEBUG 		0x75 // factory settings
 #define FAC_ENTER_MODE       		0x7C // factory settings
 #define FAC_ENTER_KEY       		0xFCAA55 // factory key
+#define FAC_PRESET_CHARGE     		0x76 // factory settings
 
 // factory settings
 #define FAC_SERIAL_OP 0x13           // factory settings

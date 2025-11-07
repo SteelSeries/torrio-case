@@ -21,7 +21,8 @@
 //  0x0800 3802 - 0x0800 3802 : Flash 1(user data)(shipping flag)
 //  0x0800 3803 - 0x0800 3803 : Flash 1(user data)(dual Image Copy Flag)
 //  0x0800 3804 - 0x0800 3817 : Flash 19(user data)(SN)
-//  0x0800 3818 - 0x0800 3FFF : Flash (user data)(Not used yet)
+//  0x0800 3818 - 0x0800 3818 : Flash 1(user data)(presetChargeState)
+//  0x0800 3819 - 0x0800 3FFF : Flash (user data)(Not used yet)
 //  0x0800 4000 - 0x0801 1FFF : App code(56K)
 //  0x0801 2000 - 0x0801 FFFF : Dual img code(56K)
 
@@ -38,11 +39,12 @@ typedef enum
 
 typedef struct __attribute__((packed))
 {
-    uint8_t model;                // 0x08003800
-    uint8_t color;                // 0x08003801
-    uint8_t shipping_flag;        // 0x08003802
-    uint8_t dual_image_copy_flag; // 0x08003803
-    uint8_t serial_number[CASE_SN_DATA_LEN];    // 0x08003804 ~ 0x08003817
+    uint8_t model;                           // 0x08003800
+    uint8_t color;                           // 0x08003801
+    uint8_t shipping_flag;                   // 0x08003802
+    uint8_t dual_image_copy_flag;            // 0x08003803
+    uint8_t serial_number[CASE_SN_DATA_LEN]; // 0x08003804 ~ 0x08003817
+    uint8_t presetChargeState;               // 0x08003818
     uint8_t reserved;
 } FileSystem_UserData_t;
 
@@ -54,7 +56,14 @@ typedef enum
     UPDATE_FIELD_SHIPPING_FLAG = 0x04,
     UPDATE_FIELD_DUAL_IMAGE_FLAG = 0x08,
     UPDATE_FIELD_SERIAL_NUMBER = 0x10,
+    UPDATE_FIELD_PRESET_CHARGE = 0x20,
 } FileSystem_UserDataUpdateField_t;
+
+typedef enum
+{
+    PRESET_CHARGE_ACTIVE = 0xAA,
+    PRESET_CHARGE_EXIT = 0xEE
+} FileSystem_PresetChargeMode_t;
 
 typedef struct
 {
@@ -64,6 +73,7 @@ typedef struct
     uint8_t shipping_flag;
     uint8_t dual_image_copy_flag;
     uint8_t serial_number[CASE_SN_DATA_LEN];
+    uint8_t presetChargeState;
     uint8_t reserved;
 } FileSystem_UserDataUpdate_t;
 /*************************************************************************************************
@@ -78,3 +88,4 @@ void FileSystem_UpdateSerialNumber(const uint8_t *new_serial);
 void FileSystem_UpdateColorSpinAndModel(const uint8_t model_value, const uint8_t color_value);
 void FileSystem_MarkDualImageReadyToMigrate(void);
 void FileSystem_CheckImageCopyFlag(void);
+void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeMode_t state);
