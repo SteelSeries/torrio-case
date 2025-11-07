@@ -31,6 +31,13 @@ typedef enum
     CPS4520_UNKNOW
 } Cps4520_DetectConnectState_t;
 
+typedef enum
+{
+    CPS4520_NON_INT = 0,
+    CPS4520_INT_COMPELETE,
+    CPS4520_INT_CORRECT
+} Cps4520_IntRegState_t;
+
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -40,6 +47,7 @@ typedef enum
  *************************************************************************************************/
 void Cps4520_GpioConfigHardware(const Cps4520_HardwareSettings_t *hardware_settings);
 void Cps4520_DetectStatusCheckTask(void);
-void Cps4520_InitReg(void);
+void Cps4520_RegCheckTask(void);
 Cps4520_DetectConnectState_t Cps4520_GetDetectState(void);
+void Cps4520_SettingRegTableInit(void);
 

@@ -23,7 +23,7 @@
  *************************************************************************************************/
 static const I2c1_HardwareSettings_t *i2c1_hardware_settings; 
 static const I2c2_HardwareSettings_t *i2c2_hardware_settings; 
-i2c_handle_type hi2cs = {0};
+static i2c_handle_type hi2cs = {0};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
