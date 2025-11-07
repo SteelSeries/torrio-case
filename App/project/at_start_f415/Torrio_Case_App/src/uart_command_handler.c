@@ -304,7 +304,9 @@ static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA
         return COMMAND_STATUS_SUCCESS;
     }
 
-    if (ctx->mode == UART_BUDS_WORK_MODE_APP)
+    switch (ctx->mode)
+    {
+    case UART_BUDS_WORK_MODE_APP:
     {
         {
             uint8_t payload[] = {BUD_CMD_FW_VERSION, 0};
@@ -331,7 +333,19 @@ static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA
             UartInterface_SendBudCommand(target, BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
         UartDrive_SendDeepPowerOffToPair(target);
+        break;
     }
+
+    case UART_BUDS_WORK_MODE_BOOTLOADER:
+    {
+        {
+            uint8_t payload[] = {BUD_CMD_FW_VERSION, 0};
+            UartInterface_SendBudCommand(target, BUD_CMD_FW_VERSION, payload, sizeof(payload), 1000);
+        }
+        break;
+    }
+    }
+
     return COMMAND_STATUS_SUCCESS;
 }
 
