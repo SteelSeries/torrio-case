@@ -5,6 +5,7 @@
  *************************************************************************************************/
 #include "at32f415_board.h"
 #include "uart_comm_manager.h"
+#include "uart_interface.h"
 
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
@@ -54,3 +55,5 @@ void UartDrive_SendData(UART_CommContext_t *ctx);
 void UartDrive_RxIrqHandler(UART_CommContext_t *ctx, uint8_t data);
 void UartDrive_BudsConnectCheckTask(void);
 void UartDrive_BudsCtxInit(void);
+void UartDrive_SendDeepPowerOffToPair(UartInterface_Port_t target);
+

@@ -6,10 +6,10 @@
 #include "Commands.h"
 #include "custom_hid_class.h"
 #include "usb.h"
-#include "uart_interface.h"
 #include <string.h>
 #include "battery.h"
 #include "file_system.h"
+#include "uart_driver.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -327,13 +327,10 @@ static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA
             UartInterface_SendBudCommand(target, BUD_CMD_BUD_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
         {
-            uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
-            UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
-        }
-        {
             uint8_t payload[] = {BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG};
             UartInterface_SendBudCommand(target, BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
+        UartDrive_SendDeepPowerOffToPair(target);
     }
     return COMMAND_STATUS_SUCCESS;
 }
