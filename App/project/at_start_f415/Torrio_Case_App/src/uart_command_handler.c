@@ -84,6 +84,7 @@ static const cmd_handler_t handler_table[] =
         {.op = BUD_CMD_SERIAL_NUMBER,           .read = HandleNoop,                         .write = ReadBudsSerialNumber,              .timeout = TimeoutHandleNoop},
         {.op = BUD_CMD_BATTERY_STATE,           .read = ReadBudsBatteryStatus,              .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         {.op = BUD_CMD_CHARGE_SETING,           .read = FactorySetBatteryChargeStatus,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_SYNC_CASE_LID_STATE,     .read = HandleNoop,                         .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
     };
 // clang-format on
 

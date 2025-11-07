@@ -46,6 +46,7 @@ static void InitOneWriteReceive(const UartHardwareConfig_t *config);
 static void CheckBudConnection(UART_CommContext_t *ctx);
 static void SendInitCommand(UartInterface_Port_t target);
 static void SendDeepPowerOffToPair(UartInterface_Port_t target);
+static void SendLidStateToPair(UartInterface_Port_t target);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -363,6 +364,7 @@ static void CheckBudConnection(UART_CommContext_t *ctx)
                 {
                     ctx->Connect = UART_BUDS_CONNT_DISCONNECT;
                     UartCommManager_DisconnectReinit(ctx);
+                    SendLidStateToPair(side);
                     DEBUG_PRINT("disconnected\n");
                 }
                 else
@@ -413,5 +415,21 @@ static void SendDeepPowerOffToPair(UartInterface_Port_t target)
     {
         uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
         UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+    }
+}
+
+static void SendLidStateToPair(UartInterface_Port_t target)
+{
+    if (target == UART_INTERFACE_BUD_LEFT &&
+        user_right_bud_ctx->Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        uint8_t payload[] = {BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG};
+        UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+    }
+    else if (target == UART_INTERFACE_BUD_RIGHT &&
+             user_left_bud_ctx->Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        uint8_t payload[] = {BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG};
+        UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
     }
 }
