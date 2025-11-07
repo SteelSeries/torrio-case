@@ -7,6 +7,7 @@
 #include "usb.h"
 #include "uart_command_handler.h"
 #include "Commands.h"
+#include "lid.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -423,13 +424,13 @@ static void SendLidStateToPair(UartInterface_Port_t target)
     if (target == UART_INTERFACE_BUD_LEFT &&
         user_right_bud_ctx->Connect == UART_BUDS_CONNT_CONNECT)
     {
-        uint8_t payload[] = {BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG};
+        uint8_t payload[] = {BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, (uint8_t)Lid_GetState()};
         UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
     }
     else if (target == UART_INTERFACE_BUD_RIGHT &&
              user_left_bud_ctx->Connect == UART_BUDS_CONNT_CONNECT)
     {
-        uint8_t payload[] = {BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG};
+        uint8_t payload[] = {BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, (uint8_t)Lid_GetState()};
         UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
     }
 }
