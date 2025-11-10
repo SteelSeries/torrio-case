@@ -36,7 +36,9 @@ int main(void)
 
   at32_board_init();
 
-  Bootloader_BackDoorGpioInit();
+  Bootloader_BackDoorHallGpioInit();
+
+  Bootloader_UsbConnectGpioInit();
 
   DEBUG_PRINT("\n\n\nBootloader start!!!\n");
 

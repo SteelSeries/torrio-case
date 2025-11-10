@@ -10,6 +10,14 @@
  *************************************************************************************************/
 #define IN_MAXPACKET_SIZE 1024
 #define NULL_FLASH_DATA 0xFFFFFFFF
+
+#define USB_DET_PIN GPIO_PINS_3                // PC3
+#define USB_DET_GPIO GPIOC                     // PC3
+#define USB_DET_CRM_CLK CRM_GPIOC_PERIPH_CLOCK // PC3
+
+#define HALL_OUT_PIN GPIO_PINS_1                // PB1
+#define HALL_OUT_GPIO GPIOB                     // PB1
+#define HALL_OUT_CRM_CLK CRM_GPIOB_PERIPH_CLOCK // PB1
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -43,12 +51,12 @@ static void ClearCrc32Calculate(void);
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
-void Bootloader_BackDoorGpioInit(void)
+void Bootloader_BackDoorHallGpioInit(void)
 {
     gpio_init_type gpio_init_struct;
 
     /* enable the button clock */
-    crm_periph_clock_enable(CRM_GPIOC_PERIPH_CLOCK, TRUE);
+    crm_periph_clock_enable(HALL_OUT_CRM_CLK, TRUE);
 
     /* set default parameter */
     gpio_default_para_init(&gpio_init_struct);
@@ -59,8 +67,28 @@ void Bootloader_BackDoorGpioInit(void)
     gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
     gpio_init_struct.gpio_pull = GPIO_PULL_UP;
 
-    gpio_init_struct.gpio_pins = GPIO_PINS_10;
-    gpio_init(GPIOC, &gpio_init_struct);
+    gpio_init_struct.gpio_pins = HALL_OUT_PIN;
+    gpio_init(HALL_OUT_GPIO, &gpio_init_struct);
+}
+
+void Bootloader_UsbConnectGpioInit(void)
+{
+    gpio_init_type gpio_init_struct;
+
+    /* enable the button clock */
+    crm_periph_clock_enable(USB_DET_CRM_CLK, TRUE);
+
+    /* set default parameter */
+    gpio_default_para_init(&gpio_init_struct);
+
+    /* configure button pin as input with pull-up/pull-down */
+    gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_OPEN_DRAIN;
+    gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
+    gpio_init_struct.gpio_pull = GPIO_PULL_UP;
+
+    gpio_init_struct.gpio_pins = USB_DET_PIN;
+    gpio_init(USB_DET_GPIO, &gpio_init_struct);
 }
 
 error_status Bootloader_FlashErase(void)
@@ -215,15 +243,64 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
 }
 #endif
 
+/**
+ * @brief  Check Hall sensor (lid open/close) behavior when USB is detected.
+ *         - Hall output SET  : Lid is OPEN
+ *         - Hall output RESET: Lid is CLOSED
+ *
+ *         The function ensures that when USB is connected, the lid transitions
+ *         from OPEN ¡÷ CLOSED ¡÷ OPEN within a certain time.
+ *
+ * @return true  : Lid closed and reopened within allowed time (normal behavior)
+ * @return false : USB not detected, or timeout, or abnormal lid state change
+ */
 bool Bootloader_CheckBackDoor(void)
 {
-    if (gpio_input_data_bit_read(GPIOC, GPIO_PINS_10) == RESET)
+    // Step 1: Check USB connection
+    if (gpio_input_data_bit_read(USB_DET_GPIO, USB_DET_PIN) != SET)
     {
-        DEBUG_PRINT("enter\n");
-        return true;
+        return false;
     }
-    // todo: check back door state, and change GPIO to PC15.
-    DEBUG_PRINT("exit\n");
+
+    uint8_t i = 0, j = 0;
+
+    // Step 2: While lid is OPEN (Hall = SET)
+    while (gpio_input_data_bit_read(HALL_OUT_GPIO, HALL_OUT_PIN) == SET)
+    {
+        delay_ms(100);
+        i++;
+
+        // DEBUG_PRINT("Lid on\n");
+
+        // Timeout: lid stayed open too long
+        if (i > 10)
+        {
+            return false;
+        }
+
+        // Step 3: Detect lid closing (RESET)
+        if (gpio_input_data_bit_read(HALL_OUT_GPIO, HALL_OUT_PIN) == RESET)
+        {
+
+            // Inner loop: wait for lid to open again
+            j = 0;
+            while (gpio_input_data_bit_read(HALL_OUT_GPIO, HALL_OUT_PIN) == RESET)
+            {
+                delay_ms(100);
+                j++;
+                // Timeout: lid stayed closed too long
+                if (j > 7)
+                {
+                    return false;
+                }
+            }
+
+            // Step 4: Lid reopened ¡÷ success
+            return true;
+        }
+    }
+
+    // Step 5: Never entered main loop or lid never closed
     return false;
 }
 

@@ -56,7 +56,8 @@ void Bootloader_JumpToApp(void);
 error_status Bootloader_FlashErase(void);
 error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len);
 void Bootloader_CmdCrcCheckHandler(uint8_t *buff);
-void Bootloader_BackDoorGpioInit(void);
+void Bootloader_BackDoorHallGpioInit(void);
+void Bootloader_UsbConnectGpioInit(void);
 #ifndef DEBUG
 error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in);
 #endif
