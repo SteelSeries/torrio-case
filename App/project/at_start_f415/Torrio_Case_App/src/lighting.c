@@ -190,7 +190,12 @@ void Lighting_Handler(uint16_t LightingMode, uint16_t PwmR, uint16_t PwmG, uint1
 void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_settings)
 {
     memcpy(&user_hardware_settings, hardware_settings, sizeof(Lighting_HardwareSettings_t));
-    /*===========Timer3 PIN================*/
+
+    crm_periph_clock_enable(user_hardware_settings.lighting_r_gpio_crm_clk, TRUE);
+    crm_periph_clock_enable(user_hardware_settings.lighting_g_gpio_crm_clk, TRUE);
+    crm_periph_clock_enable(user_hardware_settings.lighting_b_gpio_crm_clk, TRUE);
+
+    /*===========LED PIN================*/
     gpio_init_type gpio_init_struct;
 
     gpio_default_para_init(&gpio_init_struct);
@@ -205,13 +210,9 @@ void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_set
 
     gpio_init_struct.gpio_pins = user_hardware_settings.lighting_g_gpio_pin;
     gpio_init(user_hardware_settings.lighting_g_gpio_port, &gpio_init_struct);
-
+    
     gpio_init_struct.gpio_pins = user_hardware_settings.lighting_b_gpio_pin;
     gpio_init(user_hardware_settings.lighting_b_gpio_port, &gpio_init_struct);
-
-    crm_periph_clock_enable(user_hardware_settings.lighting_r_gpio_crm_clk, TRUE);
-    crm_periph_clock_enable(user_hardware_settings.lighting_g_gpio_crm_clk, TRUE);
-    crm_periph_clock_enable(user_hardware_settings.lighting_b_gpio_crm_clk, TRUE);
 }
 
 /*************************************************************************************************

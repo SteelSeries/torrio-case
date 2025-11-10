@@ -29,6 +29,12 @@ void Timer3_Init(void)
     uint16_t ch3_val = 0U;
     uint16_t div_value = 0;
 
+    crm_clocks_freq_type crm_clocks_freq_struct = {0};
+
+    crm_clocks_freq_get(&crm_clocks_freq_struct);
+
+    crm_periph_clock_enable(CRM_TMR3_PERIPH_CLOCK, TRUE);
+
     /* compute the div value */
     if(system_core_clock > (TIMER3_PWM_FREQUENCY * PWM_SET_LEVEL)) 
     {
