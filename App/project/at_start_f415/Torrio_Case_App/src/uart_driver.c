@@ -3,12 +3,11 @@
  *************************************************************************************************/
 #include "uart_driver.h"
 #include "uart_protocol.h"
-#include "uart_comm_manager.h"
 #include "task_scheduler.h"
-#include "uart_interface.h"
 #include "usb.h"
 #include "uart_command_handler.h"
 #include "Commands.h"
+#include "lid.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -47,6 +46,8 @@ static void InitOneWriteSend(const UartHardwareConfig_t *config);
 static void InitOneWriteReceive(const UartHardwareConfig_t *config);
 static void CheckBudConnection(UART_CommContext_t *ctx);
 static void SendInitCommand(UartInterface_Port_t target);
+static void SendDeepPowerOffToPair(UartInterface_Port_t target);
+static void SendLidStateToPair(UartInterface_Port_t target);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -216,6 +217,11 @@ void UartDrive_BudsConnectCheckTask(void)
     }
 }
 
+void UartDrive_SendDeepPowerOffToPair(UartInterface_Port_t target)
+{
+    SendDeepPowerOffToPair(target);
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -359,6 +365,7 @@ static void CheckBudConnection(UART_CommContext_t *ctx)
                 {
                     ctx->Connect = UART_BUDS_CONNT_DISCONNECT;
                     UartCommManager_DisconnectReinit(ctx);
+                    SendLidStateToPair(side);
                     DEBUG_PRINT("disconnected\n");
                 }
                 else
@@ -389,7 +396,41 @@ static void SendInitCommand(UartInterface_Port_t target)
     }
     else
     {
+        SendDeepPowerOffToPair(target);
+    }
+}
+
+static void SendDeepPowerOffToPair(UartInterface_Port_t target)
+{
+    uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
+    UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+
+    if (target == UART_INTERFACE_BUD_LEFT &&
+        user_right_bud_ctx->Connect == UART_BUDS_CONNT_CONNECT)
+    {
         uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
-        UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+        UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+    }
+    else if (target == UART_INTERFACE_BUD_RIGHT &&
+             user_left_bud_ctx->Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
+        UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+    }
+}
+
+static void SendLidStateToPair(UartInterface_Port_t target)
+{
+    if (target == UART_INTERFACE_BUD_LEFT &&
+        user_right_bud_ctx->Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        uint8_t payload[] = {BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, (uint8_t)Lid_GetState()};
+        UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+    }
+    else if (target == UART_INTERFACE_BUD_RIGHT &&
+             user_left_bud_ctx->Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        uint8_t payload[] = {BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, (uint8_t)Lid_GetState()};
+        UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, BUD_CMD_SYNC_CASE_LID_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
     }
 }

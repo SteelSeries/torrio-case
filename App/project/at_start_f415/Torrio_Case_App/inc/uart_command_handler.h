@@ -20,6 +20,8 @@
 #define BUD_CMD_BUD_STATE               0x7BU
 #define BUD_CMD_BATTERY_STATE           0x65U
 #define BUD_CMD_CHARGE_SETING           0x67U
+#define BUD_CMD_SYNC_CASE_LID_STATE     0x3CU
+
 // clang-format on
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
