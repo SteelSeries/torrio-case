@@ -5,14 +5,20 @@
 #include "sy8809.h"
 #include "sy8809_xsense.h"
 #include "usb.h"
+#include "cps4520.h"
 #include "task_scheduler.h"
+#include "uart_comm_manager.h"
+#include "uart_command_handler.h"
+#include "uart_interface.h"
+#include "Commands.h"
+#include "file_system.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define CASE_MAX_VBAT 4340
 #define CASE_MIN_VBAT 3500
-#define SY8809_0X12_CASE_BATT_CHARGE_COMPLETE 0x03
+#define CASE_PRESET_CHARGE_STOP_VOLTAGE 4250
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -29,26 +35,45 @@ static const uint16_t battery_voltage_table[] = {3510, 3590, 3610, 3630, 3650,
                                                  CASE_MAX_VBAT};
 static uint8_t pre_Case_VBAT_percent = BATTERY_UNKNOWN_LEVEL;
 static uint16_t adc_convert_to_voltage = 0;
-
+static UART_CommContext_t *user_left_bud_ctx = NULL;
+static UART_CommContext_t *user_right_bud_ctx = NULL;
+static Battery_PresetChargeData_t preset_charge_state = {.case_charge_status = BATTERY_PRESET_CHARGE_ACTIVE,
+                                                         .left_bud_charge_status = BATTERY_PRESET_CHARGE_ACTIVE,
+                                                         .right_bud_charge_status = BATTERY_PRESET_CHARGE_ACTIVE};
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
+static void SendBudBatteryCommandIfConnected(UART_CommContext_t *ctx);
+
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+Battery_PresetChargeData_t *Battery_GetPresetChargeState(void)
+{
+    return &preset_charge_state;
+}
+
+void Battery_BudsCtxInit(void)
+{
+    user_left_bud_ctx = UartCommManager_GetLeftBudContext();
+    user_right_bud_ctx = UartCommManager_GetRightBudContext();
+}
+
 void Battery_UpdateStatusTask(void)
 {
     Sy8809Xsense_XsenseRead_t Pending_temp = {0};
     Pending_temp.is_command_read = false;
     Pending_temp.Pending = SY8809_XSENSE_VBAT;
     Sy8809Xsense_SetPendingXsense(Pending_temp);
+    SendBudBatteryCommandIfConnected(user_left_bud_ctx);
+    SendBudBatteryCommandIfConnected(user_right_bud_ctx);
     if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
-        printf("add sy8809 trig xsense conv task fail\n");
+        DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
     }
     if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
     {
-        printf("add battery status update task fail\n");
+        DEBUG_PRINT("add battery status update task fail\n");
     }
 }
 
@@ -67,12 +92,10 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
     Sy8809_ChargeStatus_t *charge_status = (Sy8809_ChargeStatus_t *)Sy8809_GetChargeIcStatusInfo();
     uint16_t Case_VBAT_percent = 0;
     adc_convert_to_voltage = vbat_voltage * 4;
-    printf("battery calculate start\n");
-    printf("Voltage:%d\n", adc_convert_to_voltage);
-    if (((charge_status->check_reg_state.reg_0x12 & SY8809_0X12_CASE_BATT_CHARGE_COMPLETE) == SY8809_0X12_CASE_BATT_CHARGE_COMPLETE) &&
-        (Usb_GetUsbDetectState() == USB_PLUG))
-    // ((Usb_GetUsbDetectState() == USB_PLUG) || (QI_Charge_state == QI_CONTACT)))
-    // todo: check Qi connect status
+    DEBUG_PRINT("battery calculate start\n");
+    DEBUG_PRINT("Voltage:%d\n", adc_convert_to_voltage);
+    if ((charge_status->case_charge_status == SY8809_CASE_CHARGE_STATUS_CHARGE_DONE) &&
+        ((Usb_GetUsbDetectState() == USB_PLUG) || (Cps4520_GetDetectState() == CPS4520_DETECT)))
     {
         Case_VBAT_percent = 100;
         pre_Case_VBAT_percent = Case_VBAT_percent;
@@ -135,8 +158,52 @@ void Battery_UpdateBatteryStatus(uint16_t vbat_voltage)
             }
         }
     }
-    printf("percent:%d\n", pre_Case_VBAT_percent);
+
+    if (FileSystem_GetUserData()->presetChargeState == PRESET_CHARGE_ACTIVE)
+    {
+        DEBUG_PRINT("Preset charge mode is ACTIVE. Current voltage: %d mV\n", adc_convert_to_voltage);
+
+        if (adc_convert_to_voltage >= CASE_PRESET_CHARGE_STOP_VOLTAGE)
+        {
+            preset_charge_state.case_charge_status = BATTERY_PRESET_CHARGE_DONE;
+            DEBUG_PRINT("Voltage reached stop threshold. Marking case charge as DONE.\n");
+        }
+        else
+        {
+            preset_charge_state.case_charge_status = BATTERY_PRESET_CHARGE_ACTIVE;
+            DEBUG_PRINT("Voltage below threshold. Case is still charging (ACTIVE).\n");
+        }
+    }
+    else
+    {
+        DEBUG_PRINT("Preset charge mode is not active.\n");
+    }
+
+    DEBUG_PRINT("percent:%d\n", pre_Case_VBAT_percent);
 }
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static void SendBudBatteryCommandIfConnected(UART_CommContext_t *ctx)
+{
+    UartInterface_Port_t target;
+
+    if (ctx->side == UART_BUD_LEFT)
+    {
+        target = UART_INTERFACE_BUD_LEFT;
+    }
+    else if (ctx->side == UART_BUD_RIGHT)
+    {
+        target = UART_INTERFACE_BUD_RIGHT;
+    }
+    else
+    {
+        return;
+    }
+
+    if (ctx->Connect == UART_BUDS_CONNT_CONNECT)
+    {
+        uint8_t payload[] = {BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG};
+        UartInterface_SendBudCommand(target, BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
+    }
+}

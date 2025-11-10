@@ -6,11 +6,14 @@
 #include "custom_hid_class.h"
 #include "usb.h"
 #include "file_system.h"
+#include "uart_interface.h"
+#include "uart_protocol.h"
 #include <string.h>
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define NULL_FLASH_DATA 0xFFFFFFFF
+#define WRITE_CMD_HEADER_SIZE 9U // Write command header size
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -35,6 +38,7 @@ static uint8_t crc_data[UPDATE_DATA_LEN];
 static uint32_t Crc32Compute(uint8_t const *p_data, uint32_t size, uint32_t const *p_crc);
 static error_status EraseDualImageFlashProcess(void);
 static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len);
+static void ClearCrc32Calculate(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -86,6 +90,7 @@ void AppFwUpdate_CmdWriteFlashHandler(void)
 void AppFwUpdate_CmdCrcCheckHandler(void)
 {
     uint8_t txBuf[10] = {0x00};
+    bool crc_check_flag = false;
     txBuf[0] = FILE_CRC32_OP | COMMAND_READ_FLAG;
     txBuf[1] = FLASH_OPERATION_SUCCESS;
     txBuf[2] = crc_data[gFW_BinLen - 4];
@@ -96,18 +101,46 @@ void AppFwUpdate_CmdCrcCheckHandler(void)
     txBuf[7] = (sum_crc32 >> 8);
     txBuf[8] = (sum_crc32 >> 16);
     txBuf[9] = (sum_crc32 >> 24);
+
     for (uint8_t i = 2; i < 6; i++)
     {
         if (txBuf[i] != txBuf[i + 4])
         {
-            printf("CRC check fail\n");
+            DEBUG_PRINT("CRC check fail\n");
             EraseDualImageFlashProcess();
+            crc_check_flag = true;
+            break;
         }
     }
-    FileSystem_MarkDualImageReadyToMigrate();
+    if (crc_check_flag == false)
+    {
+        FileSystem_MarkDualImageReadyToMigrate();
+    }
     custom_hid_class_send_report(&otg_core_struct.dev, txBuf, sizeof(txBuf));
 }
 
+void AppFwUpdate_LeftBudWriteFlashTask(void)
+{
+    uint16_t BinLen = user_usb_receive_data[3] | (user_usb_receive_data[4] << 8);
+
+    UartInterface_SendDirect(UART_INTERFACE_BUD_LEFT,
+                             user_usb_receive_data,
+                             BinLen + WRITE_CMD_HEADER_SIZE,
+                             CMD_ONE_WIRE_UART_DATA,
+                             5000,
+                             FILE_ACCESS_OP);
+}
+
+void AppFwUpdate_RightBudWriteFlashTask(void)
+{
+    uint16_t BinLen = user_usb_receive_data[3] | (user_usb_receive_data[4] << 8);
+    UartInterface_SendDirect(UART_INTERFACE_BUD_RIGHT,
+                             user_usb_receive_data,
+                             BinLen + WRITE_CMD_HEADER_SIZE,
+                             CMD_ONE_WIRE_UART_DATA,
+                             5000,
+                             FILE_ACCESS_OP);
+}
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -132,6 +165,7 @@ static error_status EraseDualImageFlashProcess(void)
     flash_status_type status = FLASH_OPERATE_DONE;
     uint32_t start_sector, end_sector;
     uint32_t sector;
+    ClearCrc32Calculate();
 
     if ((DUAL_IMG_START_ADDRESS < FLASH_BASE) || (DUAL_IMG_START_ADDRESS % SECTOR_SIZE) ||
         (DUAL_IMG_END_ADDRESS > (FLASH_BASE + 128U * 1024U)) ||
@@ -219,7 +253,7 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     for (i = 0; i < (UPDATE_DATA_LEN / 4); ++i)
     {
         FW_UPDATE_Buffer[i] = 0;
-        FW_UPDATE_Buffer[i] = buffer[k + 9];
+        FW_UPDATE_Buffer[i] = buffer[k + WRITE_CMD_HEADER_SIZE];
         FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 10] << 8);
         FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 11] << 16);
         FW_UPDATE_Buffer[i] |= (uint32_t)(buffer[k + 12] << 24);
@@ -258,7 +292,7 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     {
         for (i = 0; i < gFW_BinLen; ++i)
         {
-            crc_data[i] = buffer[i + 9]; // include CRC of binary last 4 bytes
+            crc_data[i] = buffer[i + WRITE_CMD_HEADER_SIZE]; // include CRC of binary last 4 bytes
         }
         sum_crc32 = Crc32Compute(crc_data, gFW_BinLen - 4, &sum_crc32); // No need last 4 bytes for CRC
     }
@@ -266,10 +300,16 @@ static error_status WriteDualImageFlashProcess(const uint8_t *in, size_t in_len)
     {
         for (i = 0; i < UPDATE_DATA_LEN; ++i)
         {
-            crc_data[i] = buffer[i + 9];
+            crc_data[i] = buffer[i + WRITE_CMD_HEADER_SIZE];
         }
         sum_crc32 = Crc32Compute(crc_data, UPDATE_DATA_LEN, &sum_crc32);
     }
     flash_lock();
     return SUCCESS;
+}
+
+static void ClearCrc32Calculate(void)
+{
+    sum_crc32 = 0;
+    memset(crc_data, 0, sizeof(crc_data));
 }

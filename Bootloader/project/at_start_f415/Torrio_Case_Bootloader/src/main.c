@@ -38,7 +38,7 @@ int main(void)
 
   Bootloader_BackDoorGpioInit();
 
-  printf("\n\n\nBootloader start!!!\n");
+  DEBUG_PRINT("\n\n\nBootloader start!!!\n");
 
   if (FileSystem_CheckImageCopyFlag() == SUCCESS)
   {
@@ -48,7 +48,7 @@ int main(void)
       {
         if (gCurrentMode != BOOTLOADER_MODE)
         {
-          printf("jump to app\n");
+          DEBUG_PRINT("jump to app\n");
           Bootloader_JumpToApp();
         }
       }
@@ -80,6 +80,12 @@ int main(void)
 
   while (1)
   {
+    if (Usb_GetUsbDetectState() != USB_PLUG)
+    {
+      gCurrentMode = NORMAL_MODE;
+      SS_RESET_FLAG = true;
+    }
+
     if (SS_RESET_FLAG)
     {
       SS_RESET_FLAG = false;

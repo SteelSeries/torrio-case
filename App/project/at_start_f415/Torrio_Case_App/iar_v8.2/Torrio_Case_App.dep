@@ -1,406 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>5</fileVersion>
-    <fileChecksum>1991317933</fileChecksum>
+    <fileChecksum>3082309008</fileChecksum>
     <configuration>
         <name>Torrio_Case_App</name>
         <outputs>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_flash.c</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_dma.o</file>
-            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_crm.h</file>
-            <file>$PROJ_DIR$\..\inc\power_control.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usb_std.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\bsp\at32f415_board.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\task_scheduler.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_gpio.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_ertc.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_usart.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\i2c1.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\i2c_application_library\i2c_application.o</file>
-            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
-            <file>$PROJ_DIR$\..\inc\wdt.h</file>
-            <file>$PROJ_DIR$\..\inc\at32f415_int.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_cmp.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_wwdt.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_usart.o</file>
-            <file>$PROJ_DIR$\..\inc\usb.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_spi.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.h</file>
-            <file>$PROJ_DIR$\..\inc\file_system.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_def.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\wdt.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_pwc.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\cmsis\startup_at32f415.o.rsp</file>
-            <file>$PROJ_DIR$\..\inc\i2c1.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\init_pinout.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_usb.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_class\custom_hid_class.o</file>
-            <file>$PROJ_DIR$\..\inc\adc.h</file>
-            <file>$PROJ_DIR$\..\inc\version.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.out</file>
-            <file>$PROJ_DIR$\..\inc\timer4.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_flash.h</file>
-            <file>$PROJ_DIR$\..\inc\usb_conf.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\sy8809_xsense.o</file>
-            <file>$PROJ_DIR$\..\inc\system_state_manager.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\main.o</file>
-            <file>$PROJ_DIR$\..\inc\sy8809.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\app_fw_update.o</file>
-            <file>$PROJ_DIR$\..\inc\sy8809_xsense.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
-            <file>$PROJ_DIR$\..\inc\Commands.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_sdr.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_version.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_gpio.h</file>
-            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_dma.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_adc.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_drivers\usb_core.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_int.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\system_clock.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_i2c.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\adc.o</file>
-            <file>$PROJ_DIR$\..\inc\system_clock.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\lighting.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_misc.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_sdio.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_crc.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_adc.h</file>
-            <file>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_sdio.o</file>
-            <file>$PROJ_DIR$\..\inc\sy8809_table.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\Commands.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\cmsis\startup_at32f415.o</file>
-            <file>$TOOLKIT_DIR$\lib\dl7M_tlf.a</file>
-            <file>$PROJ_DIR$\..\inc\lighting.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_tmr.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-            <file>$PROJ_DIR$\..\inc\at32f415_conf.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_spi.o</file>
-            <file>$PROJ_DIR$\..\inc\app_fw_update.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\at32f415_int.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_pwc.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_can.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_tmr.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_exint.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\at32f415.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App.icf</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\battery.o</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_drivers\usbd_int.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\sy8809.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_drivers\usbd_core.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_cmp.h</file>
-            <file>$PROJ_DIR$\..\inc\battery.h</file>
-            <file>$PROJ_DIR$\..\inc\pinout.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usb_core.h</file>
-            <file>$PROJ_DIR$\..\inc\timer5.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.bin</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\core_cm4.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Full.h</file>
-            <file>$PROJ_DIR$\..\inc\task_scheduler.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\usb.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_iccarm.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\file_system.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_class\custom_hid_desc.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_compiler.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_i2c.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_crc.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer2.o</file>
-            <file>$PROJ_DIR$\..\inc\timer3.h</file>
-            <file>$PROJ_DIR$\..\inc\lid.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_core.h</file>
-            <file>$PROJ_DIR$\..\inc\timer2.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\version.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-            <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_debug.o</file>
-            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_wdt.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer5.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer3.o</file>
-            <file>$PROJ_DIR$\..\inc\init_pinout.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\aarch32\iccarm_builtin.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\system_state_manager.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_flash.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer4.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_drivers\usbd_sdr.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\mpu_armv7.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_wdt.o</file>
-            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_usb.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_can.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_debug.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\lid.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\cmsis\system_at32f415.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_crm.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_misc.h</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\power_control.o</file>
-            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_exint.o</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</file>
-            <file>$PROJ_DIR$\..\src\sy8809.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_spi.c</file>
-            <file>$PROJ_DIR$\..\src\i2c1.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_i2c.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_misc.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_sdio.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_core.c</file>
-            <file>$PROJ_DIR$\..\src\adc.c</file>
-            <file>$PROJ_DIR$\..\src\init_pinout.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_int.c</file>
-            <file>$PROJ_DIR$\..\src\lid.c</file>
-            <file>$PROJ_DIR$\..\src\lighting.c</file>
+            <file>$PROJ_DIR$\..\src\button.c</file>
             <file>$PROJ_DIR$\..\src\Commands.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wdt.c</file>
-            <file>$PROJ_DIR$\..\src\system_clock.c</file>
-            <file>$PROJ_DIR$\..\src\sy8809_xsense.c</file>
-            <file>$PROJ_DIR$\..\src\system_state_manager.c</file>
-            <file>$PROJ_DIR$\..\src\timer5.c</file>
-            <file>$PROJ_DIR$\..\src\version.c</file>
-            <file>$PROJ_DIR$\..\src\usb.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_tmr.c</file>
-            <file>$PROJ_DIR$\..\src\at32f415_int.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_ertc.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_wwdt.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.h</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_sdr.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usart.c</file>
-            <file>$PROJ_DIR$\..\src\app_fw_update.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usb.c</file>
-            <file>$PROJ_DIR$\..\src\file_system.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_pwc.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wwdt.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usb_core.c</file>
-            <file>$PROJ_DIR$\..\src\battery.c</file>
-            <file>$PROJ_DIR$\..\src\main.c</file>
-            <file>$PROJ_DIR$\..\src\power_control.c</file>
-            <file>$PROJ_DIR$\..\src\timer3.c</file>
-            <file>$PROJ_DIR$\..\src\timer2.c</file>
-            <file>$PROJ_DIR$\..\src\timer4.c</file>
-            <file>$PROJ_DIR$\..\src\wdt.c</file>
-            <file>$PROJ_DIR$\..\src\task_scheduler.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\startup\iar\startup_at32f415.s</file>
-            <file>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</file>
             <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_adc.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_debug.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_ertc.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_exint.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_gpio.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_cmp.c</file>
+            <file>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\startup\iar\startup_at32f415.s</file>
             <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_can.c</file>
             <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crm.c</file>
-            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_cmp.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_exint.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_adc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_debug.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_ertc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_flash.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_spi.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_gpio.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_sdio.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usart.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usb.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_i2c.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usb_core.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_int.c</file>
+            <file>$PROJ_DIR$\..\src\adc.c</file>
+            <file>$PROJ_DIR$\..\src\app_fw_update.c</file>
+            <file>$PROJ_DIR$\..\src\at32f415_int.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_misc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wdt.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wwdt.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_core.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_sdr.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_tmr.c</file>
+            <file>$PROJ_DIR$\..\src\battery.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_pwc.c</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\Commands.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_wdt.o</file>
+            <file>$PROJ_DIR$\..\inc\Commands.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_flash.o</file>
+            <file>$PROJ_DIR$\..\inc\sy8809_xsense.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_ertc.o</file>
+            <file>$PROJ_DIR$\..\inc\timer4.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_core.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_def.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.h</file>
+            <file>$PROJ_DIR$\..\inc\timer3.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_class\custom_hid_desc.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usb_std.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\lid.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\sy8809_xsense.o</file>
+            <file>$PROJ_DIR$\..\inc\i2c1.h</file>
+            <file>$PROJ_DIR$\..\inc\uart_interface.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_can.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_debug.h</file>
+            <file>$PROJ_DIR$\..\inc\timer2.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_misc.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_dma.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_exint.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_sdr.h</file>
+            <file>$PROJ_DIR$\..\inc\usb_conf.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\main.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\file_system.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\adc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_i2c.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_cmp.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.h</file>
+            <file>$PROJ_DIR$\..\inc\usb.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\system_state_manager.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\power_control.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_debug.o</file>
+            <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
+            <file>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\sy8809.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\uart_interface.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\wdt.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_drivers\usb_core.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\cmsis\startup_at32f415.o.rsp</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_crm.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_class\custom_hid_class.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\at32f415.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_pwc.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_tmr.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\cmsis\startup_at32f415.o</file>
+            <file>$PROJ_DIR$\..\inc\lid.h</file>
+            <file>$PROJ_DIR$\..\inc\lighting.h</file>
+            <file>$PROJ_DIR$\..\src\qi.c</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_usb.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_sdio.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$TOOLKIT_DIR$\lib\dl7M_tlf.a</file>
+            <file>$PROJ_DIR$\..\inc\wdt.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_crm.h</file>
+            <file>$PROJ_DIR$\..\inc\battery.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.out</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_wdt.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_dma.h</file>
+            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+            <file>$PROJ_DIR$\..\inc\sy8809_table.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_compiler.h</file>
+            <file>$PROJ_DIR$\..\inc\sy8809.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer4.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\uart_command_queue.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_spi.o</file>
+            <file>$PROJ_DIR$\..\inc\adc.h</file>
+            <file>$PROJ_DIR$\..\inc\at32f415_conf.h</file>
+            <file>$PROJ_DIR$\..\inc\qi.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_exint.o</file>
+            <file>$PROJ_DIR$\..\inc\power_control.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+            <file>$PROJ_DIR$\..\inc\system_state_manager.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_version.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\mpu_armv7.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_int.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\app_fw_update.o</file>
+            <file>$PROJ_DIR$\..\inc\app_fw_update.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\i2c_application_library\i2c_application.o</file>
+            <file>$PROJ_DIR$\..\inc\uart_command_queue.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_gpio.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_gpio.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usb_core.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_cmp.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_adc.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\aarch32\iccarm_builtin.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\button.o</file>
+            <file>$PROJ_DIR$\..\inc\timer5.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\at32f415_int.o</file>
+            <file>$PROJ_DIR$\..\inc\pinout.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_pwc.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_spi.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_wwdt.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\bsp\at32f415_board.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_drivers\usbd_sdr.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\cmsis\system_at32f415.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\uart_driver.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\i2c1.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer2.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_can.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_tmr.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\uart_protocol.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\uart_comm_manager.o</file>
+            <file>$PROJ_DIR$\..\inc\at32f415_int.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_drivers\usbd_int.o</file>
+            <file>$PROJ_DIR$\..\inc\uart_comm_manager.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\version.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Full.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\lighting.o</file>
+            <file>$PROJ_DIR$\..\inc\uart_driver.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_usart.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_i2c.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\uart_command_handler.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_sdio.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_usb.h</file>
+            <file>$PROJ_DIR$\..\inc\init_pinout.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.bin</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\task_scheduler.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+            <file>$PROJ_DIR$\..\inc\system_clock.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\battery.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_wwdt.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\usbd_drivers\usbd_core.o</file>
+            <file>$PROJ_DIR$\..\inc\file_system.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App.icf</file>
+            <file>$PROJ_DIR$\..\inc\task_scheduler.h</file>
+            <file>$PROJ_DIR$\..\inc\uart_protocol.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer3.o</file>
+            <file>$PROJ_DIR$\..\inc\uart_command_handler.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\qi.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_ertc.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\usb.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_crc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_adc.o</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_crc.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_flash.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\system_clock.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\timer5.o</file>
+            <file>$PROJ_DIR$\..\inc\button.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_iccarm.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_misc.o</file>
+            <file>$PROJ_DIR$\..\src\uart_comm_manager.c</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\user\init_pinout.o</file>
+            <file>$PROJ_DIR$\..\src\timer2.c</file>
+            <file>$PROJ_DIR$\..\src\version.c</file>
+            <file>$PROJ_DIR$\..\src\power_control.c</file>
+            <file>$PROJ_DIR$\..\src\wdt.c</file>
+            <file>$PROJ_DIR$\..\src\task_scheduler.c</file>
+            <file>$PROJ_DIR$\..\src\main.c</file>
+            <file>$PROJ_DIR$\..\src\timer3.c</file>
+            <file>$PROJ_DIR$\..\src\uart_interface.c</file>
+            <file>$PROJ_DIR$\..\src\file_system.c</file>
+            <file>$PROJ_DIR$\..\src\system_clock.c</file>
+            <file>$PROJ_DIR$\..\src\timer4.c</file>
+            <file>$PROJ_DIR$\..\src\uart_protocol.c</file>
+            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
+            <file>$PROJ_DIR$\..\src\timer5.c</file>
+            <file>$PROJ_DIR$\..\src\uart_command_handler.c</file>
+            <file>$PROJ_DIR$\..\src\i2c1.c</file>
+            <file>$PROJ_DIR$\..\src\lid.c</file>
+            <file>$PROJ_DIR$\..\src\sy8809.c</file>
+            <file>$PROJ_DIR$\..\src\sy8809_xsense.c</file>
+            <file>$PROJ_DIR$\..\src\init_pinout.c</file>
+            <file>$PROJ_DIR$\..\src\system_state_manager.c</file>
+            <file>$PROJ_DIR$\..\src\usb.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\core_cm4.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App\Obj\firmware\at32f415_usart.o</file>
+            <file>$PROJ_DIR$\..\src\uart_command_queue.c</file>
+            <file>$PROJ_DIR$\..\src\uart_driver.c</file>
+            <file>$PROJ_DIR$\..\inc\version.h</file>
+            <file>$PROJ_DIR$\..\src\lighting.c</file>
         </outputs>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_flash.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 122</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.out</name>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 69 113 13 50 82 6 68 132 52 129 16 103 133 114 1 9 136 122 8 102 60 25 65 74 79 18 29 126 17 12 30 100 53 87 85 124 67 57 42 76 83 99 11 28 131 59 40 135 86 38 55 121 7 104 118 123 117 97 110 24</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.bin</name>
-            <inputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 33</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 12</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\sy8809.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 86</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 21 64 73 89 27 119 106 41 66 43 39 96 109 19 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_spi.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 74</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\i2c1.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 11</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 27 41 66</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_i2c.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 102</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_misc.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 60</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_sdio.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 65</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_core.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 87</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 46 64 73 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\adc.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 57</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 31 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\init_pinout.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 28</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 64 31 73 27 119 106 90 41 66 105 19 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_int.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 85</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 54 64 73 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\lid.c</name>
+            <name>$PROJ_DIR$\..\src\button.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
@@ -410,27 +236,42 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 64 73 106 39 96 19 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\lighting.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 59</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 70 96 105</file>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 76 39 109 186 70 62</file>
                 </tool>
             </inputs>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\Commands.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 37</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 76 39 119 109 169 89 104 102 41 114 171 121 54 70 62 217</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 140</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_cmp.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
@@ -440,27 +281,42 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 21 64 45 75 73 22 70 41 66 43 39 96 19 36 32</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wdt.c</name>
+            <name>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 126</file>
+                    <file> 138</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 88</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\system_clock.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\startup\iar\startup_at32f415.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 87</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 81</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_can.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
@@ -470,282 +326,126 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 64 73 106 58 19 36</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crm.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 38</file>
+                    <file> 82</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 21 64 45 31 73 89 27 41 66 43 96 34 19 36</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\system_state_manager.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_exint.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 121</file>
+                    <file> 111</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 21 64 45 75 73 89 106 4 41 66 39 96 19 36</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\timer5.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crc.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 117</file>
+                    <file> 179</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 92</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\version.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_adc.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 110</file>
+                    <file> 180</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 32</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\usb.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_debug.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 97</file>
+                    <file> 74</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 64 73 39 96 19 36</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_tmr.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 79</file>
+                    <file> 59</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\at32f415_int.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_ertc.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 76</file>
+                    <file> 43</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 54 64 73 15 41 66 43 96 34 19 36</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_sdr.c</name>
+            <name>[ROOT_NODE]</name>
             <outputs>
                 <tool>
-                    <name>ICCARM</name>
-                    <file> 124</file>
+                    <name>ILINK</name>
+                    <file> 98</file>
                 </tool>
             </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 46 64 73 36</file>
-                </tool>
-            </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usart.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 18</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 42</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 21 64 45 75 73 22 19 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 100</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 46 21 163 64 73 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usb.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 29</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\file_system.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 99</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 75 73 22</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_pwc.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 25</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wwdt.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 17</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 30</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 21 163 64 45 73 19 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usb_core.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 53</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 64 73 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\battery.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 83</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 64 73 89 41 66 43 96 19 36</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\main.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_flash.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
@@ -755,27 +455,177 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 91 5 108 21 163 64 45 31 75 73 22 119 106 70 4 41 66 58 96 109 34 92 19 36 14</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\power_control.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_spi.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 135</file>
+                    <file> 107</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 4</file>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\timer3.c</name>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_gpio.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 122</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_sdio.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 158</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usart.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 214</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usb.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 91</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 120</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_i2c.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 66</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 49</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 61 182 42 76 109 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usb_core.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 80</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 76 109 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_int.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 149</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 117 76 109 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\adc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 65</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 108 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
@@ -785,237 +635,12 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 44 120 107 84 162 115 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 105</file>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 76 39 119 109 169 70 62</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\timer2.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 104</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 109</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\timer4.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 123</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 34</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\wdt.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 24</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 14</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 7</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 96 109</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\startup\iar\startup_at32f415.s</name>
-            <outputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 68</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 26</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 6</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 107 84 162 127 2 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 47 64 73 106</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 132</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_adc.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 52</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_debug.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 114</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_ertc.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 9</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 1</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_exint.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 136</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_gpio.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 8</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crc.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 103</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_can.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 129</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crm.c</name>
+            <name>$PROJ_DIR$\..\src\at32f415_int.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
@@ -1025,7 +650,831 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 117 76 109 148 104 102 41 171 44 150 121 154 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_misc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 188</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wdt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 38</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 83</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 42 76 39 109 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wwdt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 137</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_core.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 168</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 61 76 109 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_sdr.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 139</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 61 76 109 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_tmr.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 145</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\battery.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 165</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 76 109 97 110 104 102 41 171 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_pwc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 135</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 68 176 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 109</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\qi.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 175</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 76 39 109 110 114 171 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.out</name>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 94 75 203 101 170 138 87 140 180 55 67 179 82 74 59 43 111 40 122 66 188 135 158 107 145 214 91 38 137 120 83 49 80 168 149 139 37 65 118 133 165 131 64 142 190 51 153 63 73 175 77 52 184 71 162 143 173 105 185 147 157 106 141 78 146 178 151 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Torrio_Case_App\Exe\Torrio_Case_App.bin</name>
+            <inputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 98</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_comm_manager.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 147</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 148 171 57 150 174 121 154 172</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer2.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 143</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 57</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\version.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 151</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 217</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\power_control.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 73</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 112</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\wdt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 79</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 95</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 162</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 171 57</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 63</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 42 76 39 108 119 109 186 169 160 88 89 112 110 104 102 164 171 57 48 44 132 150 121 70 62 95</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer3.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 173</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 48</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_interface.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 78</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 150 121 54 172</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\file_system.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 64</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 119 109 169</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\system_clock.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 184</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 76 109 88 164 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer4.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 105</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 44</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_protocol.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 146</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 121 172</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer5.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 185</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 132</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_command_handler.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 157</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 76 39 109 150 174 121 172 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c1.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 142</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 53 104 102</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\lid.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 51</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 76 109 88 89 110 114 171 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sy8809.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 77</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 76 109 97 53 160 88 110 104 102 41 114 171 57 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 52</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 76 39 108 109 97 53 104 102 41 171 44 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\init_pinout.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 190</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 76 108 109 186 53 160 88 89 134 110 104 102 150 121 154 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\system_state_manager.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 71</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 130 127 68 124 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 182 76 39 119 109 97 88 112 110 104 102 114 171 150 121 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\usb.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 178</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 76 109 114 171 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_command_queue.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 106</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 121</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_driver.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 141</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 76 109 150 121 154 172</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\lighting.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 153</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152 93 72 163 130 127 68 124 113 176 129 167 103 187 115 213 116 84 69 128 144 126 181 96 56 46 100 177 60 183 123 156 58 85 92 136 86 155 159 99 166 47 125 50 45 76 109 97 88 89 110 171 48 70 62</file>
+                </tool>
+            </inputs>
+        </file>
+        <forcedrebuild>
+            <name>[REBUILD_ALL]</name>
+        </forcedrebuild>
+    </configuration>
+    <configuration>
+        <name>Torrio_Case_App_Debug</name>
+        <outputs>
+            <file>$PROJ_DIR$\..\src\button.c</file>
+            <file>$PROJ_DIR$\..\src\Commands.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_cmp.c</file>
+            <file>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\startup\iar\startup_at32f415.s</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_can.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crm.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_exint.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crc.c</file>
+            <file>$PROJ_DIR$\..\src\cps4520.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_adc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_debug.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_ertc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_flash.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_spi.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_gpio.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_sdio.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usart.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usb.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_i2c.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usb_core.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_int.c</file>
+            <file>$PROJ_DIR$\..\src\adc.c</file>
+            <file>$PROJ_DIR$\..\src\app_fw_update.c</file>
+            <file>$PROJ_DIR$\..\src\at32f415_int.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_misc.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wdt.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wwdt.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_core.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_sdr.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_tmr.c</file>
+            <file>$PROJ_DIR$\..\src\battery.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_pwc.c</file>
+            <file>$PROJ_DIR$\..\inc\Commands.h</file>
+            <file>$PROJ_DIR$\..\inc\sy8809_xsense.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.h</file>
+            <file>$PROJ_DIR$\..\inc\timer4.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_core.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_def.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.h</file>
+            <file>$PROJ_DIR$\..\inc\timer3.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usb_std.h</file>
+            <file>$PROJ_DIR$\..\inc\i2c1.h</file>
+            <file>$PROJ_DIR$\..\inc\uart_interface.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_debug.h</file>
+            <file>$PROJ_DIR$\..\inc\timer2.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_misc.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_exint.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_sdr.h</file>
+            <file>$PROJ_DIR$\..\inc\usb_conf.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.h</file>
+            <file>$PROJ_DIR$\..\inc\usb.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
+            <file>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\at32f415.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_pwc.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_tmr.h</file>
+            <file>$PROJ_DIR$\..\inc\lid.h</file>
+            <file>$PROJ_DIR$\..\inc\lighting.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_sdio.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$TOOLKIT_DIR$\lib\dl7M_tlf.a</file>
+            <file>$PROJ_DIR$\..\inc\wdt.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_crm.h</file>
+            <file>$PROJ_DIR$\..\inc\battery.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_wdt.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_dma.h</file>
+            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+            <file>$PROJ_DIR$\..\inc\sy8809_table.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_compiler.h</file>
+            <file>$PROJ_DIR$\..\inc\sy8809.h</file>
+            <file>$PROJ_DIR$\..\inc\adc.h</file>
+            <file>$PROJ_DIR$\..\inc\at32f415_conf.h</file>
+            <file>$PROJ_DIR$\..\inc\power_control.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+            <file>$PROJ_DIR$\..\inc\system_state_manager.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_version.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\mpu_armv7.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usbd_int.h</file>
+            <file>$PROJ_DIR$\..\inc\app_fw_update.h</file>
+            <file>$PROJ_DIR$\..\inc\uart_command_queue.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_gpio.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\inc\usb_core.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_cmp.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_adc.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\aarch32\iccarm_builtin.h</file>
+            <file>$PROJ_DIR$\..\inc\timer5.h</file>
+            <file>$PROJ_DIR$\..\inc\pinout.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_spi.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_can.h</file>
+            <file>$PROJ_DIR$\..\inc\at32f415_int.h</file>
+            <file>$PROJ_DIR$\..\inc\uart_comm_manager.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Full.h</file>
+            <file>$PROJ_DIR$\..\inc\uart_driver.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_usart.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_i2c.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_usb.h</file>
+            <file>$PROJ_DIR$\..\inc\init_pinout.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+            <file>$PROJ_DIR$\..\inc\system_clock.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_wwdt.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$PROJ_DIR$\..\inc\file_system.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App.icf</file>
+            <file>$PROJ_DIR$\..\inc\task_scheduler.h</file>
+            <file>$PROJ_DIR$\..\inc\uart_protocol.h</file>
+            <file>$PROJ_DIR$\..\inc\uart_command_handler.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_ertc.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_crc.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\inc\at32f415_flash.h</file>
+            <file>$PROJ_DIR$\..\inc\button.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product_stdlib.h</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\cmsis_iccarm.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\i2c_comm.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\uart_command_handler.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\usbd_drivers\usbd_sdr.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_ertc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_i2c.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_misc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\init_pinout.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\battery.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\adc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\wdt.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\timer3.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_adc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\cmsis\system_at32f415.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\uart_interface.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\uart_driver.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_can.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\uart_command_queue.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_tmr.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_gpio.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\timer4.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\bsp\at32f415_board.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_exint.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_debug.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\app_fw_update.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\power_control.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\button.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\usbd_class\custom_hid_desc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_flash.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\file_system.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\usbd_class\custom_hid_class.o</file>
+            <file>$PROJ_DIR$\..\inc\cps4520_table.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\uart_comm_manager.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_pwc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\usbd_drivers\usbd_core.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\i2c1.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\system_state_manager.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_spi.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_usart.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\i2c2.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_crm.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_dma.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\timer5.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\usbd_drivers\usbd_int.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_usb.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\sy8809.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\usbd_drivers\usb_core.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\main.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\cmsis\startup_at32f415.o.rsp</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\task_scheduler.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_crc.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_wwdt.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\version.o</file>
+            <file>$PROJ_DIR$\..\inc\i2c_comm.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\cmsis\startup_at32f415.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\at32f415_int.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_wdt.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\Commands.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_sdio.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Exe\Torrio_Case_App.bin</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Exe\Torrio_Case_App.out</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\i2c_application_library\i2c_application.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\uart_protocol.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\lighting.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\usb.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\sy8809_xsense.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\firmware\at32f415_cmp.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\timer2.o</file>
+            <file>$PROJ_DIR$\..\inc\cps4520.h</file>
+            <file>$PROJ_DIR$\..\inc\i2c2.h</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\system_clock.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\lid.o</file>
+            <file>$PROJ_DIR$\Torrio_Case_App_Debug\Obj\user\cps4520.o</file>
+            <file>$PROJ_DIR$\..\src\uart_comm_manager.c</file>
+            <file>$PROJ_DIR$\..\src\timer2.c</file>
+            <file>$PROJ_DIR$\..\src\version.c</file>
+            <file>$PROJ_DIR$\..\src\power_control.c</file>
+            <file>$PROJ_DIR$\..\src\wdt.c</file>
+            <file>$PROJ_DIR$\..\src\task_scheduler.c</file>
+            <file>$PROJ_DIR$\..\src\main.c</file>
+            <file>$PROJ_DIR$\..\src\timer3.c</file>
+            <file>$PROJ_DIR$\..\src\uart_interface.c</file>
+            <file>$PROJ_DIR$\..\src\file_system.c</file>
+            <file>$PROJ_DIR$\..\src\system_clock.c</file>
+            <file>$PROJ_DIR$\..\src\timer4.c</file>
+            <file>$PROJ_DIR$\..\src\uart_protocol.c</file>
+            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
+            <file>$PROJ_DIR$\..\src\timer5.c</file>
+            <file>$PROJ_DIR$\..\src\uart_command_handler.c</file>
+            <file>$PROJ_DIR$\..\src\i2c1.c</file>
+            <file>$PROJ_DIR$\..\src\i2c2.c</file>
+            <file>$PROJ_DIR$\..\src\i2c_comm.c</file>
+            <file>$PROJ_DIR$\..\src\lid.c</file>
+            <file>$PROJ_DIR$\..\src\sy8809.c</file>
+            <file>$PROJ_DIR$\..\src\sy8809_xsense.c</file>
+            <file>$PROJ_DIR$\..\src\init_pinout.c</file>
+            <file>$PROJ_DIR$\..\src\system_state_manager.c</file>
+            <file>$PROJ_DIR$\..\src\usb.c</file>
+            <file>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\core_support\core_cm4.h</file>
+            <file>$PROJ_DIR$\..\src\uart_command_queue.c</file>
+            <file>$PROJ_DIR$\..\src\uart_driver.c</file>
+            <file>$PROJ_DIR$\..\inc\version.h</file>
+            <file>$PROJ_DIR$\..\src\lighting.c</file>
+        </outputs>
+        <file>
+            <name>$PROJ_DIR$\..\src\button.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 150</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 38 79 122 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\Commands.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 182</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 38 86 79 112 64 65 77 75 39 82 114 101 116 87 48 115 57 54 226</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\system_at32f415.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 137</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
                 </tool>
             </inputs>
         </file>
@@ -1034,13 +1483,178 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 16</file>
+                    <file> 191</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 95 37 112 120 84 127 72 101 98 48 94 125 81 111 63 78 88 62 3 130 23 51 160 80 35 49 56 134 77 61 20 71 10 128 116 161 73</file>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 145</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 64</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\cmsis\cm4\device_support\startup\iar\startup_at32f415.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 179</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 173</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_can.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 140</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crm.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 165</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_exint.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 146</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_crc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 175</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\cps4520.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 197</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 38 79 193 155 178 82 114 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_adc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 136</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_debug.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 147</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 166</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_ertc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 128</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
                 </tool>
             </inputs>
         </file>
@@ -1049,9 +1663,777 @@
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 33</file>
+                    <file> 185</file>
                 </tool>
             </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_flash.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 152</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_spi.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 161</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_gpio.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 143</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_sdio.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 183</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usart.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 162</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_usb.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 169</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\i2c_application_library\i2c_application.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 186</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_i2c.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 129</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_desc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 151</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 53 120 40 60 79 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usb_core.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 171</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 60 79 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_int.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 168</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 85 60 79 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\adc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 133</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 78 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\app_fw_update.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 148</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 38 86 79 112 87 48 115 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\at32f415_int.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 180</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 85 60 79 100 193 77 75 39 114 41 101 87 103 48 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_misc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 130</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wdt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 181</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usbd_class\custom_hid\custom_hid_class.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 154</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 40 60 38 79 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_wwdt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 176</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_core.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 158</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 53 60 79 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\middlewares\usb_drivers\src\usbd_sdr.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 127</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 53 60 79 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_tmr.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 142</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\battery.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 132</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 60 38 79 71 193 112 77 75 39 114 101 116 87 48 115 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_pwc.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 157</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 55 117 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Torrio_Case_App_Debug\Exe\Torrio_Case_App.bin</name>
+            <inputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 185</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Torrio_Case_App_Debug\Exe\Torrio_Case_App.out</name>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 68 59 211 74 113 145 179 137 136 140 191 175 165 147 166 128 146 152 143 129 130 157 183 161 142 162 169 181 176 186 154 151 171 158 168 127 182 133 148 180 132 150 197 153 159 163 125 131 196 188 172 149 170 190 195 160 174 192 135 144 167 156 126 141 139 138 187 189 177 134</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_comm_manager.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 156</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 123 108 95 92 55 89 164 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 100 71 114 50 101 116 87 103 48 115</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer2.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 192</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 50</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\version.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 177</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 226</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\power_control.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 149</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 80</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\wdt.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 134</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 69</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\task_scheduler.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 174</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 114 50</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 172</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 40 60 38 78 86 79 122 193 112 47 194 107 64 65 80 77 75 109 114 50 45 41 96 101 87 57 54 69</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer3.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 135</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 45</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_interface.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 138</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 123 108 95 92 55 89 164 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 101 87 48 115</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\file_system.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 153</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 86 79 112</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\system_clock.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 195</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 60 79 64 109 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer4.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 144</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 41</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_protocol.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 187</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 87 115</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\timer5.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 167</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 96</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_command_handler.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 126</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 38 79 71 112 101 116 87 103 48 115 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c1.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 159</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 47 97 77 75</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c2.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 163</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 193 194 97</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\i2c_comm.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 125</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 193 47 194 178 77 75</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\lid.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 196</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 79 38 193 64 65 82 114 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sy8809.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 170</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 79 71 193 178 107 64 77 75 39 82 114 50 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\sy8809_xsense.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 190</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 38 78 79 71 112 178 77 75 39 114 41 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\init_pinout.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 131</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 60 78 79 122 193 47 194 107 64 65 97 77 75 101 87 103 48 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\system_state_manager.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 160</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 95 92 55 89 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 120 60 38 86 79 71 193 64 80 77 75 82 114 101 87 103 48 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\usb.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 189</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 60 79 82 114 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_command_queue.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 141</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 60 79 87</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\uart_driver.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 139</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 60 38 79 64 114 101 116 87 103 48 115 57 54</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\lighting.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 188</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 102 67 58 108 95 92 55 89 81 117 94 111 76 124 83 223 84 61 56 93 99 91 119 70 49 43 73 118 52 121 88 105 51 62 66 98 63 104 106 72 110 44 90 46 42 60 79 71 38 193 112 64 65 114 45 57 54</file>
+                </tool>
+            </inputs>
         </file>
         <forcedrebuild>
             <name>[REBUILD_ALL]</name>

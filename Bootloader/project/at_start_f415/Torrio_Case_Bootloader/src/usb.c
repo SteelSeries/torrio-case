@@ -72,6 +72,7 @@ void Usb_GpioConfig(void)
   gpio_init_type gpio_init_struct;
 
   crm_periph_clock_enable(OTG_PIN_GPIO_CLOCK, TRUE);
+  crm_periph_clock_enable(USB_DET_CRM_CLK, TRUE);
   gpio_default_para_init(&gpio_init_struct);
 
   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
@@ -92,6 +93,13 @@ void Usb_GpioConfig(void)
   gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
   gpio_init(OTG_PIN_GPIO, &gpio_init_struct);
 #endif
+
+  gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+  gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  gpio_init_struct.gpio_pins = USB_DET_PIN;
+  gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+  gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
+  gpio_init(USB_DET_GPIO, &gpio_init_struct);
 }
 /**
   * @brief  usb delay millisecond function.
@@ -145,6 +153,11 @@ void OTG_WKUP_HANDLER(void)
 }
 
 #endif
+
+Usb_DetectConnectState_t Usb_GetUsbDetectState(void)
+{
+  return (Usb_DetectConnectState_t)gpio_input_data_bit_read(USB_DET_GPIO, USB_DET_PIN);
+}
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/

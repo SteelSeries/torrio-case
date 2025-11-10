@@ -65,8 +65,9 @@ Step 6: APP clears dual_image_copy_flag
 //  0x0800 3801 - 0x0800 3801 : Flash 1(user data)(color)
 //  0x0800 3802 - 0x0800 3802 : Flash 1(user data)(shipping flag)
 //  0x0800 3803 - 0x0800 3803 : Flash 1(user data)(dual Image Copy Flag)
-//  0x0800 3804 - 0x0800 3C16 : Flash 18(user data)(SN)
-//  0x0800 3C16 - 0x0800 3FFF : Flash (user data)(Not used yet)
+//  0x0800 3804 - 0x0800 3817 : Flash 19(user data)(SN)
+//  0x0800 3818 - 0x0800 3818 : Flash 1(user data)(presetChargeState)
+//  0x0800 3819 - 0x0800 3FFF : Flash (user data)(Not used yet)
 //  0x0800 4000 - 0x0801 1FFF : App code(56K)
 //  0x0801 2000 - 0x0801 FFFF : Dual img code(56K)
 
@@ -105,12 +106,6 @@ typedef enum
     RECOVERY_MODE_NUM_MODES
 } AppFwUpdate_RecoveryMode_t;
 
-typedef enum
-{
-    FILE_ID_LOCAL = 0,
-    FILE_ID_PERIPHERAL,
-    FILE_ID_NUM_MODES
-} AppFwUpdate_FileId_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -124,3 +119,5 @@ void AppFwUpdata_SetResetFlag(bool state);
 bool AppFwUpdata_GetResetFlag(void);
 void AppFwUpdata_SetCurrentMode(uint8_t mode);
 void AppFwUpdata_UsbReceiveData(uint8_t *data, uint16_t len);
+void AppFwUpdate_LeftBudWriteFlashTask(void);
+void AppFwUpdate_RightBudWriteFlashTask(void);

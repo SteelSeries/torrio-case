@@ -8,6 +8,8 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
+#define TIME_BASE_US 100U                                  // Tick duration in microseconds (100us per tick)
+#define MS_TO_TICKS(ms) ((ms) * 1000 / TIME_BASE_US)       // Convert milliseconds to ticks
 
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *

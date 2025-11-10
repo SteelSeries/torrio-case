@@ -38,8 +38,8 @@ void Usb_GpioConfigHardware(const Usb_HardwareSettings_t *hardware_settings)
   memcpy(&user_hardware_settings, hardware_settings, sizeof(Usb_HardwareSettings_t));
 
   crm_periph_clock_enable(user_hardware_settings.usb_detect_gpio_crm_clk, TRUE);
+  crm_periph_clock_enable(user_hardware_settings.usb_otg_pin_sof_gpio_crm_clk, TRUE);
   crm_periph_clock_enable(user_hardware_settings.usb_otg_pin_vbus_gpio_crm_clk, TRUE);
-  crm_periph_clock_enable(user_hardware_settings.usb_detect_gpio_crm_clk, TRUE);
 
   gpio_default_para_init(&gpio_init_struct);
 
@@ -85,7 +85,6 @@ Usb_DetectConnectState_t Usb_FirstSetupUsbState(void)
 
 void Usb_StatusCheckTask(void)
 {
-  gpio_bits_toggle(GPIOB, GPIO_PINS_9);
   static bool is_debounce_check = false;
   usb_detect_state = (Usb_DetectConnectState_t)gpio_input_data_bit_read(user_hardware_settings.usb_detect_gpio_port, user_hardware_settings.usb_detect_gpio_pin);
 
@@ -101,12 +100,12 @@ void Usb_StatusCheckTask(void)
     if (usb_detect_state != pre_usb_detect_state)
     {
       pre_usb_detect_state = usb_detect_state;
-      printf("USB state changed to: %s\n", usb_detect_state == USB_PLUG ? "PLUG" : "UNPLUG");
+      DEBUG_PRINT("USB state changed to: %s\n", usb_detect_state == USB_PLUG ? "PLUG" : "UNPLUG");
       if (pre_usb_detect_state == USB_UNPLUG)
       {
         if (TaskScheduler_AddTask(SystemStateManager_SystemResetCheck, 10, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
-          printf("add system reset task fail\n");
+          DEBUG_PRINT("add system reset task fail\n");
         }
       }
     }
@@ -117,7 +116,7 @@ void Usb_StatusCheckTask(void)
 void Usb_ReadyStateSet(usbd_event_type usb_state)
 {
   usb_ready = usb_state;
-  printf("USB event:%d\n", usb_ready);
+  DEBUG_PRINT("USB event:%d\n", usb_ready);
 }
 
 usbd_event_type Usb_ReadyStateGet(void)

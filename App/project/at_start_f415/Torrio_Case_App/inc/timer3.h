@@ -8,25 +8,12 @@
 /*************************************************************************************************
  *                                   GLOBAL MACRO DEFINITIONS                                    *
  *************************************************************************************************/
-
+#define PWM_SET_LEVEL               1023U
+#define TIMER3_PWM_FREQUENCY        7800U  // 7.8 kHz
 /*************************************************************************************************
  *                                    GLOBAL TYPE DEFINITIONS                                    *
  *************************************************************************************************/
-typedef struct
-{
-    gpio_type *pwm_r_gpio_port;
-    uint32_t pwm_r_gpio_pin;
-    crm_periph_clock_type pwm_r_gpio_crm_clk;
 
-    gpio_type *pwm_g_gpio_port;
-    uint32_t pwm_g_gpio_pin;
-    crm_periph_clock_type pwm_g_gpio_crm_clk;
-
-    gpio_type *pwm_b_gpio_port;
-    uint32_t pwm_b_gpio_pin;
-    crm_periph_clock_type pwm_b_gpio_crm_clk;
-
-} Pwm_HardwareSettings_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -34,4 +21,4 @@ typedef struct
 /*************************************************************************************************
  *                                  GLOBAL FUNCTION DECLARATIONS                                 *
  *************************************************************************************************/
-void Pwm_GpioConfigHardware(const Pwm_HardwareSettings_t *hardware_settings);
+void Timer3_Init(void);

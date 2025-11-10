@@ -67,14 +67,22 @@ void FileSystem_CheckImageCopyFlag(void)
 {
     if (user_data->dual_image_copy_flag == DUAL_IMAGE_FLAG_REQUEST)
     {
-        printf("Clear dual image copy flag\n");
+        DEBUG_PRINT("Clear dual image copy flag\n");
         FileSystem_UserDataUpdate_t update = {0};
         update.field_mask = UPDATE_FIELD_DUAL_IMAGE_FLAG;
         update.dual_image_copy_flag = (uint8_t)DUAL_IMAGE_FLAG_NONE;
         UpdateUserData(&update);
 
-        printf("Dual Image CopyFlg : %02X\n", user_data->dual_image_copy_flag);
+        DEBUG_PRINT("Dual Image CopyFlg : %02X\n", user_data->dual_image_copy_flag);
     }
+}
+
+void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeMode_t state)
+{
+    FileSystem_UserDataUpdate_t update = {0};
+    update.field_mask = UPDATE_FIELD_PRESET_CHARGE;
+    update.presetChargeState = (uint8_t)state;
+    UpdateUserData(&update);
 }
 
 /*************************************************************************************************
@@ -113,6 +121,11 @@ static void UpdateUserData(const FileSystem_UserDataUpdate_t *update)
     if (update->field_mask & UPDATE_FIELD_SERIAL_NUMBER)
     {
         memcpy(user_data_ram.serial_number, update->serial_number, sizeof(user_data_ram.serial_number));
+    }
+
+    if (update->field_mask & UPDATE_FIELD_PRESET_CHARGE)
+    {
+        user_data_ram.presetChargeState = update->presetChargeState;
     }
 
     EraseFlashRegion(USER_DATA_START_ADDRESS, USER_DATA_END_ADDRESS);

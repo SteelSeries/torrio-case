@@ -7,9 +7,7 @@
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
-#define MAX_TASKS 10                                       // Maximum number of tasks
-#define TIME_BASE_US 100U                                  // Tick duration in microseconds (100us per tick)
-#define MS_TO_TICKS(ms) ((ms) * 1000 / TIME_BASE_US)       // Convert milliseconds to ticks
+#define MAX_TASKS 20                                       // Maximum number of tasks
 #define SEC_TO_TICKS(sec) ((sec) * 1000000 / TIME_BASE_US) // Convert seconds to ticks
 
 // UINT32_MAX is the maximum value for a 32-bit unsigned integer (4294967295)
@@ -147,14 +145,14 @@ uint32_t TaskScheduler_GetTimeUntilNextTask(void)
         uint32_t delta = taskList[i].interval - (now - taskList[i].lastRun);
         if (delta <= 0)
         {
-            return 0; // 任務已到期，立即執行
+            return 0;
         }
         if (minDelta == -1 || delta < minDelta)
         {
             minDelta = delta;
         }
     }
-    return minDelta; // 剩餘時間（ticks 單位）
+    return minDelta;
 }
 
 /*************************************************************************************************

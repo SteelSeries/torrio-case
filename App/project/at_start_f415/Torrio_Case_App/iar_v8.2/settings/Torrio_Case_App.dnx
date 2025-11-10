@@ -31,8 +31,8 @@
     <SWOManager>
         <SamplingDivider>8192</SamplingDivider>
         <OverrideClock>0</OverrideClock>
-        <CpuClock>1870012532</CpuClock>
-        <SwoClock>1769234796</SwoClock>
+        <CpuClock>7565925</CpuClock>
+        <SwoClock>589884</SwoClock>
         <DataLogMode>0</DataLogMode>
         <ItmPortsEnabled>63</ItmPortsEnabled>
         <ItmTermIOPorts>1</ItmTermIOPorts>
@@ -46,7 +46,7 @@
         <EnforceMemoryConfiguration>1</EnforceMemoryConfiguration>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>2064098281</Checksum>
+        <Checksum>45370269</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -105,8 +105,11 @@
     </DisassembleMode>
     <Breakpoints2>
         <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\src\app_fw_update.c}.146.5" 0 0 1 "" 0 "" 0</Bp0>
-        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\task_scheduler.c}.92.9" 0 0 1 "" 0 "" 0</Bp1>
-        <Count>2</Count>
+        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\usb.c}.113.5" 0 0 1 "" 0 "" 0</Bp1>
+        <Bp2>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\lighting.c}.136.11" 0 0 1 "" 0 "" 0</Bp2>
+        <Bp3>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\Commands.c}.620.5" 0 0 1 "" 0 "" 0</Bp3>
+        <Bp4>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\Commands.c}.622.9" 0 0 1 "" 0 "" 0</Bp4>
+        <Count>5</Count>
     </Breakpoints2>
     <Aliases>
         <Count>0</Count>
