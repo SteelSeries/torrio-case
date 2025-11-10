@@ -8,6 +8,8 @@
 #include "usb.h"
 #include "cps4520.h"
 #include "lighting.h"
+#include "commands.h"
+#include "custom_hid_class.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -26,9 +28,12 @@
 static Lid_HardwareSettings_t user_hardware_settings = {0};
 static Lid_State_t lid_state = LID_UNKNOW;
 static Lid_State_t pre_lid_state = LID_UNKNOW;
+static Lid_Usb_Report_State_t usb_lid_state = LID_USB_REPROT_UNKNOW;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
+static Lid_Usb_Report_State_t Lid_GetUsbReportState(void);
+static void Lid_SyncLidStatusHandle(void);
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -92,6 +97,7 @@ void Lid_StatusCheckTask(void)
       DEBUG_PRINT("Lid state changed to: %s\n", lid_state == LID_OPEN ? "OPEN" : "CLOSED");
     }
     is_debounce_check = false;
+    Lid_SyncLidStatusHandle();
   }
   if (pre_lid_state == LID_CLOSE)
   {
@@ -101,10 +107,37 @@ void Lid_StatusCheckTask(void)
       {
         DEBUG_PRINT("add enter standby task fail\n");
       }
-    }
+    } 
   }
+}
+
+// This function is used for GG engine, the reported lid status.
+void Lid_GetLidStatusHandle(void)
+{
+    uint8_t buff[2] = {GET_CASE_LID_STATUS | COMMAND_READ_FLAG , Lid_GetUsbReportState()};
+
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
 
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static Lid_Usb_Report_State_t Lid_GetUsbReportState(void)
+{
+  if (pre_lid_state == LID_CLOSE)
+  {
+    usb_lid_state = LID_USB_REPROT_CLOSE;
+  }
+  else
+  {
+    usb_lid_state = LID_USB_REPROT_OPEN;
+  }
+  return usb_lid_state;
+}
+
+static void Lid_SyncLidStatusHandle(void)
+{
+    uint8_t buff[2] = {GET_CASE_LID_STATUS | COMMAND_READ_FLAG , Lid_GetUsbReportState()};
+
+    ep3_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+}

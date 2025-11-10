@@ -12,7 +12,6 @@
 #include "sy8809.h"
 #include "lid.h"
 #include "task_scheduler.h"
-#include "uart_comm_manager.h"
 #include "uart_driver.h"
 
 /*************************************************************************************************

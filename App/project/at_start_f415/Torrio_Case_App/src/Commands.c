@@ -17,6 +17,7 @@
 #include "uart_comm_manager.h"
 #include "lighting.h"
 #include "uart_command_handler.h"
+#include "lid.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -76,6 +77,7 @@ static Command_Status_t WriteColorSpinAndMoldel(const uint8_t command[USB_RECEIV
 static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t GetLidStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t HandleLedDebugCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, uint8_t b);
 static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN]);
@@ -119,6 +121,7 @@ static const cmd_handler_t handler_table[] =
 
         // Case/Buds
         {.op = GET_BATTERY_INFO,        .read = GetBatteryStatus,               .write = HandleNoop},
+        {.op = GET_CASE_LID_STATUS,     .read = GetLidStatus,                     .write = HandleNoop}
 };
 // clang-format on
 static Command_GetFactoryLighting_t fac_lighting_mode = COMMAND_FACTORY_NONE;
@@ -638,6 +641,15 @@ static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_L
 static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN])
 {
     if (TaskScheduler_AddTask(SystemStateManager_GetBatteryStatusHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        DEBUG_PRINT("add read battery status task fail\n");
+    }
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t GetLidStatus(const uint8_t command[USB_RECEIVE_LEN])
+{
+    if (TaskScheduler_AddTask(Lid_GetLidStatusHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
     {
         DEBUG_PRINT("add read battery status task fail\n");
     }

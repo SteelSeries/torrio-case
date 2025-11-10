@@ -84,6 +84,21 @@ typedef struct
   uint8_t send_state;
 }custom_hid_type;
 
+typedef struct
+{
+  uint8_t g_rxhid_buff[USBD_CUSTOM3_IN_MAXPACKET_SIZE];
+  uint8_t g_txhid_buff[USBD_CUSTOM_OUT_MAXPACKET_SIZE];
+
+  uint32_t hid_protocol;
+  uint32_t hid_set_idle;
+  uint32_t alt_setting;
+  
+  uint8_t hid_set_report[USBD_CUSTOM3_IN_MAXPACKET_SIZE];
+  uint8_t hid_get_report[USBD_CUSTOM_OUT_MAXPACKET_SIZE];
+  uint8_t hid_state;
+  uint8_t send_ep3_state;
+}ep3_hid_type;
+
 /**
   * @}
   */
@@ -93,6 +108,7 @@ typedef struct
   */
 extern usbd_class_handler custom_hid_class_handler;
 usb_sts_type custom_hid_class_send_report(void *udev, uint8_t *report, uint16_t len);
+usb_sts_type ep3_hid_class_send_report(void *udev, uint8_t *report, uint16_t len);
 /**
   * @}
   */

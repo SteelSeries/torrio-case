@@ -6,10 +6,10 @@
 #include "Commands.h"
 #include "custom_hid_class.h"
 #include "usb.h"
-#include "uart_interface.h"
 #include <string.h>
 #include "battery.h"
 #include "file_system.h"
+#include "uart_driver.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -84,6 +84,7 @@ static const cmd_handler_t handler_table[] =
         {.op = BUD_CMD_SERIAL_NUMBER,           .read = HandleNoop,                         .write = ReadBudsSerialNumber,              .timeout = TimeoutHandleNoop},
         {.op = BUD_CMD_BATTERY_STATE,           .read = ReadBudsBatteryStatus,              .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
         {.op = BUD_CMD_CHARGE_SETING,           .read = FactorySetBatteryChargeStatus,      .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
+        {.op = BUD_CMD_SYNC_CASE_LID_STATE,     .read = HandleNoop,                         .write = HandleNoop,                        .timeout = TimeoutHandleNoop},
     };
 // clang-format on
 
@@ -304,7 +305,9 @@ static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA
         return COMMAND_STATUS_SUCCESS;
     }
 
-    if (ctx->mode == UART_BUDS_WORK_MODE_APP)
+    switch (ctx->mode)
+    {
+    case UART_BUDS_WORK_MODE_APP:
     {
         {
             uint8_t payload[] = {BUD_CMD_FW_VERSION, 0};
@@ -327,14 +330,23 @@ static Command_Status_t ReadBudsButtonAndMode(const uint8_t command[CMD_MAX_DATA
             UartInterface_SendBudCommand(target, BUD_CMD_BUD_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
         {
-            uint8_t payload[] = {BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG};
-            UartInterface_SendBudCommand(target, BUD_CMD_DEEP_POWER_OFF | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
-        }
-        {
             uint8_t payload[] = {BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG};
             UartInterface_SendBudCommand(target, BUD_CMD_BATTERY_STATE | COMMAND_READ_FLAG, payload, sizeof(payload), 1000);
         }
+        UartDrive_SendDeepPowerOffToPair(target);
+        break;
     }
+
+    case UART_BUDS_WORK_MODE_BOOTLOADER:
+    {
+        {
+            uint8_t payload[] = {BUD_CMD_FW_VERSION, 0};
+            UartInterface_SendBudCommand(target, BUD_CMD_FW_VERSION, payload, sizeof(payload), 1000);
+        }
+        break;
+    }
+    }
+
     return COMMAND_STATUS_SUCCESS;
 }
 
