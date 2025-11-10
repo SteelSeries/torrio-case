@@ -96,6 +96,18 @@ void Lid_StatusCheckTask(void)
       DEBUG_PRINT("Lid state changed to: %s\n", lid_state == LID_OPEN ? "OPEN" : "CLOSED");
     }
     is_debounce_check = false;
+    if (pre_lid_state == LID_CLOSE)
+    {
+      usb_lid_state = LID_USB_REPROT_CLOSE;
+    }
+    else
+    {
+      usb_lid_state = LID_USB_REPROT_OPEN;
+    }
+    if (TaskScheduler_AddTask(Lid_GetLidStatusHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)//sync lid status
+    {
+        DEBUG_PRINT("add read battery status task fail\n");
+    }
   }
   if (pre_lid_state == LID_CLOSE)
   {
@@ -105,12 +117,7 @@ void Lid_StatusCheckTask(void)
       {
         DEBUG_PRINT("add enter standby task fail\n");
       }
-    }
-    usb_lid_state = LID_USB_REPROT_CLOSE;
-  }
-  else
-  {
-    usb_lid_state = LID_USB_REPROT_OPEN;
+    } 
   }
 }
 
