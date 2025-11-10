@@ -79,6 +79,7 @@ static usb_sts_type class_init_handler(void *udev)
   usb_sts_type status = USB_OK;
   usbd_core_type *pudev = (usbd_core_type *)udev;
   custom_hid_type *pcshid = (custom_hid_type *)pudev->class_handler->pdata;
+  ep3_hid_type *pcshidep3 = (ep3_hid_type *)pudev->class_handler->pdata;
   /* open custom hid in endpoint */
   usbd_ept_open(pudev, USBD_CUSTOM_HID_IN_EPT, EPT_INT_TYPE, USBD_CUSTOM_IN_MAXPACKET_SIZE);
 
@@ -95,7 +96,6 @@ static usb_sts_type class_init_handler(void *udev)
   // usbd_ept_recv(pudev, USBD_CUSTOM_HID_OUT_EPT, pcshid->g_rxhid_buff, USBD_CUSTOM_OUT_MAXPACKET_SIZE);
 
   pcshid->send_state = 0;
-  ep3_hid_type *pcshidep3 = (ep3_hid_type *)pudev->class_handler->pdata;
   pcshidep3->send_ep3_state = 0;
   
   return status;
@@ -277,7 +277,9 @@ static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   custom_hid_type *pcshid = (custom_hid_type *)pudev->class_handler->pdata;
   
   pcshid->send_state = 0;
+
   ep3_hid_type *pcshidep3 = (ep3_hid_type *)pudev->class_handler->pdata;
+
   pcshidep3->send_ep3_state = 0;
   
   /* ...user code...
