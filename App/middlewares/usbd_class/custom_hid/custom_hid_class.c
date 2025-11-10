@@ -95,6 +95,8 @@ static usb_sts_type class_init_handler(void *udev)
   // usbd_ept_recv(pudev, USBD_CUSTOM_HID_OUT_EPT, pcshid->g_rxhid_buff, USBD_CUSTOM_OUT_MAXPACKET_SIZE);
 
   pcshid->send_state = 0;
+  ep3_hid_type *pcshidep3 = (ep3_hid_type *)pudev->class_handler->pdata;
+  pcshidep3->send_ep3_state = 0;
   
   return status;
 }
@@ -275,6 +277,8 @@ static usb_sts_type class_in_handler(void *udev, uint8_t ept_num)
   custom_hid_type *pcshid = (custom_hid_type *)pudev->class_handler->pdata;
   
   pcshid->send_state = 0;
+  ep3_hid_type *pcshidep3 = (ep3_hid_type *)pudev->class_handler->pdata;
+  pcshidep3->send_ep3_state = 0;
   
   /* ...user code...
     trans next packet data
@@ -378,6 +382,29 @@ usb_sts_type custom_hid_class_send_report(void *udev, uint8_t *report, uint16_t 
     memset(pcshid->g_txhid_buff, 0x00, USBD_CUSTOM_IN_MAXPACKET_SIZE);
     memcpy(pcshid->g_txhid_buff, report, len);
     usbd_ept_send(pudev, USBD_CUSTOM_HID_IN_EPT, pcshid->g_txhid_buff, USBD_CUSTOM_IN_MAXPACKET_SIZE);
+    status = USB_OK;
+  }
+  return status;
+}
+
+/**
+  * @brief  usb device class send report
+  * @param  udev: to the structure of usbd_core_type
+  * @param  report: report buffer
+  * @param  len: report length
+  * @retval status of usb_sts_type
+  */
+usb_sts_type ep3_hid_class_send_report(void *udev, uint8_t *report, uint16_t len)
+{
+  usb_sts_type status = USB_FAIL;
+  usbd_core_type *pudev = (usbd_core_type *)udev;
+  ep3_hid_type *pcshid = (ep3_hid_type *)pudev->class_handler->pdata;
+
+  if(usbd_connect_state_get(pudev) == USB_CONN_STATE_CONFIGURED && pcshid->send_ep3_state == 0)
+  {
+    pcshid->send_ep3_state = 1;
+    memcpy(pcshid->g_txhid_buff, report, len);
+    usbd_ept_send(pudev, USBD_CUSTOM_HID_IN_EPT3, pcshid->g_txhid_buff, USBD_CUSTOM3_IN_MAXPACKET_SIZE);
     status = USB_OK;
   }
   return status;

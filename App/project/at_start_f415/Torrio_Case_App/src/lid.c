@@ -33,6 +33,7 @@ static Lid_Usb_Report_State_t usb_lid_state = LID_USB_REPROT_UNKNOW;
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
 static Lid_Usb_Report_State_t Lid_GetUsbReportState(void);
+static void Lid_SyncLidStatusHandle(void);
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -96,15 +97,7 @@ void Lid_StatusCheckTask(void)
       DEBUG_PRINT("Lid state changed to: %s\n", lid_state == LID_OPEN ? "OPEN" : "CLOSED");
     }
     is_debounce_check = false;
-    if (pre_lid_state == LID_CLOSE)
-    {
-      usb_lid_state = LID_USB_REPROT_CLOSE;
-    }
-    else
-    {
-      usb_lid_state = LID_USB_REPROT_OPEN;
-    }
-    if (TaskScheduler_AddTask(Lid_GetLidStatusHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)//sync lid status
+    if (TaskScheduler_AddTask(Lid_SyncLidStatusHandle, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)//sync lid status
     {
         DEBUG_PRINT("add read battery status task fail\n");
     }
@@ -126,6 +119,15 @@ void Lid_GetLidStatusHandle(void)
 {
     uint8_t buff[2] = {0x00};
 
+    if (pre_lid_state == LID_CLOSE)
+    {
+      usb_lid_state = LID_USB_REPROT_CLOSE;
+    }
+    else
+    {
+      usb_lid_state = LID_USB_REPROT_OPEN;
+    }
+
     buff[0] = GET_CASE_LID_STATUS | COMMAND_READ_FLAG;
     buff[1] = Lid_GetUsbReportState();
 
@@ -138,4 +140,23 @@ void Lid_GetLidStatusHandle(void)
 static Lid_Usb_Report_State_t Lid_GetUsbReportState(void)
 {
   return usb_lid_state;
+}
+
+static void Lid_SyncLidStatusHandle(void)
+{
+    uint8_t buff[2] = {0x00};
+
+    if (pre_lid_state == LID_CLOSE)
+    {
+      usb_lid_state = LID_USB_REPROT_CLOSE;
+    }
+    else
+    {
+      usb_lid_state = LID_USB_REPROT_OPEN;
+    }
+
+    buff[0] = GET_CASE_LID_STATUS | COMMAND_READ_FLAG;
+    buff[1] = Lid_GetUsbReportState();
+
+    ep3_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
