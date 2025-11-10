@@ -95,15 +95,15 @@
 
 #define PWM_R_PIN                           GPIO_PINS_6                 // PA6
 #define PWM_R_GPIO_PORT                     GPIOA                       // PA6
-#define PWM_R_GPIO_CLK                      CRM_TMR3_PERIPH_CLOCK      // PA6
+#define PWM_R_GPIO_CLK                      CRM_GPIOA_PERIPH_CLOCK      // PA6
 
 #define PWM_G_PIN                           GPIO_PINS_7                 // PA7
 #define PWM_G_GPIO_PORT                     GPIOA                       // PA7
-#define PWM_G_GPIO_CLK                      CRM_TMR3_PERIPH_CLOCK      // PA7
+#define PWM_G_GPIO_CLK                      CRM_GPIOA_PERIPH_CLOCK      // PA7
 
 #define PWM_B_PIN                           GPIO_PINS_0                 // PB0
 #define PWM_B_GPIO_PORT                     GPIOB                       // PB0
-#define PWM_B_GPIO_CLK                      CRM_TMR3_PERIPH_CLOCK      // PB0
+#define PWM_B_GPIO_CLK                      CRM_GPIOB_PERIPH_CLOCK      // PB0
 
 #define I2C1_PORT                           I2C1
 #define I2C1_CLK                            CRM_I2C1_PERIPH_CLOCK

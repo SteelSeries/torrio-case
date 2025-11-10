@@ -195,6 +195,12 @@ void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_set
 
     gpio_default_para_init(&gpio_init_struct);
 
+    crm_clocks_freq_type crm_clocks_freq_struct = {0};
+
+    crm_clocks_freq_get(&crm_clocks_freq_struct);
+
+    crm_periph_clock_enable(CRM_TMR3_PERIPH_CLOCK, TRUE);
+
     gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
     gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
     gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
@@ -202,15 +208,14 @@ void Lighting_GpioConfigHardware(const Lighting_HardwareSettings_t *hardware_set
 
     gpio_init_struct.gpio_pins = user_hardware_settings.lighting_r_gpio_pin;
     gpio_init(user_hardware_settings.lighting_r_gpio_port, &gpio_init_struct);
+    crm_periph_clock_enable(user_hardware_settings.lighting_r_gpio_crm_clk, TRUE);
 
     gpio_init_struct.gpio_pins = user_hardware_settings.lighting_g_gpio_pin;
     gpio_init(user_hardware_settings.lighting_g_gpio_port, &gpio_init_struct);
+    crm_periph_clock_enable(user_hardware_settings.lighting_g_gpio_crm_clk, TRUE);
 
     gpio_init_struct.gpio_pins = user_hardware_settings.lighting_b_gpio_pin;
     gpio_init(user_hardware_settings.lighting_b_gpio_port, &gpio_init_struct);
-
-    crm_periph_clock_enable(user_hardware_settings.lighting_r_gpio_crm_clk, TRUE);
-    crm_periph_clock_enable(user_hardware_settings.lighting_g_gpio_crm_clk, TRUE);
     crm_periph_clock_enable(user_hardware_settings.lighting_b_gpio_crm_clk, TRUE);
 }
 
