@@ -26,6 +26,7 @@
 
 // Case
 #define GET_BATTERY_INFO 0x37 // Read Case and buds battery level and charging status.
+#define GET_CASE_LID_STATUS 0x3C //Get/Sync lid status(Reverse status)
 
 // internal - we can reuse those as USB APIs for Artery
 #define INTERNAL_USB_SUSPEND_OP 0x0CU // USB entered suspend mode. Lower power usage

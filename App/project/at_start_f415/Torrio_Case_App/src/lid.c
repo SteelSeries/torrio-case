@@ -8,6 +8,8 @@
 #include "usb.h"
 #include "cps4520.h"
 #include "lighting.h"
+#include "commands.h"
+#include "custom_hid_class.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -26,9 +28,11 @@
 static Lid_HardwareSettings_t user_hardware_settings = {0};
 static Lid_State_t lid_state = LID_UNKNOW;
 static Lid_State_t pre_lid_state = LID_UNKNOW;
+static Lid_Usb_Report_State_t usb_lid_state = LID_USB_REPROT_UNKNOW;
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
+static Lid_Usb_Report_State_t Lid_GetUsbReportState(void);
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
@@ -102,9 +106,29 @@ void Lid_StatusCheckTask(void)
         DEBUG_PRINT("add enter standby task fail\n");
       }
     }
+    usb_lid_state = LID_USB_REPROT_CLOSE;
   }
+  else
+  {
+    usb_lid_state = LID_USB_REPROT_OPEN;
+  }
+}
+
+// This function is used for GG engine, the reported lid status.
+void Lid_GetLidStatusHandle(void)
+{
+    uint8_t buff[2] = {0x00};
+
+    buff[0] = GET_CASE_LID_STATUS | COMMAND_READ_FLAG;
+    buff[1] = Lid_GetUsbReportState();
+
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
 
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static Lid_Usb_Report_State_t Lid_GetUsbReportState(void)
+{
+  return usb_lid_state;
+}
