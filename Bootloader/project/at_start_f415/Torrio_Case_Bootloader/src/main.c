@@ -40,12 +40,22 @@ int main(void)
 
   Bootloader_UsbConnectGpioInit();
 
+  Bootloader_LedGpioInit();
+
   DEBUG_PRINT("\n\n\nBootloader start!!!\n");
 
   if (FileSystem_CheckImageCopyFlag() == SUCCESS)
   {
     if (Bootloader_CheckBackDoor() == FALSE)
     {
+      if (crm_flag_get(CRM_SW_RESET_FLAG) != RESET)
+      {
+        crm_flag_clear(CRM_SW_RESET_FLAG);
+      }
+      else
+      {
+        gCurrentMode = NORMAL_MODE;
+      }
       if (Bootloader_CheckAppCodeComplete())
       {
         if (gCurrentMode != BOOTLOADER_MODE)
@@ -82,6 +92,7 @@ int main(void)
 
   while (1)
   {
+    Bootloader_LedBlink();
     if (Usb_GetUsbDetectState() != USB_PLUG)
     {
       gCurrentMode = NORMAL_MODE;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>5</fileVersion>
-    <fileChecksum>992441209</fileChecksum>
+    <fileChecksum>3964349473</fileChecksum>
     <configuration>
         <name>Torrio_Case_Bootloader</name>
         <outputs>
@@ -309,6 +309,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\Torrio_Case_Bootloader\Exe\Torrio_Case_Bootloader.out</name>
+            <outputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 94</file>
+                </tool>
+            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
@@ -894,6 +900,7 @@
             <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_dma.c</file>
             <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_ertc.c</file>
             <file>$PROJ_DIR$\..\..\..\..\libraries\drivers\src\at32f415_flash.c</file>
+            <file>$PROJ_DIR$\Torrio_Case_Bootloader_Debug\List\Torrio_Case_Bootloader.map</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\..\..\..\at32f415_board\at32f415_board.c</name>
@@ -1050,12 +1057,22 @@
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 80</file>
+                    <file> 80 142</file>
                 </tool>
             </outputs>
         </file>
         <file>
             <name>$PROJ_DIR$\Torrio_Case_Bootloader_Debug\Exe\Torrio_Case_Bootloader.out</name>
+            <outputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 87</file>
+                </tool>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 142</file>
+                </tool>
+            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
@@ -1492,5 +1509,8 @@
                 </tool>
             </inputs>
         </file>
+        <forcedrebuild>
+            <name>[REBUILD_ALL]</name>
+        </forcedrebuild>
     </configuration>
 </project>

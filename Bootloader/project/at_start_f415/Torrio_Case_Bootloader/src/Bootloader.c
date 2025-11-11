@@ -18,6 +18,18 @@
 #define HALL_OUT_PIN GPIO_PINS_1                // PB1
 #define HALL_OUT_GPIO GPIOB                     // PB1
 #define HALL_OUT_CRM_CLK CRM_GPIOB_PERIPH_CLOCK // PB1
+
+#define PWM_R_PIN GPIO_PINS_6                // PA6
+#define PWM_R_GPIO_PORT GPIOA                // PA6
+#define PWM_R_GPIO_CLK CRM_GPIOA_PERIPH_CLOCK // PA6
+
+#define PWM_G_PIN GPIO_PINS_7                // PA7
+#define PWM_G_GPIO_PORT GPIOA                // PA7
+#define PWM_G_GPIO_CLK CRM_GPIOA_PERIPH_CLOCK // PA7
+
+#define PWM_B_PIN GPIO_PINS_0                // PB0
+#define PWM_B_GPIO_PORT GPIOB                // PB0
+#define PWM_B_GPIO_CLK CRM_GPIOB_PERIPH_CLOCK // PB0
 /*************************************************************************************************
  *                                  LOCAL TYPE DEFINITIONS                                       *
  *************************************************************************************************/
@@ -89,6 +101,44 @@ void Bootloader_UsbConnectGpioInit(void)
 
     gpio_init_struct.gpio_pins = USB_DET_PIN;
     gpio_init(USB_DET_GPIO, &gpio_init_struct);
+}
+
+void Bootloader_LedGpioInit(void)
+{
+    gpio_init_type gpio_init_struct;
+
+    /* enable the led clock */
+    crm_periph_clock_enable(PWM_R_GPIO_CLK, TRUE);
+    crm_periph_clock_enable(PWM_G_GPIO_CLK, TRUE);
+    crm_periph_clock_enable(PWM_B_GPIO_CLK, TRUE);
+
+    /* set default parameter */
+    gpio_default_para_init(&gpio_init_struct);
+
+    /* configure the led gpio */
+    gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+    gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+    gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
+    gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+
+    gpio_init_struct.gpio_pins = PWM_R_PIN;
+    gpio_init(PWM_R_GPIO_PORT, &gpio_init_struct);
+
+    gpio_init_struct.gpio_pins = PWM_G_PIN;
+    gpio_init(PWM_G_GPIO_PORT, &gpio_init_struct);
+
+    gpio_init_struct.gpio_pins = PWM_B_PIN;
+    gpio_init(PWM_B_GPIO_PORT, &gpio_init_struct);
+
+    gpio_bits_reset(PWM_R_GPIO_PORT, PWM_R_PIN);
+    gpio_bits_reset(PWM_G_GPIO_PORT, PWM_G_PIN);
+    gpio_bits_reset(PWM_B_GPIO_PORT, PWM_B_PIN);
+}
+
+void Bootloader_LedBlink(void)
+{
+    gpio_bits_toggle(PWM_R_GPIO_PORT, PWM_R_PIN);
+    delay_ms(500);
 }
 
 error_status Bootloader_FlashErase(void)
@@ -249,18 +299,22 @@ error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in)
  *         - Hall output RESET: Lid is CLOSED
  *
  *         The function ensures that when USB is connected, the lid transitions
- *         from OPEN ¡÷ CLOSED ¡÷ OPEN within a certain time.
+ *         from OPEN -> CLOSED -> OPEN within a certain time.
  *
  * @return true  : Lid closed and reopened within allowed time (normal behavior)
  * @return false : USB not detected, or timeout, or abnormal lid state change
  */
 bool Bootloader_CheckBackDoor(void)
 {
+    DEBUG_PRINT("Bootloader_CheckBackDoor: start\n");
+
     // Step 1: Check USB connection
     if (gpio_input_data_bit_read(USB_DET_GPIO, USB_DET_PIN) != SET)
     {
+        DEBUG_PRINT("USB not detected, abort backdoor check.\n");
         return false;
     }
+    DEBUG_PRINT("USB detected.\n");
 
     uint8_t i = 0, j = 0;
 
@@ -270,17 +324,19 @@ bool Bootloader_CheckBackDoor(void)
         delay_ms(100);
         i++;
 
-        // DEBUG_PRINT("Lid on\n");
+        DEBUG_PRINT("Lid is OPEN (Hall=SET), i=%d\n", i);
 
         // Timeout: lid stayed open too long
         if (i > 10)
         {
+            DEBUG_PRINT("Timeout: Lid stayed open too long (>1s). Abort backdoor check.\n");
             return false;
         }
 
         // Step 3: Detect lid closing (RESET)
         if (gpio_input_data_bit_read(HALL_OUT_GPIO, HALL_OUT_PIN) == RESET)
         {
+            DEBUG_PRINT("Lid CLOSED detected, entering inner loop.\n");
 
             // Inner loop: wait for lid to open again
             j = 0;
@@ -288,19 +344,24 @@ bool Bootloader_CheckBackDoor(void)
             {
                 delay_ms(100);
                 j++;
+                DEBUG_PRINT("Waiting for lid to reopen, j=%d\n", j);
+
                 // Timeout: lid stayed closed too long
                 if (j > 7)
                 {
+                    DEBUG_PRINT("Timeout: Lid stayed closed too long (>700ms). Abort backdoor check.\n");
                     return false;
                 }
             }
 
-            // Step 4: Lid reopened ¡÷ success
+            // Step 4: Lid reopened success
+            DEBUG_PRINT("Lid reopened. Backdoor check SUCCESS.\n");
             return true;
         }
     }
 
     // Step 5: Never entered main loop or lid never closed
+    DEBUG_PRINT("Lid never closed. Backdoor check FAILED.\n");
     return false;
 }
 

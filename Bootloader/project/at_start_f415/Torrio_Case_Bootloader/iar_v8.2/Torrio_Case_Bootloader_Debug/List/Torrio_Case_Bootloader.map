@@ -1,0 +1,708 @@
+###############################################################################
+#
+# IAR ELF Linker V9.20.2.320/W64 for ARM                  11/Nov/2025  11:13:42
+# Copyright 2007-2021 IAR Systems AB.
+#
+#    Output file  =
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Exe\Torrio_Case_Bootloader.out_nochecksum
+#    Map file     =
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\List\Torrio_Case_Bootloader.map
+#    Command line =
+#        -f
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Exe\Torrio_Case_Bootloader.out_nochecksum.rsp
+#        (C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_adc.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\bsp\at32f415_board.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_can.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user\at32f415_clock.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_cmp.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_crc.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_crm.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_debug.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_dma.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_ertc.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_exint.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_flash.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_gpio.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_i2c.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user\at32f415_int.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_misc.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_pwc.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_sdio.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_spi.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_tmr.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_usart.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_usb.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_wdt.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware\at32f415_wwdt.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user\Bootloader.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user\command.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_custom\custom_hid_class.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_custom\custom_hid_desc.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user\file_system.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user\main.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\cmsis\startup_at32f415.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\cmsis\system_at32f415.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user\usb.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_drivers\usb_core.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_drivers\usbd_core.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_drivers\usbd_int.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_drivers\usbd_sdr.o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user\version.o
+#        --redirect _Printf=_PrintfTiny --no_out_extension -o
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Exe\Torrio_Case_Bootloader.out_nochecksum
+#        --map
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\List\Torrio_Case_Bootloader.map
+#        --config
+#        C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader.icf
+#        --semihosting --entry __iar_program_start --vfe --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor       = *
+__CPP_Runtime   = 1
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The basic heap was selected because no calls to memory allocation
+functions were found in the application outside of system library
+functions, and there are calls to deallocation functions in the
+application.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at address 0x800'0000 { ro section .intvec };
+"P1":  place in [from 0x800'0000 to 0x800'37ff] { ro };
+define block CSTACK with size = 4K, alignment = 8 { };
+define block HEAP with size = 4K, alignment = 8 { };
+"P2":  place in [from 0x2000'0001 to 0x2000'7fff] {
+          rw, block CSTACK, block HEAP };
+initialize by copy { rw };
+
+  Section            Kind         Address    Size  Object
+  -------            ----         -------    ----  ------
+"A0":                                       0x170
+  .intvec            ro code   0x800'0000   0x170  startup_at32f415.o [2]
+                             - 0x800'0170   0x170
+
+"P1":                                      0x35ee
+  .text              ro code   0x800'0170   0x6a8  usbd_core.o [5]
+  .text              ro code   0x800'0818   0x3a2  usbd_sdr.o [5]
+  .text              ro code   0x800'0bba    0x1a  xsnprout.o [7]
+  .text              ro code   0x800'0bd4   0x422  at32f415_usb.o [3]
+  .text              ro code   0x800'0ff8    0xbc  usb.o [6]
+  .text              ro code   0x800'10b4   0x434  at32f415_crm.o [3]
+  .text              ro code   0x800'14e8    0xd2  at32f415_gpio.o [3]
+  .text              ro code   0x800'15bc   0x188  at32f415_board.o [1]
+  .text              ro code   0x800'1744   0x106  I64DivMod_small.o [8]
+  .text              ro code   0x800'184c    0x7c  at32f415_usart.o [3]
+  .text              ro code   0x800'18c8    0xcc  at32f415_misc.o [3]
+  .text              ro code   0x800'1994     0x2  I64DivZer.o [8]
+  .text              ro code   0x800'1998   0x4f0  Bootloader.o [6]
+  .text              ro code   0x800'1e88    0x18  ABImemcpy_small.o [8]
+  .text              ro code   0x800'1ea0    0xe0  at32f415_flash.o [3]
+  .text              ro code   0x800'1f80    0x28  printf.o [7]
+  .text              ro code   0x800'1fa8   0x1ec  file_system.o [6]
+  .text              ro code   0x800'2194     0x6  ABImemclr4.o [8]
+  .text              ro code   0x800'219a   0x136  xprintftiny.o [7]
+  .text              ro code   0x800'22d0    0x1e  memcmp_small.o [8]
+  .text              ro code   0x800'22f0    0x32  ABImemset48.o [8]
+  .text              ro code   0x800'2324    0x36  strlen.o [8]
+  .text              ro code   0x800'235a   0x4ba  usbd_int.o [5]
+  .text              ro code   0x800'2814   0x24e  custom_hid_class.o [4]
+  .text              ro code   0x800'2a64   0x180  command.o [6]
+  .text              ro code   0x800'2be4    0x44  snprintf.o [7]
+  .text              ro code   0x800'2c28    0xa4  version.o [6]
+  .text              ro code   0x800'2ccc   0x180  main.o [6]
+  .text              ro code   0x800'2e4c    0x70  at32f415_clock.o [6]
+  .text              ro code   0x800'2ebc    0x86  usb_core.o [5]
+  .text              ro code   0x800'2f44   0x148  system_at32f415.o [2]
+  .rodata            const     0x800'308c   0x17c  Bootloader.o [6]
+  .text              ro code   0x800'3208   0x128  custom_hid_desc.o [4]
+  .text              ro code   0x800'3330    0x78  lz77_init_single.o [8]
+  .rodata            const     0x800'33a8    0x48  command.o [6]
+  .text              ro code   0x800'33f0    0x44  putchar.o [7]
+  .text              ro code   0x800'3434    0x38  zero_init3.o [8]
+  .text              ro code   0x800'346c    0x28  data_init.o [8]
+  .iar.init_table    const     0x800'3494    0x20  - Linker created -
+  .text              ro code   0x800'34b4    0x1e  cmain.o [8]
+  .text              ro code   0x800'34d2     0x4  low_level_init.o [7]
+  .text              ro code   0x800'34d6     0x4  exit.o [7]
+  .text              ro code   0x800'34dc     0xa  cexit.o [8]
+  .text              ro code   0x800'34e8    0x14  exit.o [9]
+  .text              ro code   0x800'34fc    0x1c  at32f415_int.o [6]
+  .text              ro code   0x800'3518    0x1c  cstartup_M.o [8]
+  .text              ro code   0x800'3534    0x16  xprout.o [7]
+  .text              ro code   0x800'354c    0x10  startup_at32f415.o [2]
+  .text              ro code   0x800'355c     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3560     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3564     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3568     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'356c     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3570     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3574     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3578     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'357c     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3580     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3584     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3588     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'358c     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3590     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3594     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3598     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'359c     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35a0     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35a4     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35a8     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35ac     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35b0     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35b4     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35b8     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35bc     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35c0     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35c4     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35c8     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35cc     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35d0     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35d4     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35d8     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35dc     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35e0     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35e4     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35e8     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35ec     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35f0     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35f4     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35f8     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'35fc     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3600     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3604     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3608     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'360c     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3610     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3614     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3618     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'361c     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3620     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3624     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3628     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'362c     0x4  startup_at32f415.o [2]
+  .text              ro code   0x800'3630     0x4  startup_at32f415.o [2]
+  .rodata            const     0x800'3634     0x0  zero_init3.o [8]
+  .rodata            const     0x800'3634     0x0  lz77_init_single.o [8]
+  Initializer bytes  const     0x800'3634   0x12a  <for P2-1>
+                             - 0x800'375e  0x35ee
+
+Absolute sections:                            0x1
+  .noinit            uninit   0x2000'0000     0x1  command.o [6]
+                            - 0x2000'0001     0x1
+
+"P2", part 1 of 3:                          0x1b4
+  P2-1                        0x2000'0004   0x1b4  <Init block>
+    .data            inited   0x2000'0004    0x28  custom_hid_class.o [4]
+    .data            inited   0x2000'002c    0x2c  custom_hid_desc.o [4]
+    .data            inited   0x2000'0058    0x14  custom_hid_desc.o [4]
+    .data            inited   0x2000'006c    0x5c  custom_hid_desc.o [4]
+    .data            inited   0x2000'00c8    0x28  custom_hid_desc.o [4]
+    .data            inited   0x2000'00f0    0x1c  custom_hid_desc.o [4]
+    .data            inited   0x2000'010c    0x20  custom_hid_desc.o [4]
+    .data            inited   0x2000'012c     0x4  custom_hid_desc.o [4]
+    .data            inited   0x2000'0130    0x24  custom_hid_desc.o [4]
+    .data            inited   0x2000'0154     0x8  custom_hid_desc.o [4]
+    .data            inited   0x2000'015c     0x8  custom_hid_desc.o [4]
+    .data            inited   0x2000'0164     0x8  custom_hid_desc.o [4]
+    .data            inited   0x2000'016c     0x4  system_at32f415.o [2]
+    .data            inited   0x2000'0170    0x48  xfiles.o [7]
+                            - 0x2000'01b8   0x1b4
+
+"P2", part 2 of 3:                         0x1024
+  .bss               zero     0x2000'01b8   0x4d0  custom_hid_class.o [4]
+  .bss               zero     0x2000'0688   0x400  command.o [6]
+  .bss               zero     0x2000'0a88   0x3f4  Bootloader.o [6]
+  .bss               zero     0x2000'0e7c   0x1f4  usb.o [6]
+  .bss               zero     0x2000'1070   0x108  custom_hid_desc.o [4]
+  .bss               zero     0x2000'1178    0x50  xfiles.o [7]
+  .bss               zero     0x2000'11c8     0x8  at32f415_board.o [1]
+  .bss               zero     0x2000'11d0     0x8  Bootloader.o [6]
+  .bss               zero     0x2000'11d8     0x1  command.o [6]
+  .bss               zero     0x2000'11d9     0x1  usbd_sdr.o [5]
+                            - 0x2000'11da  0x1022
+
+"P2", part 3 of 3:                         0x1000
+  CSTACK                      0x2000'11e0  0x1000  <Block>
+    CSTACK           uninit   0x2000'11e0  0x1000  <Block tail>
+                            - 0x2000'21e0  0x1000
+
+Unused ranges:
+
+         From           To    Size
+         ----           --    ----
+   0x800'375e   0x800'37ff    0xa2
+  0x2000'0001  0x2000'0003     0x3
+  0x2000'11dc  0x2000'11df     0x4
+  0x2000'21e0  0x2000'7fff  0x5e20
+
+
+*******************************************************************************
+*** INIT TABLE
+***
+
+          Address      Size
+          -------      ----
+Zero (__iar_zero_init3)
+    1 destination range, total size 0x1022:
+          0x2000'01b8  0x1022
+
+Copy/lz77 (__iar_lz77_init_single3)
+    1 source range, total size 0x12a (68% of destination):
+           0x800'3634   0x12a
+    1 destination range, total size 0x1b4:
+          0x2000'0004   0x1b4
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module              ro code  ro data  rw data  rw data
+                                                    (abs)
+    ------              -------  -------  -------  -------
+command line/config:
+    ------------------------------------------------------
+    Total:
+
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\bsp: [1]
+    at32f415_board.o        392                 8
+    ------------------------------------------------------
+    Total:                  392                 8
+
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\cmsis: [2]
+    startup_at32f415.o      600
+    system_at32f415.o       328        2        4
+    ------------------------------------------------------
+    Total:                  928        2        4
+
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware: [3]
+    at32f415_crm.o        1'076
+    at32f415_flash.o        224
+    at32f415_gpio.o         210
+    at32f415_misc.o         204
+    at32f415_usart.o        124
+    at32f415_usb.o        1'058
+    ------------------------------------------------------
+    Total:                2'896
+
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_custom: [4]
+    custom_hid_class.o      590       27    1'272
+    custom_hid_desc.o       296      219      584
+    ------------------------------------------------------
+    Total:                  886      246    1'856
+
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_drivers: [5]
+    usb_core.o              134
+    usbd_core.o           1'704
+    usbd_int.o            1'210
+    usbd_sdr.o              930                 1
+    ------------------------------------------------------
+    Total:                3'978                 1
+
+C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user: [6]
+    Bootloader.o          1'264      380    1'020
+    at32f415_clock.o        112
+    at32f415_int.o           28
+    command.o               384       72    1'025        1
+    file_system.o           492
+    main.o                  384
+    usb.o                   188               500
+    version.o               164
+    ------------------------------------------------------
+    Total:                3'016      452    2'545        1
+
+dl7M_tlf.a: [7]
+    exit.o                    4
+    low_level_init.o          4
+    printf.o                 40
+    putchar.o                68
+    snprintf.o               68
+    xfiles.o                          50      152
+    xprintftiny.o           310
+    xprout.o                 22
+    xsnprout.o               26
+    ------------------------------------------------------
+    Total:                  542       50      152
+
+rt7M_tl.a: [8]
+    ABImemclr4.o              6
+    ABImemcpy_small.o        24
+    ABImemset48.o            50
+    I64DivMod_small.o       262
+    I64DivZer.o               2
+    cexit.o                  10
+    cmain.o                  30
+    cstartup_M.o             28
+    data_init.o              40
+    lz77_init_single.o      120
+    memcmp_small.o           30
+    strlen.o                 54
+    zero_init3.o             56
+    ------------------------------------------------------
+    Total:                  712
+
+shb_l.a: [9]
+    exit.o                   20
+    ------------------------------------------------------
+    Total:                   20
+
+    Gaps                     22
+    Linker created                    32    4'096
+----------------------------------------------------------
+    Grand Total:         13'392      782    8'662        1
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                       Address   Size  Type      Object
+-----                       -------   ----  ----      ------
+.iar.init_table$$Base    0x800'3494          --   Gb  - Linker created -
+.iar.init_table$$Limit   0x800'34b4          --   Gb  - Linker created -
+?main                    0x800'34b5         Code  Gb  cmain.o [8]
+Bootloader_BackDoorHallGpioInit
+                         0x800'1999   0x22  Code  Gb  Bootloader.o [6]
+Bootloader_CheckAppCodeComplete
+                         0x800'1ce1   0x5e  Code  Gb  Bootloader.o [6]
+Bootloader_CheckBackDoor
+                         0x800'1c19   0xa6  Code  Gb  Bootloader.o [6]
+Bootloader_CmdCrcCheckHandler
+                         0x800'1bb9   0x60  Code  Gb  Bootloader.o [6]
+Bootloader_FlashErase    0x800'1a97    0x2  Code  Gb  Bootloader.o [6]
+Bootloader_FlashWrite    0x800'1a99  0x11e  Code  Gb  Bootloader.o [6]
+Bootloader_JumpToApp     0x800'1cc7   0x1a  Code  Gb  Bootloader.o [6]
+Bootloader_LedBlink      0x800'1a7f   0x18  Code  Gb  Bootloader.o [6]
+Bootloader_LedGpioInit   0x800'19fb   0x84  Code  Gb  Bootloader.o [6]
+Bootloader_UsbConnectGpioInit
+                         0x800'19bb   0x20  Code  Gb  Bootloader.o [6]
+BusFault_Handler         0x800'3503    0x2  Code  Gb  at32f415_int.o [6]
+CSTACK$$Base            0x2000'11e0          --   Gb  - Linker created -
+CSTACK$$Limit           0x2000'21e0          --   Gb  - Linker created -
+CommandVersion_ReadVersion
+                         0x800'2b77   0x40  Code  Lc  command.o [6]
+Command_CheckCRC32       0x800'2b59   0x14  Code  Lc  command.o [6]
+Command_HandleEraseFlash
+                         0x800'2aef   0x24  Code  Lc  command.o [6]
+Command_HandleNoop       0x800'2ac3    0x4  Code  Lc  command.o [6]
+Command_HandleResetDevice
+                         0x800'2ac7   0x28  Code  Lc  command.o [6]
+Command_HandleWriteFlash
+                         0x800'2b13   0x34  Code  Lc  command.o [6]
+Commands_HandleUsbCommand
+                         0x800'2a65   0x5e  Code  Gb  command.o [6]
+ConsumerHID_ReportDescriptor
+                        0x2000'00f0   0x1c  Data  Gb  custom_hid_desc.o [4]
+Crc32Compute             0x800'1db3   0x36  Code  Lc  Bootloader.o [6]
+CustomHID_ReportDescriptor
+                        0x2000'00c8   0x28  Data  Gb  custom_hid_desc.o [4]
+DebugMon_Handler         0x800'3509    0x2  Code  Gb  at32f415_int.o [6]
+EraseDualImageFlashProcess
+                         0x800'1d3f   0x6c  Code  Lc  Bootloader.o [6]
+EraseFlashRegion         0x800'2061   0x76  Code  Lc  file_system.o [6]
+FileSystem_CheckImageCopyFlag
+                         0x800'1fdd   0x84  Code  Gb  file_system.o [6]
+FileSystem_MarkDualImageReadyToMigrate
+                         0x800'1fa9   0x34  Code  Gb  file_system.o [6]
+HardFault_Handler        0x800'34ff    0x2  Code  Gb  at32f415_int.o [6]
+MemManage_Handler        0x800'3501    0x2  Code  Gb  at32f415_int.o [6]
+NMI_Handler              0x800'34fd    0x2  Code  Gb  at32f415_int.o [6]
+OTGFS1_IRQHandler        0x800'350f    0x6  Code  Gb  at32f415_int.o [6]
+PendSV_Handler           0x800'350b    0x2  Code  Gb  at32f415_int.o [6]
+Region$$Table$$Base      0x800'3494          --   Gb  - Linker created -
+Region$$Table$$Limit     0x800'34b4          --   Gb  - Linker created -
+SS_RESET_FLAG           0x2000'11d8    0x1  Data  Gb  command.o [6]
+SVC_Handler              0x800'3507    0x2  Code  Gb  at32f415_int.o [6]
+SyncHID_ReportDescriptor
+                        0x2000'010c   0x20  Data  Gb  custom_hid_desc.o [4]
+SysTick_Handler          0x800'350d    0x2  Code  Gb  at32f415_int.o [6]
+SystemInit               0x800'2f45   0x68  Code  Gb  system_at32f415.o [2]
+UsageFault_Handler       0x800'3505    0x2  Code  Gb  at32f415_int.o [6]
+Usb_Clock48mSelect       0x800'0ff9   0x46  Code  Gb  usb.o [6]
+Usb_GetUsbDetectState    0x800'108b    0x8  Code  Gb  usb.o [6]
+Usb_GpioConfig           0x800'103f   0x46  Code  Gb  usb.o [6]
+Version_GetArteryVersion
+                         0x800'2c29    0x8  Code  Gb  version.o [6]
+WriteFlashProcess        0x800'20f5   0x7a  Code  Lc  file_system.o [6]
+_PrintfTiny              0x800'21b3  0x11e  Code  Gb  xprintftiny.o [7]
+_Prout                   0x800'3535   0x16  Code  Gb  xprout.o [7]
+_SNProut                 0x800'0bbb   0x1a  Code  Gb  xsnprout.o [7]
+__aeabi_ldiv0            0x800'1995         Code  Gb  I64DivZer.o [8]
+__aeabi_memclr4          0x800'2195         Code  Gb  ABImemclr4.o [8]
+__cmain                  0x800'34b5         Code  Gb  cmain.o [8]
+__exit                   0x800'34e9   0x14  Code  Gb  exit.o [9]
+__iar_Memset4_word       0x800'22f1         Code  Gb  ABImemset48.o [8]
+__iar_Memset8_word       0x800'22f1         Code  Gb  ABImemset48.o [8]
+__iar_Stdout            0x2000'0170   0x48  Data  Gb  xfiles.o [7]
+__iar_data_init3         0x800'346d   0x28  Code  Gb  data_init.o [8]
+__iar_lz77_init_single3
+                         0x800'3331   0x78  Code  Gb  lz77_init_single.o [8]
+__iar_program_start      0x800'3519         Code  Gb  cstartup_M.o [8]
+__iar_small_Memcpy       0x800'1e8d         Code  Gb  ABImemcpy_small.o [8]
+__iar_small_memcmp       0x800'22d1         Code  Gb  memcmp_small.o [8]
+__iar_small_memcpy       0x800'1e89         Code  Gb  ABImemcpy_small.o [8]
+__iar_small_memcpy4      0x800'1e89         Code  Gb  ABImemcpy_small.o [8]
+__iar_small_memcpy8      0x800'1e89         Code  Gb  ABImemcpy_small.o [8]
+__iar_small_uldivmod     0x800'1745         Code  Gb  I64DivMod_small.o [8]
+__iar_zero_init3         0x800'3435   0x38  Code  Gb  zero_init3.o [8]
+__low_level_init         0x800'34d3    0x4  Code  Gb  low_level_init.o [7]
+__vector_table           0x800'0000         Data  Gb  startup_at32f415.o [2]
+__write                  0x800'15e7   0x38  Code  Gb  at32f415_board.o [1]
+_call_main               0x800'34c1         Code  Gb  cmain.o [8]
+_exit                    0x800'34dd         Code  Gb  cexit.o [8]
+at32_board_init          0x800'169d    0xe  Code  Gb  at32f415_board.o [1]
+buffer                  0x2000'0688  0x400  Data  Lc  command.o [6]
+class_clear_handler      0x800'2853   0x26  Code  Lc  custom_hid_class.o [4]
+class_ept0_rx_handler    0x800'29b7   0x2c  Code  Lc  custom_hid_class.o [4]
+class_ept0_tx_handler    0x800'29b3    0x4  Code  Lc  custom_hid_class.o [4]
+class_event_handler      0x800'2a1d    0x4  Code  Lc  custom_hid_class.o [4]
+class_in_handler         0x800'29e3    0xe  Code  Lc  custom_hid_class.o [4]
+class_init_handler       0x800'2815   0x38  Code  Lc  custom_hid_class.o [4]
+class_out_handler        0x800'29f1   0x28  Code  Lc  custom_hid_class.o [4]
+class_setup_handler      0x800'2879  0x122  Code  Lc  custom_hid_class.o [4]
+class_sof_handler        0x800'2a19    0x4  Code  Lc  custom_hid_class.o [4]
+config_descriptor       0x2000'015c    0x8  Data  Lc  custom_hid_desc.o [4]
+crc_data                0x2000'0a88  0x3f4  Data  Lc  Bootloader.o [6]
+crm_ahb_div_set          0x800'1227    0xe  Code  Gb  at32f415_crm.o [3]
+crm_apb1_div_set         0x800'1235    0xe  Code  Gb  at32f415_crm.o [3]
+crm_apb2_div_set         0x800'1243    0xe  Code  Gb  at32f415_crm.o [3]
+crm_auto_step_mode_enable
+                         0x800'1451   0x1a  Code  Gb  at32f415_crm.o [3]
+crm_clock_source_enable
+                         0x800'1171   0x40  Code  Gb  at32f415_crm.o [3]
+crm_clocks_freq_get      0x800'1361   0xf0  Code  Gb  at32f415_crm.o [3]
+crm_clocks_freq_get::adc_div_table
+                         0x800'14e0    0x8  Data  Lc  at32f415_crm.o [3]
+crm_clocks_freq_get::ahb_apb1_div_table
+                         0x800'14d0    0x8  Data  Lc  at32f415_crm.o [3]
+crm_clocks_freq_get::ahb_apb2_div_table
+                         0x800'14d8    0x8  Data  Lc  at32f415_crm.o [3]
+crm_clocks_freq_get::sclk_ahb_div_table
+                         0x800'14c0   0x10  Data  Lc  at32f415_crm.o [3]
+crm_flag_clear           0x800'11b1   0x76  Code  Gb  at32f415_crm.o [3]
+crm_flag_get             0x800'10ff   0x24  Code  Gb  at32f415_crm.o [3]
+crm_hext_stable_wait     0x800'1123   0x2a  Code  Gb  at32f415_crm.o [3]
+crm_periph_clock_enable
+                         0x800'114d   0x24  Code  Gb  at32f415_crm.o [3]
+crm_pll_config           0x800'126f   0xb4  Code  Gb  at32f415_crm.o [3]
+crm_reset                0x800'10b5   0x4a  Code  Gb  at32f415_crm.o [3]
+crm_sysclk_switch        0x800'1323   0x34  Code  Gb  at32f415_crm.o [3]
+crm_sysclk_switch_status_get
+                         0x800'1357    0xa  Code  Gb  at32f415_crm.o [3]
+crm_usb_clock_div_set    0x800'1251   0x1e  Code  Gb  at32f415_crm.o [3]
+custom_hid_class_handler
+                        0x2000'0004   0x28  Data  Gb  custom_hid_class.o [4]
+custom_hid_class_send_report
+                         0x800'2a21   0x38  Code  Gb  custom_hid_class.o [4]
+custom_hid_desc_handler
+                        0x2000'002c   0x2c  Data  Gb  custom_hid_desc.o [4]
+custom_hid_struct       0x2000'01b8  0x4d0  Data  Gb  custom_hid_class.o [4]
+delay_init               0x800'16b3   0x22  Code  Gb  at32f415_board.o [1]
+delay_ms                 0x800'16d5   0x4c  Code  Gb  at32f415_board.o [1]
+device_descriptor       0x2000'0154    0x8  Data  Lc  custom_hid_desc.o [4]
+exit                     0x800'34d7    0x4  Code  Gb  exit.o [7]
+fac_ms                  0x2000'11cc    0x4  Data  Lc  at32f415_board.o [1]
+fac_us                  0x2000'11c8    0x4  Data  Lc  at32f415_board.o [1]
+flash_byte_program       0x800'1f5d    0xa  Code  Gb  at32f415_flash.o [3]
+flash_flag_clear         0x800'1ea1    0x8  Code  Gb  at32f415_flash.o [3]
+flash_lock               0x800'1eff    0xe  Code  Gb  at32f415_flash.o [3]
+flash_operation_status_get
+                         0x800'1ea9   0x28  Code  Gb  at32f415_flash.o [3]
+flash_operation_wait_for
+                         0x800'1ed1   0x1c  Code  Gb  at32f415_flash.o [3]
+flash_sector_erase       0x800'1f0d   0x2a  Code  Gb  at32f415_flash.o [3]
+flash_unlock             0x800'1eed   0x12  Code  Gb  at32f415_flash.o [3]
+flash_word_program       0x800'1f37    0xa  Code  Gb  at32f415_flash.o [3]
+format_as_bytes_dotted_hex
+                         0x800'2c57   0x5c  Code  Lc  version.o [6]
+fputc                    0x800'15bd   0x2a  Code  Gb  at32f415_board.o [1]
+gCurrentMode            0x2000'0000    0x1  Data  Wk  command.o [6]
+gFW_BinLen              0x2000'11d0    0x2  Data  Lc  Bootloader.o [6]
+gFW_FirstBinLen         0x2000'11d2    0x2  Data  Lc  Bootloader.o [6]
+g_string_lang_id        0x2000'012c    0x4  Data  Lc  custom_hid_desc.o [4]
+g_string_serial         0x2000'0130   0x1c  Data  Lc  custom_hid_desc.o [4]
+g_usbd_configuration    0x2000'006c   0x5c  Data  Gb  custom_hid_desc.o [4]
+g_usbd_desc_buffer      0x2000'1078  0x100  Data  Lc  custom_hid_desc.o [4]
+g_usbd_descriptor       0x2000'0058   0x14  Data  Lc  custom_hid_desc.o [4]
+get_device_config_string
+                         0x800'32cd    0x8  Code  Lc  custom_hid_desc.o [4]
+get_device_configuration
+                         0x800'326b    0x4  Code  Lc  custom_hid_desc.o [4]
+get_device_descriptor    0x800'3263    0x4  Code  Lc  custom_hid_desc.o [4]
+get_device_interface_string
+                         0x800'32c5    0x8  Code  Lc  custom_hid_desc.o [4]
+get_device_lang_id       0x800'3273    0x4  Code  Lc  custom_hid_desc.o [4]
+get_device_manufacturer_string
+                         0x800'3279    0x8  Code  Lc  custom_hid_desc.o [4]
+get_device_other_speed   0x800'326f    0x4  Code  Lc  custom_hid_desc.o [4]
+get_device_product_string
+                         0x800'3281    0x6  Code  Lc  custom_hid_desc.o [4]
+get_device_qualifier     0x800'3267    0x4  Code  Lc  custom_hid_desc.o [4]
+get_device_serial_string
+                         0x800'329b   0x2a  Code  Lc  custom_hid_desc.o [4]
+gpio_bits_reset          0x800'15af    0x4  Code  Gb  at32f415_gpio.o [3]
+gpio_bits_toggle         0x800'15b3    0x8  Code  Gb  at32f415_gpio.o [3]
+gpio_default_para_init   0x800'1589   0x16  Code  Gb  at32f415_gpio.o [3]
+gpio_init                0x800'14e9   0xa0  Code  Gb  at32f415_gpio.o [3]
+gpio_input_data_bit_read
+                         0x800'159f   0x10  Code  Gb  at32f415_gpio.o [3]
+handler_table            0x800'33a8   0x48  Data  Lc  command.o [6]
+langid_descriptor       0x2000'0164    0x8  Data  Lc  custom_hid_desc.o [4]
+main                     0x800'2ccd   0xe4  Code  Gb  main.o [6]
+nvic_irq_enable          0x800'18e5   0x5e  Code  Gb  at32f415_misc.o [3]
+nvic_priority_group_config
+                         0x800'1943   0x1a  Code  Gb  at32f415_misc.o [3]
+nvic_system_reset        0x800'18c9   0x1a  Code  Gb  at32f415_misc.o [3]
+obuf                    0x2000'1178   0x50  Data  Lc  xfiles.o [7]
+otg_core_struct         0x2000'0e7c  0x1f4  Data  Gb  usb.o [6]
+out                      0x800'219b   0x18  Code  Lc  xprintftiny.o [7]
+printf                   0x800'1f81   0x28  Code  Gb  printf.o [7]
+putchar                  0x800'33f1   0x44  Code  Gb  putchar.o [7]
+serial_descriptor       0x2000'014c    0x8  Data  Lc  custom_hid_desc.o [4]
+snprintf                 0x800'2be5   0x44  Code  Gb  snprintf.o [7]
+strlen                   0x800'2325         Code  Gb  strlen.o [8]
+sum_crc32               0x2000'11d4    0x4  Data  Lc  Bootloader.o [6]
+system_clock_config      0x800'2e4d   0x70  Code  Gb  at32f415_clock.o [6]
+system_core_clock       0x2000'016c    0x4  Data  Gb  system_at32f415.o [2]
+system_core_clock_update
+                         0x800'2fad   0xac  Code  Gb  system_at32f415.o [2]
+system_core_clock_update::sys_ahb_div_table
+                         0x800'307c   0x10  Data  Lc  system_at32f415.o [2]
+systick_clock_source_config
+                         0x800'195d   0x1a  Code  Gb  at32f415_misc.o [3]
+uart_print_init          0x800'161f   0x7e  Code  Gb  at32f415_board.o [1]
+usart_data_transmit      0x800'18b5    0x8  Code  Gb  at32f415_usart.o [3]
+usart_enable             0x800'18a1    0xa  Code  Gb  at32f415_usart.o [3]
+usart_flag_get           0x800'18bd    0xc  Code  Gb  at32f415_usart.o [3]
+usart_init               0x800'184d   0x50  Code  Gb  at32f415_usart.o [3]
+usart_transmitter_enable
+                         0x800'18ab    0xa  Code  Gb  at32f415_usart.o [3]
+usb_connect              0x800'0fbb   0x10  Code  Gb  at32f415_usb.o [3]
+usb_core_config          0x800'2ebd   0x30  Code  Gb  usb_core.o [5]
+usb_delay_ms             0x800'1085    0x6  Code  Gb  usb.o [6]
+usb_disconnect           0x800'0fcb   0x10  Code  Gb  at32f415_usb.o [3]
+usb_ept0_setup           0x800'0f9f   0x1c  Code  Gb  at32f415_usb.o [3]
+usb_ept0_start           0x800'0f79   0x26  Code  Gb  at32f415_usb.o [3]
+usb_ept_clear_stall      0x800'0ecf   0x30  Code  Gb  at32f415_usb.o [3]
+usb_ept_close            0x800'0e51   0x52  Code  Gb  at32f415_usb.o [3]
+usb_ept_default_init     0x800'043f   0x42  Code  Gb  usbd_core.o [5]
+usb_ept_in_clear         0x800'0f5f    0xc  Code  Gb  at32f415_usb.o [3]
+usb_ept_in_interrupt     0x800'0f31   0x22  Code  Gb  at32f415_usb.o [3]
+usb_ept_open             0x800'0d79   0xd8  Code  Gb  at32f415_usb.o [3]
+usb_ept_out_clear        0x800'0f53    0xc  Code  Gb  at32f415_usb.o [3]
+usb_ept_out_interrupt    0x800'0f1b   0x16  Code  Gb  at32f415_usb.o [3]
+usb_ept_stall            0x800'0ea3   0x2c  Code  Gb  at32f415_usb.o [3]
+usb_flush_rx_fifo        0x800'0c53   0x1e  Code  Gb  at32f415_usb.o [3]
+usb_flush_tx_fifo        0x800'0c2d   0x26  Code  Gb  at32f415_usb.o [3]
+usb_get_all_in_interrupt
+                         0x800'0f0d    0xe  Code  Gb  at32f415_usb.o [3]
+usb_get_all_out_interrupt
+                         0x800'0eff    0xe  Code  Gb  at32f415_usb.o [3]
+usb_global_clear_interrupt
+                         0x800'0c8f    0x4  Code  Gb  at32f415_usb.o [3]
+usb_global_get_all_interrupt
+                         0x800'0c85    0xa  Code  Gb  at32f415_usb.o [3]
+usb_global_init          0x800'0c05   0x22  Code  Gb  at32f415_usb.o [3]
+usb_global_interrupt_enable
+                         0x800'0c75   0x10  Code  Gb  at32f415_usb.o [3]
+usb_global_reset         0x800'0bd5   0x30  Code  Gb  at32f415_usb.o [3]
+usb_global_select_core   0x800'0c27    0x6  Code  Gb  at32f415_usb.o [3]
+usb_global_set_mode      0x800'0ce5   0x3c  Code  Gb  at32f415_usb.o [3]
+usb_hid_buf_process      0x800'2a59    0xa  Code  Lc  custom_hid_class.o [4]
+usb_interrupt_disable    0x800'0c9d    0xa  Code  Gb  at32f415_usb.o [3]
+usb_interrupt_enable     0x800'0c93    0xa  Code  Gb  at32f415_usb.o [3]
+usb_open_phy_clk         0x800'0d29    0x8  Code  Gb  at32f415_usb.o [3]
+usb_read_packet          0x800'0d57   0x22  Code  Gb  at32f415_usb.o [3]
+usb_set_address          0x800'0f6b    0xe  Code  Gb  at32f415_usb.o [3]
+usb_set_rx_fifo          0x800'0ca7    0x4  Code  Gb  at32f415_usb.o [3]
+usb_set_tx_fifo          0x800'0cab   0x3a  Code  Gb  at32f415_usb.o [3]
+usb_stop_phy_clk         0x800'0d21    0x8  Code  Gb  at32f415_usb.o [3]
+usb_suspend_status_get   0x800'0feb    0xc  Code  Gb  at32f415_usb.o [3]
+usb_write_empty_txfifo   0x800'2421   0x82  Code  Gb  usbd_int.o [5]
+usb_write_packet         0x800'0d31   0x26  Code  Gb  at32f415_usb.o [3]
+usbd_clear_stall         0x800'032b   0x1e  Code  Gb  usbd_core.o [5]
+usbd_connect_state_get   0x800'060f    0x6  Code  Gb  usbd_core.o [5]
+usbd_core_in_handler     0x800'0171   0xbe  Code  Gb  usbd_core.o [5]
+usbd_core_init           0x800'067b  0x18e  Code  Gb  usbd_core.o [5]
+usbd_core_out_handler    0x800'022f   0x68  Code  Gb  usbd_core.o [5]
+usbd_core_setup_handler
+                         0x800'0297   0x54  Code  Gb  usbd_core.o [5]
+usbd_ctrl_recv           0x800'02fb   0x12  Code  Gb  usbd_core.o [5]
+usbd_ctrl_recv_status    0x800'031f    0xc  Code  Gb  usbd_core.o [5]
+usbd_ctrl_send           0x800'02eb   0x10  Code  Gb  usbd_core.o [5]
+usbd_ctrl_send_status    0x800'0311    0xa  Code  Gb  usbd_core.o [5]
+usbd_ctrl_unsupport      0x800'0377   0x14  Code  Gb  usbd_core.o [5]
+usbd_device_request      0x800'0845  0x242  Code  Gb  usbd_sdr.o [5]
+usbd_endpoint_request    0x800'0ac3   0xe6  Code  Gb  usbd_sdr.o [5]
+usbd_enter_suspend       0x800'0615   0x1a  Code  Gb  usbd_core.o [5]
+usbd_enumdone_handler    0x800'25ef   0x6c  Code  Gb  usbd_int.o [5]
+usbd_ept_close           0x800'041d   0x1c  Code  Gb  usbd_core.o [5]
+usbd_ept_in_check_fifo   0x800'03c9   0x54  Code  Gb  usbd_core.o [5]
+usbd_ept_open            0x800'039b   0x2e  Code  Gb  usbd_core.o [5]
+usbd_ept_recv            0x800'057b   0x94  Code  Gb  usbd_core.o [5]
+usbd_ept_send            0x800'0481   0xfa  Code  Gb  usbd_core.o [5]
+usbd_fifo_alloc          0x800'0639   0x3a  Code  Gb  usbd_core.o [5]
+usbd_flush_tx_fifo       0x800'062f    0xa  Code  Gb  usbd_core.o [5]
+usbd_get_recv_len        0x800'038b   0x10  Code  Gb  usbd_core.o [5]
+usbd_incomisioin_handler
+                         0x800'26d5    0xe  Code  Gb  usbd_int.o [5]
+usbd_incomisoout_handler
+                         0x800'26c7    0xe  Code  Gb  usbd_int.o [5]
+usbd_inept_handler       0x800'24a3   0x82  Code  Gb  usbd_int.o [5]
+usbd_init                0x800'2eed   0x56  Code  Gb  usb_core.o [5]
+usbd_int_to_unicode      0x800'323d   0x26  Code  Lc  custom_hid_desc.o [4]
+usbd_interface_request   0x800'0a8d   0x36  Code  Gb  usbd_sdr.o [5]
+usbd_irq_handler         0x800'235b   0xc0  Code  Gb  usbd_int.o [5]
+usbd_outept_handler      0x800'252d   0xba  Code  Gb  usbd_int.o [5]
+usbd_reset_handler       0x800'26e3   0xc0  Code  Gb  usbd_int.o [5]
+usbd_rxflvl_handler      0x800'265b   0x6c  Code  Gb  usbd_int.o [5]
+usbd_set_configuration::config_value
+                        0x2000'11d9    0x1  Data  Lc  usbd_sdr.o [5]
+usbd_set_device_addr     0x800'0439    0x6  Code  Gb  usbd_core.o [5]
+usbd_set_stall           0x800'0349   0x1e  Code  Gb  usbd_core.o [5]
+usbd_setup_request_parse
+                         0x800'0819   0x2a  Code  Gb  usbd_sdr.o [5]
+usbd_sof_handler         0x800'27a3    0xc  Code  Gb  usbd_int.o [5]
+usbd_suspend_handler     0x800'27af   0x34  Code  Gb  usbd_int.o [5]
+usbd_unicode_convert     0x800'3209   0x34  Code  Lc  custom_hid_desc.o [4]
+usbd_wakeup_handler      0x800'27e3   0x32  Code  Gb  usbd_int.o [5]
+vp_desc                 0x2000'1070    0x8  Data  Lc  custom_hid_desc.o [4]
+write_hex2_uint8         0x800'2c31   0x26  Code  Lc  version.o [6]
+write_hex2_uint8::hex    0x800'2cb8   0x14  Data  Lc  version.o [6]
+
+
+[1] = C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\bsp
+[2] = C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\cmsis
+[3] = C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\firmware
+[4] = C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_custom
+[5] = C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\usbd_drivers
+[6] = C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\Torrio_Case_Bootloader_Debug\Obj\user
+[7] = dl7M_tlf.a
+[8] = rt7M_tl.a
+[9] = shb_l.a
+
+  13'392 bytes of readonly  code memory
+     782 bytes of readonly  data memory
+   8'662 bytes of readwrite data memory (+ 1 absolute)
+
+Errors: none
+Warnings: none

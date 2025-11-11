@@ -58,6 +58,8 @@ error_status Bootloader_FlashWrite(const uint8_t *in, size_t in_len);
 void Bootloader_CmdCrcCheckHandler(uint8_t *buff);
 void Bootloader_BackDoorHallGpioInit(void);
 void Bootloader_UsbConnectGpioInit(void);
+void Bootloader_LedGpioInit(void);
+void Bootloader_LedBlink(void);
 #ifndef DEBUG
 error_status Bootloader_CommandHandleReadFlash(uint8_t *buff, const uint8_t *in);
 #endif
