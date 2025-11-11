@@ -42,4 +42,5 @@ void Cps4520_GpioConfigHardware(const Cps4520_HardwareSettings_t *hardware_setti
 void Cps4520_DetectStatusCheckTask(void);
 void Cps4520_InitReg(void);
 Cps4520_DetectConnectState_t Cps4520_GetDetectState(void);
-
+i2c_status_type Cps4520_DebugRegWrite(const uint8_t reg, const uint8_t value);
+void Cps4520_DebugRegRead(const uint8_t reg, uint8_t *buff);

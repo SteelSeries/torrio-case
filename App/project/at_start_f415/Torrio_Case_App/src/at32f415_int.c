@@ -191,7 +191,6 @@ void EXINT9_5_IRQHandler(void)
   if (exint_interrupt_flag_get(EXINT_LINE_5) != RESET)
   {
     Cps4520_InitReg();
-    DEBUG_PRINT("CPS4520 INT IRQ\n");
     exint_flag_clear(EXINT_LINE_5);
   }
 }

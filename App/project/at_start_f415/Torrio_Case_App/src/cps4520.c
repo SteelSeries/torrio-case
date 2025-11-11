@@ -27,7 +27,6 @@
 static Cps4520_HardwareSettings_t user_hardware_settings = {0};
 static Cps4520_DetectConnectState_t cps4520_state = CPS4520_UNKNOW;
 static Cps4520_DetectConnectState_t pre_cps4520_state = CPS4520_UNKNOW;
-static bool cps4520_init_flag = false;
 static const uint8_t cps4520_reg_init_list[CPS4520_REG_TABLE_LEN][2] = {
     {CPS4520_REG_0x13, 0x21},
     {CPS4520_REG_0x15, 0x01},
@@ -105,8 +104,6 @@ void Cps4520_InitReg(void)
   static uint8_t cps4520_reg13_rx_buff[1] = {0};
   static uint8_t cps4520_reg14_rx_buff[1] = {0};
   static uint8_t cps4520_reg15_rx_buff[1] = {0};
-  if(cps4520_init_flag == false)
-  {
     SettingRegTableInit();
     I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x13, cps4520_reg13_rx_buff);
     DEBUG_PRINT("CPS4520_REG_0x13: %02X\n", cps4520_reg13_rx_buff[0]);
@@ -114,12 +111,6 @@ void Cps4520_InitReg(void)
     DEBUG_PRINT("CPS4520_REG_0x15: %02X\n", cps4520_reg15_rx_buff[0]);
     I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x14, cps4520_reg14_rx_buff);
     DEBUG_PRINT("CPS4520_REG_0x14: %02X\n", cps4520_reg14_rx_buff[0]);
-    if(cps4520_reg15_rx_buff[0] == 0x01 && cps4520_reg14_rx_buff[0] == 0x8A && cps4520_reg13_rx_buff[0] == 0x21)
-    {
-      cps4520_init_flag = true;
-      DEBUG_PRINT("CPS4520 Init\n");
-    }
-  }
 }
 
 Cps4520_DetectConnectState_t Cps4520_GetDetectState(void)
@@ -127,13 +118,21 @@ Cps4520_DetectConnectState_t Cps4520_GetDetectState(void)
   return pre_cps4520_state;
 }
 
+i2c_status_type Cps4520_DebugRegWrite(const uint8_t reg, const uint8_t value)
+{
+    return I2cComm_WriteReg(CPS4520_I2C_SLAVE_ADDRESS, reg, value);
+}
+
+void Cps4520_DebugRegRead(const uint8_t reg, uint8_t *buff)
+{
+    I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, reg, buff);
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
 static void SettingRegTableInit(void)
 {
-    DEBUG_PRINT("table init\n");
-
     for (uint8_t i = 0; i < CPS4520_REG_TABLE_LEN; i++)
     {
         I2cComm_WriteReg(
