@@ -111,7 +111,7 @@ void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
     {
         uint8_t buff[OUT_MAXPACKET_SIZE] = {0};
         memset(buff, 0, sizeof(buff));
-        snprintf((char *)buff, sizeof(buff), "USB COMMAND ERROR CMD:%02X\n", command);
+        snprintf((char *)buff, sizeof(buff), "USB COMMAND ERROR CMD:%X\n", command);
         custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     }
 }
