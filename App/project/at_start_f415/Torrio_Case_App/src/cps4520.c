@@ -38,6 +38,7 @@ static const uint8_t cps4520_reg_init_list[][2] = {
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
+static void Cps4520_SettingRegTableInit(void);
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -104,7 +105,7 @@ void Cps4520_DetectStatusCheckTask(void)
 
 void Cps4520_InitReg(void)
 {
-  SettingRegTableInit();
+  Cps4520_SettingRegTableInit();
   //Todo:check write register correct
 }
 
@@ -124,21 +125,15 @@ void Cps4520_DebugRegRead(const uint8_t reg, uint8_t *buff)
 }
 
 /*************************************************************************************************
-void Cps4520_SettingRegTableInit(void)
-{
-    if(cps4520_init_reg_flag == CPS4520_NON_INT)
-    {
-      for (uint8_t i = 0; i < CPS4520_REG_TABLE_LEN; i++)
-      {
-          I2cComm_WriteReg(
-                          CPS4520_I2C_SLAVE_ADDRESS,
-                          cps4520_reg_init_list[i][0],
-                          cps4520_reg_init_list[i][1]);
-      }
-      cps4520_init_reg_flag = CPS4520_INT_COMPELETE;
-    }
-}
-
-/*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+static void Cps4520_SettingRegTableInit(void)
+{
+  for (uint8_t i = 0; i < CPS4520_REG_TABLE_LEN; i++)
+  {
+      I2cComm_WriteReg(
+                      CPS4520_I2C_SLAVE_ADDRESS,
+                      cps4520_reg_init_list[i][0],
+                      cps4520_reg_init_list[i][1]);
+  }
+}
