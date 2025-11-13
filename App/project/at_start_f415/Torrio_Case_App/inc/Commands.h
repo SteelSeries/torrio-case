@@ -23,6 +23,7 @@
 #define DEBUG_SY8809_OP 0x71U
 #define DEBUG_SY8809_XSENSE_OP 0x70U
 #define DEBUG_LEDRGB_OP 0x73U
+#define DEBUG_CPS4520_OP 0x77U
 
 // Case
 #define GET_BATTERY_INFO 0x37 // Read Case and buds battery level and charging status.
