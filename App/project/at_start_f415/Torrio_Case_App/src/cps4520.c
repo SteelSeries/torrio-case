@@ -20,6 +20,7 @@
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+#define CPS4520_REG_TABLE_LEN (sizeof(cps4520_reg_init_list) / sizeof(cps4520_reg_init_list[0]))
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -27,10 +28,11 @@
 static Cps4520_HardwareSettings_t user_hardware_settings = {0};
 static Cps4520_DetectConnectState_t cps4520_state = CPS4520_UNKNOW;
 static Cps4520_DetectConnectState_t pre_cps4520_state = CPS4520_UNKNOW;
-static const uint8_t cps4520_reg_init_list[CPS4520_REG_TABLE_LEN][2] = {
+static const uint8_t cps4520_reg_init_list[][2] = {
     {CPS4520_REG_0x13, 0x21},
     {CPS4520_REG_0x15, 0x01},
     {CPS4520_REG_0x14, 0x8A}};
+    
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -101,16 +103,8 @@ void Cps4520_DetectStatusCheckTask(void)
 
 void Cps4520_InitReg(void)
 {
-  static uint8_t cps4520_reg13_rx_buff[1] = {0};
-  static uint8_t cps4520_reg14_rx_buff[1] = {0};
-  static uint8_t cps4520_reg15_rx_buff[1] = {0};
-    SettingRegTableInit();
-    I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x13, cps4520_reg13_rx_buff);
-    DEBUG_PRINT("CPS4520_REG_0x13: %02X\n", cps4520_reg13_rx_buff[0]);
-    I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x15, cps4520_reg15_rx_buff);
-    DEBUG_PRINT("CPS4520_REG_0x15: %02X\n", cps4520_reg15_rx_buff[0]);
-    I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 0x14, cps4520_reg14_rx_buff);
-    DEBUG_PRINT("CPS4520_REG_0x14: %02X\n", cps4520_reg14_rx_buff[0]);
+  SettingRegTableInit();
+  //Todo:check write register correct
 }
 
 Cps4520_DetectConnectState_t Cps4520_GetDetectState(void)
