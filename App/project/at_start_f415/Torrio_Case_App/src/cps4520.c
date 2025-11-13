@@ -3,6 +3,7 @@
  *************************************************************************************************/
 #include "cps4520.h"
 #include "cps4520_table.h"
+#include "usb.h"
 #include "i2c_comm.h"
 #include "task_scheduler.h"
 #include "system_state_manager.h"
@@ -21,6 +22,7 @@
 /*************************************************************************************************
  *                                GLOBAL VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+#define CPS4520_REG_TABLE_LEN (sizeof(cps4520_reg_init_list) / sizeof(cps4520_reg_init_list[0]))
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -28,11 +30,11 @@
 static Cps4520_HardwareSettings_t user_hardware_settings = {0};
 static Cps4520_DetectConnectState_t cps4520_state = CPS4520_UNKNOW;
 static Cps4520_DetectConnectState_t pre_cps4520_state = CPS4520_UNKNOW;
-static Cps4520_IntRegState_t cps4520_init_reg_flag = CPS4520_NON_INT;
-static const uint8_t cps4520_reg_init_list[CPS4520_REG_TABLE_LEN][2] = {
-    {CPS4520_REG_0x13, CPS4520_VERSION},
-    {CPS4520_REG_0x15, CPS4520_MFG_CODE_B1},
-    {CPS4520_REG_0x14, CPS4520_MFG_CODE_B2}};
+static const uint8_t cps4520_reg_init_list[][2] = {
+    {CPS4520_REG_0x13, 0x21},
+    {CPS4520_REG_0x15, 0x01},
+    {CPS4520_REG_0x14, 0x8A}};
+    
 /*************************************************************************************************
  *                                STATIC FUNCTION DECLARATIONS                                   *
  *************************************************************************************************/
@@ -95,36 +97,15 @@ void Cps4520_DetectStatusCheckTask(void)
     {
       pre_cps4520_state = cps4520_state;
       DEBUG_PRINT("Qi state changed to: %s\n", cps4520_state == CPS4520_DETECT ? "DETECT" : "NON_DETECT");
-      if(pre_cps4520_state == CPS4520_NON_DETECT)
-      {
-        cps4520_init_reg_flag = CPS4520_NON_INT;
-      }
     }
     is_debounce_check = false;
   }
 }
 
-void Cps4520_RegCheckTask(void)
+void Cps4520_InitReg(void)
 {
-    static uint8_t cps4520_reg_rx_buff[3] = {0};
-
-    if(cps4520_init_reg_flag == CPS4520_INT_COMPELETE)
-    {
-      for (uint8_t i = 0; i < CPS4520_REG_TABLE_LEN; i++)
-      {
-          I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, 
-                          cps4520_reg_init_list[i][0], 
-                          & cps4520_reg_rx_buff[i]);
-      }
-      if(cps4520_reg_rx_buff[0] == cps4520_reg_init_list[0][1] && cps4520_reg_rx_buff[1] == cps4520_reg_init_list[1][1] && cps4520_reg_rx_buff[2] == cps4520_reg_init_list[2][1])
-      {
-        cps4520_init_reg_flag = CPS4520_INT_CORRECT;
-        for (uint8_t i = 0; i < CPS4520_REG_TABLE_LEN; i++)
-        {
-            DEBUG_PRINT("CPS4520_REG: %02X\n", cps4520_reg_rx_buff[i]);
-        }
-      }
-    }
+  SettingRegTableInit();
+  //Todo:check write register correct
 }
 
 Cps4520_DetectConnectState_t Cps4520_GetDetectState(void)
@@ -132,6 +113,17 @@ Cps4520_DetectConnectState_t Cps4520_GetDetectState(void)
   return pre_cps4520_state;
 }
 
+i2c_status_type Cps4520_DebugRegWrite(const uint8_t reg, const uint8_t value)
+{
+    return I2cComm_WriteReg(CPS4520_I2C_SLAVE_ADDRESS, reg, value);
+}
+
+void Cps4520_DebugRegRead(const uint8_t reg, uint8_t *buff)
+{
+    I2cComm_ReadReg(CPS4520_I2C_SLAVE_ADDRESS, reg, buff);
+}
+
+/*************************************************************************************************
 void Cps4520_SettingRegTableInit(void)
 {
     if(cps4520_init_reg_flag == CPS4520_NON_INT)
