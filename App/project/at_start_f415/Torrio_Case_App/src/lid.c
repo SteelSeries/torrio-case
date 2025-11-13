@@ -114,7 +114,7 @@ void Lid_StatusCheckTask(void)
 // This function is used for GG engine, the reported lid status.
 void Lid_GetLidStatusHandle(void)
 {
-    uint8_t buff[2] = {GET_CASE_LID_STATUS | COMMAND_READ_FLAG , Lid_GetUsbReportState()};
+    uint8_t buff[] = {GET_CASE_LID_STATUS | COMMAND_READ_FLAG , Lid_GetUsbReportState()};
 
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
@@ -137,7 +137,7 @@ static Lid_Usb_Report_State_t Lid_GetUsbReportState(void)
 
 static void Lid_SyncLidStatusHandle(void)
 {
-    uint8_t buff[2] = {GET_CASE_LID_STATUS | COMMAND_READ_FLAG , Lid_GetUsbReportState()};
+    uint8_t buff[] = {GET_CASE_LID_STATUS | COMMAND_READ_FLAG , Lid_GetUsbReportState()};
 
     ep3_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
 }
