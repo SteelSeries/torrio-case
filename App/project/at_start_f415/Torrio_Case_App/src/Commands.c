@@ -10,6 +10,7 @@
 #include "app_fw_update.h"
 #include "file_system.h"
 #include "sy8809.h"
+#include "cps4520.h"
 #include "system_state_manager.h"
 #include "uart_interface.h"
 #include <stdio.h>
@@ -66,6 +67,8 @@ static Command_Status_t RecoveryAndReset(const uint8_t command[USB_RECEIVE_LEN])
 static Command_Status_t DebugCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t Sy8809DebugRegReadCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t Sy8809DebugRegWriteCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t Cps4520DebugRegReadCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t Cps4520DebugRegWriteCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t EraseFile(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t WriteFile(const uint8_t command[USB_RECEIVE_LEN]);
@@ -109,6 +112,7 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_SY8809_OP,         .read = Sy8809DebugRegReadCommand,      .write = Sy8809DebugRegWriteCommand},
         {.op = DEBUG_SY8809_XSENSE_OP,  .read = Sy8809DebugXsenserReadCommand,  .write = HandleNoop},
         {.op = DEBUG_LEDRGB_OP,         .read = HandleNoop,                     .write = HandleLedDebugCommand},
+         {.op = DEBUG_CPS4520_OP,       .read = Cps4520DebugRegReadCommand,     .write = Cps4520DebugRegWriteCommand},
 
         // factory
         {.op = FAC_SERIAL_OP,           .read = GetSerialNumber,                .write = SetSerialNumber},
@@ -293,6 +297,22 @@ static Command_Status_t Sy8809DebugRegReadCommand(const uint8_t command[USB_RECE
 static Command_Status_t Sy8809DebugRegWriteCommand(const uint8_t command[USB_RECEIVE_LEN])
 {
     uint8_t buff[] = {DEBUG_SY8809_OP, Sy8809_DebugRegWrite(command[1], command[2])};
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t Cps4520DebugRegReadCommand(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint8_t reg_ret_buff[1] = {0};
+    Cps4520_DebugRegRead(command[1], reg_ret_buff);
+    uint8_t buff[] = {DEBUG_CPS4520_OP | COMMAND_READ_FLAG, reg_ret_buff[0]};
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t Cps4520DebugRegWriteCommand(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint8_t buff[] = {DEBUG_CPS4520_OP, Cps4520_DebugRegWrite(command[1], command[2])};
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }
