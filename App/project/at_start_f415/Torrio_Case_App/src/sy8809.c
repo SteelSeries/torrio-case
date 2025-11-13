@@ -13,6 +13,7 @@
 #include "custom_hid_class.h"
 #include "battery.h"
 #include "sy8809_xsense.h"
+#include "commands.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -407,6 +408,12 @@ void Sy8809_StartWorkTask(void)
         DEBUG_PRINT("is_irq_change detected \n");
         is_irq_change = false;
         UpdateTableByPowerSource();
+    }
+
+    if(Commands_EnterShippingState() == COMMAND_SHIPPING)
+    {
+        DEBUG_PRINT("EnterShippingMode TABLE4\r\n");
+        SettingRegTable4();
     }
 
     if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)

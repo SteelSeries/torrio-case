@@ -39,6 +39,7 @@
 #define FAC_ENTER_MODE       		0x7C // factory settings
 #define FAC_ENTER_KEY       		0xFCAA55 // factory key
 #define FAC_PRESET_CHARGE     		0x76 // factory settings
+#define FAC_ENTER_SHIPPING_MODE     0x78 //factory enter shipping mode
 
 // factory settings
 #define FAC_SERIAL_OP 0x13           // factory settings
@@ -94,6 +95,13 @@ typedef enum
     COMMAND_FACTORY_MODE,
 } Command_GetFactoryStatus_t;
 
+typedef enum
+{
+    COMMAND_SHIPPING_NON = 0,
+    COMMAND_SHIPPING,
+    COMMAND_SHIPPING_UNKNOW,
+} Command__ShippingState_t;
+
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -104,3 +112,4 @@ typedef enum
  *************************************************************************************************/
 void Commands_HandleUsbCommand(const uint8_t * in, size_t in_len);
 Command_GetFactoryLighting_t Commands_HandleLightingMode(void);
+Command__ShippingState_t Commands_EnterShippingState(void);

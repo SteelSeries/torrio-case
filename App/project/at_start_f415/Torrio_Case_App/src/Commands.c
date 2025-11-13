@@ -84,6 +84,7 @@ static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_L
 static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t SetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t EnterShippingMode(const uint8_t command[USB_RECEIVE_LEN]);
 
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
@@ -118,6 +119,7 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,           .write = HandleNoop},
         {.op = FAC_ENTER_MODE,          .read = HandleFactoryEnterCommand,      .write = HandleNoop},
         {.op = FAC_PRESET_CHARGE,       .read = GetPresetChargeMode,            .write = SetPresetChargeMode},
+        {.op = FAC_ENTER_SHIPPING_MODE, .read = HandleNoop,                     .write = EnterShippingMode},
 
         // Case/Buds
         {.op = GET_BATTERY_INFO,        .read = GetBatteryStatus,               .write = HandleNoop},
@@ -126,6 +128,7 @@ static const cmd_handler_t handler_table[] =
 // clang-format on
 static Command_GetFactoryLighting_t fac_lighting_mode = COMMAND_FACTORY_NONE;
 static Command_GetFactoryStatus_t fac_mode = COMMAND_FACTORY_NON_ENTER;
+static Command__ShippingState_t CheckShippingState = COMMAND_SHIPPING_UNKNOW;
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -167,6 +170,11 @@ void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
 Command_GetFactoryLighting_t Commands_HandleLightingMode(void)
 {
     return fac_lighting_mode;
+}
+
+Command__ShippingState_t Commands_EnterShippingState(void)
+{
+  return CheckShippingState;
 }
 
 /*************************************************************************************************
@@ -749,5 +757,13 @@ static Command_Status_t GetPresetChargeMode(const uint8_t command[USB_RECEIVE_LE
         buff[1] = 0x00;
     }
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t EnterShippingMode(const uint8_t command[USB_RECEIVE_LEN])
+{
+    //Temporary Process Pending Discussion
+    CheckShippingState = COMMAND_SHIPPING;
+    SystemStateManager_EnterShippingMode();
     return COMMAND_STATUS_SUCCESS;
 }

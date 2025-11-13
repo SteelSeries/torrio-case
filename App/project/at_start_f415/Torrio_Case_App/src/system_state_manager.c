@@ -136,6 +136,26 @@ void SystemStateManager_SystemStartWork(void)
     }
 }
 
+void SystemStateManager_EnterShippingMode(void)
+{
+    TaskScheduler_RemoveTask(Sy8809_StartWorkTask);
+    if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+        DEBUG_PRINT("add sy8809 read vbat task fail\n");
+    }
+
+    if (Lid_GetState() == LID_CLOSE)
+    {
+        if (Usb_FirstSetupUsbState() == USB_UNPLUG)
+        {
+            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+            {
+                DEBUG_PRINT("add enter standby task fail\n");
+            }
+        }
+    }
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
