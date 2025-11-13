@@ -81,7 +81,7 @@ static Command_Status_t FactoryReadBatteryAndNtc(const uint8_t command[USB_RECEI
 static Command_Status_t FactorySetBatteryChargeStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetBatteryStatus(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetLidStatus(const uint8_t command[USB_RECEIVE_LEN]);
-static Command_Status_t HandleLedDebugCommand(const uint8_t command[USB_RECEIVE_LEN]);
+static Command_Status_t HandleFactoryLedCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, uint8_t b);
 static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECEIVE_LEN]);
@@ -111,8 +111,7 @@ static const cmd_handler_t handler_table[] =
         {.op = DEBUG_CUSTOM_OP,         .read = HandleNoop,                     .write = DebugCommand},
         {.op = DEBUG_SY8809_OP,         .read = Sy8809DebugRegReadCommand,      .write = Sy8809DebugRegWriteCommand},
         {.op = DEBUG_SY8809_XSENSE_OP,  .read = Sy8809DebugXsenserReadCommand,  .write = HandleNoop},
-        {.op = DEBUG_LEDRGB_OP,         .read = HandleNoop,                     .write = HandleLedDebugCommand},
-         {.op = DEBUG_CPS4520_OP,       .read = Cps4520DebugRegReadCommand,     .write = Cps4520DebugRegWriteCommand},
+        {.op = DEBUG_CPS4520_OP,        .read = Cps4520DebugRegReadCommand,     .write = Cps4520DebugRegWriteCommand},
 
         // factory
         {.op = FAC_SERIAL_OP,           .read = GetSerialNumber,                .write = SetSerialNumber},
@@ -122,10 +121,11 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,           .write = HandleNoop},
         {.op = FAC_ENTER_MODE,          .read = HandleFactoryEnterCommand,      .write = HandleNoop},
         {.op = FAC_PRESET_CHARGE,       .read = GetPresetChargeMode,            .write = SetPresetChargeMode},
+        {.op = FAC_LEDRGB_SET,          .read = HandleNoop,                     .write = HandleFactoryLedCommand},
 
         // Case/Buds
         {.op = GET_BATTERY_INFO,        .read = GetBatteryStatus,               .write = HandleNoop},
-        {.op = GET_CASE_LID_STATUS,     .read = GetLidStatus,                     .write = HandleNoop}
+        {.op = GET_CASE_LID_STATUS,     .read = GetLidStatus,                   .write = HandleNoop}
 };
 // clang-format on
 static Command_GetFactoryLighting_t fac_lighting_mode = COMMAND_FACTORY_NONE;
@@ -676,36 +676,6 @@ static Command_Status_t GetLidStatus(const uint8_t command[USB_RECEIVE_LEN])
     return COMMAND_STATUS_SUCCESS;
 }
 
-static Command_Status_t HandleLedDebugCommand(const uint8_t command[USB_RECEIVE_LEN])
-{
-    uint8_t buff[1] = {0};
-    switch (command[1])
-    {
-    case COMMAND_TARGET_CASE:
-    {
-        if (fac_mode == COMMAND_FACTORY_MODE)
-        {
-            fac_lighting_mode = COMMAND_FACTORY_LED_ON_OFF;
-            Lighting_Handler(LIGHTING_STABLE, command[2], command[3], command[4]);
-        }
-        break;
-    }
-    case COMMAND_TARGET_LEFT_BUD:
-    {
-        break;
-    }
-    case COMMAND_TARGET_RIGHT_BUD:
-    {
-        break;
-    }
-    default:
-        break;
-    }
-    buff[0] = DEBUG_LEDRGB_OP;
-    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
-    return COMMAND_STATUS_SUCCESS;
-}
-
 static void HandleLightingDebugCommand(uint8_t command, uint8_t r, uint8_t g, uint8_t b)
 {
     Lighting_Change_Flag = LIGHTING_CHANGE_TRUE;
@@ -768,6 +738,36 @@ static Command_Status_t GetPresetChargeMode(const uint8_t command[USB_RECEIVE_LE
     {
         buff[1] = 0x00;
     }
+    custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
+    return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t HandleFactoryLedCommand(const uint8_t command[USB_RECEIVE_LEN])
+{
+    uint8_t buff[1] = {0};
+    switch (command[1])
+    {
+    case COMMAND_TARGET_CASE:
+    {
+        if (fac_mode == COMMAND_FACTORY_MODE)
+        {
+            fac_lighting_mode = COMMAND_FACTORY_LED_ON_OFF;
+            Lighting_Handler(LIGHTING_STABLE, command[2], command[3], command[4]);
+        }
+        break;
+    }
+    case COMMAND_TARGET_LEFT_BUD:
+    {
+        break;
+    }
+    case COMMAND_TARGET_RIGHT_BUD:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+    buff[0] = FAC_LEDRGB_SET;
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
 }

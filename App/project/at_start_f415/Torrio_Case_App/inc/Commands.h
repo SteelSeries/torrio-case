@@ -22,7 +22,6 @@
 #define DEBUG_CUSTOM_OP 0x08U // each application implements it as they see fit
 #define DEBUG_SY8809_OP 0x71U
 #define DEBUG_SY8809_XSENSE_OP 0x70U
-#define DEBUG_LEDRGB_OP 0x73U
 #define DEBUG_CPS4520_OP 0x77U
 
 // Case
@@ -40,6 +39,7 @@
 #define FAC_ENTER_MODE       		0x7C // factory settings
 #define FAC_ENTER_KEY       		0xFCAA55 // factory key
 #define FAC_PRESET_CHARGE     		0x76 // factory settings
+#define FAC_LEDRGB_SET              0x73 // factory settings
 
 // factory settings
 #define FAC_SERIAL_OP 0x13           // factory settings
