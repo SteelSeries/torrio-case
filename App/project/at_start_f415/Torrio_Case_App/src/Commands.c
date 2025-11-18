@@ -148,12 +148,13 @@ void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
     uint8_t command = (buffer[0]);
     uint8_t op = command & (~COMMAND_READ_FLAG);
     bool is_read = (command & COMMAND_READ_FLAG) == COMMAND_READ_FLAG;
-    if(command == FAC_ENTER_MODE | COMMAND_READ_FLAG)
+    if(command == (FAC_ENTER_MODE | COMMAND_READ_FLAG))
     {
         fac_mode = COMMAND_FACTORY_MODE;
     }
     if(fac_mode == COMMAND_FACTORY_MODE)
     {
+        DEBUG_PRINT("FAC_TABLE\r\n");
         for (int i = 0; i < FACTORY_NUM_COMMANDS; ++i)
         {
             if (factory_handler_table[i].op == op)
@@ -173,6 +174,7 @@ void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
     }
     else
     {
+        DEBUG_PRINT("NORMAL_TABLE\r\n");
         for (int i = 0; i < NUM_COMMANDS; ++i)
         {
             if (handler_table[i].op == op)
