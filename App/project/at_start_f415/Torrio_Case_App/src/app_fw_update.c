@@ -24,7 +24,11 @@
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
+#ifdef __ICCARM__
 static __root __no_init uint8_t CurrentMode @0x20000000;
+#else
+static uint8_t CurrentMode __attribute__((used, section(".CurrentMode")));
+#endif
 static bool reset_flag = false;
 static uint32_t sum_crc32 = 0;
 static uint8_t user_usb_receive_data[USB_RECEIVE_LEN] = {0};
