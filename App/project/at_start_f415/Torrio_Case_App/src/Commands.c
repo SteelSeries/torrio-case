@@ -23,6 +23,7 @@
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
 #define NUM_COMMANDS (sizeof(handler_table) / sizeof(handler_table[0]))
+#define FACTORY_NUM_COMMANDS (sizeof(factory_handler_table) / sizeof(factory_handler_table[0]))
 #define WRITE_SERIAL_NUMBER_KEY 0xAA551133U
 
 // ---------------------------------------------------------------------------
@@ -88,6 +89,9 @@ static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECE
 static Command_Status_t SetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN]);
 
+static Command_Status_t RunFacTable(const uint8_t *buffer, uint8_t command, uint8_t op, bool is_read);
+static Command_Status_t RunNormalTable(const uint8_t *buffer, uint8_t command, uint8_t op, bool is_read);
+
 /*************************************************************************************************
  *                                STATIC VARIABLE DEFINITIONS                                    *
  *************************************************************************************************/
@@ -107,6 +111,16 @@ static const cmd_handler_t handler_table[] =
         // info
         {.op = VERSION_OP,              .read = ReadVersion,                    .write = HandleNoop},
 
+        // enter fac key
+        {.op = FAC_ENTER_MODE,          .read = HandleFactoryEnterCommand,      .write = HandleNoop},
+
+        // Case/Buds
+        {.op = GET_BATTERY_INFO,        .read = GetBatteryStatus,               .write = HandleNoop},
+        {.op = GET_CASE_LID_STATUS,     .read = GetLidStatus,                   .write = HandleNoop}
+};//for user/gg tool use
+
+static const cmd_handler_t factory_handler_table[] =
+    {
         // debug
         {.op = DEBUG_CUSTOM_OP,         .read = HandleNoop,                     .write = DebugCommand},
         {.op = DEBUG_SY8809_OP,         .read = Sy8809DebugRegReadCommand,      .write = Sy8809DebugRegWriteCommand},
@@ -119,14 +133,13 @@ static const cmd_handler_t handler_table[] =
         {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc,       .write = HandleNoop},
         {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,                     .write = FactorySetBatteryChargeStatus},
         {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,           .write = HandleNoop},
-        {.op = FAC_ENTER_MODE,          .read = HandleFactoryEnterCommand,      .write = HandleNoop},
         {.op = FAC_PRESET_CHARGE,       .read = GetPresetChargeMode,            .write = SetPresetChargeMode},
         {.op = FAC_LEDRGB_SET,          .read = HandleNoop,                     .write = HandleFactoryLedCommand},
 
-        // Case/Buds
-        {.op = GET_BATTERY_INFO,        .read = GetBatteryStatus,               .write = HandleNoop},
-        {.op = GET_CASE_LID_STATUS,     .read = GetLidStatus,                   .write = HandleNoop}
-};
+        // info
+        {.op = VERSION_OP,              .read = ReadVersion,                    .write = HandleNoop}
+};//for factory use
+
 // clang-format on
 static Command_GetFactoryLighting_t fac_lighting_mode = COMMAND_FACTORY_NONE;
 static Command_GetFactoryStatus_t fac_mode = COMMAND_FACTORY_NON_ENTER;
@@ -136,28 +149,21 @@ static Command_GetFactoryStatus_t fac_mode = COMMAND_FACTORY_NON_ENTER;
  *************************************************************************************************/
 void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
 {
-    Command_Status_t status = COMMAND_STATUS_ERROR_NO_HANDLER;
+    Command_Status_t status;
 
     memcpy(buffer, in, in_len);
 
     uint8_t command = (buffer[0]);
     uint8_t op = command & (~COMMAND_READ_FLAG);
     bool is_read = (command & COMMAND_READ_FLAG) == COMMAND_READ_FLAG;
-    for (int i = 0; i < NUM_COMMANDS; ++i)
+
+    if(fac_mode == COMMAND_FACTORY_MODE)
     {
-        if (handler_table[i].op == op)
-        {
-            if (is_read)
-            {
-                status = handler_table[i].read(buffer);
-                break;
-            }
-            else
-            {
-                status = handler_table[i].write(buffer);
-                break;
-            }
-        }
+        status = RunFacTable(buffer, command, op, is_read);
+    }
+    else
+    {
+        status = RunNormalTable(buffer, command, op, is_read);
     }
     if (status != COMMAND_STATUS_SUCCESS)
     {
@@ -690,12 +696,12 @@ static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECE
 
     if (fac_key == FAC_ENTER_KEY)
     {
+        fac_mode = COMMAND_FACTORY_MODE;
         switch (command[4])
         {
         case COMMAND_TARGET_CASE:
         {
             fac_lighting_mode = COMMAND_FACTORY_MODE_LIGHTING;
-            fac_mode = COMMAND_FACTORY_MODE;
             break;
         }
         case COMMAND_TARGET_LEFT_BUD:
@@ -770,4 +776,52 @@ static Command_Status_t HandleFactoryLedCommand(const uint8_t command[USB_RECEIV
     buff[0] = FAC_LEDRGB_SET;
     custom_hid_class_send_report(&otg_core_struct.dev, buff, sizeof(buff));
     return COMMAND_STATUS_SUCCESS;
+}
+
+static Command_Status_t RunFacTable(const uint8_t *buffer, uint8_t command, uint8_t op, bool is_read)
+{
+    Command_Status_t status = COMMAND_STATUS_ERROR_NO_HANDLER;
+
+    DEBUG_PRINT("FAC_TABLE\r\n");
+    for (int i = 0; i < FACTORY_NUM_COMMANDS; ++i)
+    {
+        if (factory_handler_table[i].op == op)
+        {
+            if (is_read)
+            {
+                status = factory_handler_table[i].read(buffer);
+                break;
+            }
+            else
+            {
+                status = factory_handler_table[i].write(buffer);
+                break;
+            }
+        }
+    }
+    return status;
+}
+
+static Command_Status_t RunNormalTable(const uint8_t *buffer, uint8_t command, uint8_t op, bool is_read)
+{
+    Command_Status_t status = COMMAND_STATUS_ERROR_NO_HANDLER;
+
+    DEBUG_PRINT("NORMAL_TABLE\r\n");
+    for (int i = 0; i < NUM_COMMANDS; ++i)
+    {
+        if (handler_table[i].op == op)
+        {
+            if (is_read)
+            {
+                status = handler_table[i].read(buffer);
+                break;
+            }
+            else
+            {
+                status = handler_table[i].write(buffer);
+                break;
+            }
+        }
+    }
+    return status;
 }
