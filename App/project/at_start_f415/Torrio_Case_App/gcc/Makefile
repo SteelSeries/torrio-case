@@ -16,8 +16,11 @@ FLASH_SIZE  = $$(($(FLASH_END) - $(FLASH_START) + 1))
 ######################################
 # target
 ######################################
+ifeq ($(DEBUG),1)
+TARGET = Torrio_Case_App_Debug
+else
 TARGET = Torrio_Case_App
-
+endif
 
 ######################################
 # building variables
@@ -33,7 +36,12 @@ OPT = -Og
 #######################################
 # Build path
 ROOT_DIR = ../../../../
+
+ifeq ($(DEBUG),1)
+BUILD_DIR = build_debug
+else
 BUILD_DIR = build
+endif
 APP_DIR := $(ROOT_DIR)/project/at_start_f415/Torrio_Case_App
 BOARD_DIR := $(ROOT_DIR)/project/at32f415_board
 
@@ -208,8 +216,24 @@ LIBDIR =
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin postcopy pack
+# all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin postcopy pack
 
+
+ifeq ($(DEBUG),1)
+ALL_TARGETS = $(BUILD_DIR)/$(TARGET).elf \
+              $(BUILD_DIR)/$(TARGET).hex \
+              $(BUILD_DIR)/$(TARGET).bin \
+              postcopy \
+			  pack_debug
+else
+ALL_TARGETS = $(BUILD_DIR)/$(TARGET).elf \
+              $(BUILD_DIR)/$(TARGET).hex \
+              $(BUILD_DIR)/$(TARGET).bin \
+			  postcopy \
+              pack
+endif
+
+all: $(ALL_TARGETS)
 
 #######################################
 # build the application
@@ -248,15 +272,20 @@ $(BUILD_DIR):
 # ---------------------------------------
 # Copy .bin to Torrio_Case_App_Debug/
 # ---------------------------------------
-DEBUG_DIR = Torrio_Case_App_Debug
 
 postcopy: $(BUILD_DIR)/$(TARGET).bin
-	mkdir -p $(DEBUG_DIR)
-	cp $(BUILD_DIR)/$(TARGET).bin $(DEBUG_DIR)/
+	mkdir -p $(TARGET)
+	cp $(BUILD_DIR)/$(TARGET).bin $(TARGET)/
 
 pack:
-	mkdir -p Torrio_Case_App_Debug
-	cp build/Torrio_Case_App.bin Torrio_Case_App_Debug/
+	mkdir -p Torrio_Case_App
+	cp $(BUILD_DIR)/Torrio_Case_App.bin Torrio_Case_App/
+	@echo Running Windows batch script...
+	MSYS2_ARG_CONV_EXCL='*' cmd.exe /c "_CRC32_Generate.bat"
+
+pack_debug:
+	mkdir -p $(TARGET)
+	cp $(BUILD_DIR)/$(TARGET).bin $(TARGET)/
 	@echo Running Windows batch script...
 	MSYS2_ARG_CONV_EXCL='*' cmd.exe /c "_CRC32_Generate_Debug.bat"
 
@@ -264,8 +293,10 @@ pack:
 # clean up
 #######################################
 clean:
-	-rm -fR $(BUILD_DIR)
-	-rm -fR $(DEBUG_DIR)
+	-rm -fR build_debug
+	-rm -fR build
+	-rm -fR Torrio_Case_App_Debug
+	-rm -fR Torrio_Case_App
   
 #######################################
 # dependencies

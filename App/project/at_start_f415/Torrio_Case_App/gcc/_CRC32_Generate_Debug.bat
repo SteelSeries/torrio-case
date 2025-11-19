@@ -13,7 +13,7 @@ cd at_start_f415
 cd Torrio_Case_App
 cd gcc
 
-set "FILES=_UPDATE_Torrio.bat srec_cat.exe update_file_config_Torrio.json update_tool.exe"
+set "FILES=_UPDATE_Torrio_debug.bat srec_cat.exe update_file_config_Torrio_debug.json update_tool.exe"
 
 echo Copying files to "gcc" ...
 for %%F in (%FILES%) do (
@@ -29,9 +29,9 @@ cd Torrio_Case_App_Debug
 
 srec_cat.exe -generate 0x00000 0xE000 --constant 0xFF -o Flash_Base_56KB.bin -binary >nul 2>&1
 
-srec_cat.exe Torrio_Case_App.bin -binary -crop 0x00000000 0xDFFC -fill 0xFF 0x00000000 0xDFFC -crc32-l-e 0xDFFC -o Torrio_Case_App.bin -binary >nul 2>&1
+srec_cat.exe Torrio_Case_App_Debug.bin -binary -crop 0x00000000 0xDFFC -fill 0xFF 0x00000000 0xDFFC -crc32-l-e 0xDFFC -o Torrio_Case_App_Debug.bin -binary >nul 2>&1
 
-srec_cat.exe Torrio_Case_Bootloader.bin -binary Torrio_Case_App.bin -binary -offset 0x4000 -o Torrio_Artery_Image.bin --binary >nul 2>&1
+srec_cat.exe Torrio_Case_Bootloader.bin -binary Torrio_Case_App_Debug.bin -binary -offset 0x4000 -o Torrio_Artery_Image.bin --binary >nul 2>&1
 
 srec_cat.exe Torrio_Artery_Image.bin -binary Flash_Base_56KB.bin -binary -offset 0x12000 -o Torrio_Artery_Image.bin --binary >nul 2>&1
 
@@ -43,7 +43,7 @@ set "FOLDERNAME=Torrio_Case_App_Update_Debug_packing_%TIMESTAMP%"
 
 mkdir "%FOLDERNAME%"
 
-set "FILES=_UPDATE_Torrio.bat srec_cat.exe Torrio_Case_App.bin update_file_config_Torrio.json update_tool.exe Torrio_Artery_Image.bin"
+set "FILES=_UPDATE_Torrio_debug.bat srec_cat.exe Torrio_Case_App_Debug.bin update_file_config_Torrio_debug.json update_tool.exe Torrio_Artery_Image.bin"
 
 echo Copying files to "%FOLDERNAME%" ...
 for %%F in (%FILES%) do (
