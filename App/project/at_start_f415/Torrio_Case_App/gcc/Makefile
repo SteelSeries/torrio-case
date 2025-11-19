@@ -115,8 +115,7 @@ $(DRIVERS_DIR)/src/at32f415_wdt.c \
 $(DRIVERS_DIR)/src/at32f415_wwdt.c
 
 # ASM sources
-ASM_SOURCES =  \
-startup_at32f415.s
+ASM_SOURCES =  $(ROOT_DIR)/libraries/cmsis/cm4/device_support/startup/gcc/startup_at32f415.s
 
 # ASM sources
 ASMM_SOURCES = 
@@ -201,7 +200,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = AT32F415x8_FLASH.ld
+LDSCRIPT = $(ROOT_DIR)/libraries/cmsis/cm4/device_support/startup/gcc/linker/AT32F415xB_FLASH.ld
 
 # libraries
 LIBS = -lc -lm -lnosys 
@@ -255,18 +254,11 @@ postcopy: $(BUILD_DIR)/$(TARGET).bin
 	mkdir -p $(DEBUG_DIR)
 	cp $(BUILD_DIR)/$(TARGET).bin $(DEBUG_DIR)/
 
-# BAT := $(CURDIR)/_CRC32_Generate_Debug.bat
-# pack: build/Torrio_Case_App.bin
-# 	mkdir -p Torrio_Case_App_Debug
-# 	cp build/Torrio_Case_App.bin Torrio_Case_App_Debug/
-# 	cmd /c _CRC32_Generate_Debug.bat
-
 pack:
 	mkdir -p Torrio_Case_App_Debug
 	cp build/Torrio_Case_App.bin Torrio_Case_App_Debug/
 	@echo Running Windows batch script...
 	MSYS2_ARG_CONV_EXCL='*' cmd.exe /c "_CRC32_Generate_Debug.bat"
-
 
 #######################################
 # clean up

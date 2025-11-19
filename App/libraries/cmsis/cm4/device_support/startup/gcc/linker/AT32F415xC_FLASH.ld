@@ -1,10 +1,10 @@
 /*
 *****************************************************************************
 **
-**  File        : AT32F415x8_FLASH.ld
+**  File        : AT32F415xC_FLASH.ld
 **
-**  Abstract    : Linker script for AT32F415x8 Device with
-**                64KByte FLASH, 32KByte RAM
+**  Abstract    : Linker script for AT32F415xC Device with
+**                256KByte FLASH, 32KByte RAM
 **
 **                Set heap size, stack size and stack location according
 **                to application requirements.
@@ -31,8 +31,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x08004000, LENGTH = 0xD000  /* 0x08011FFF - 0x08004000 + 1 */
-  RAM (xrw)  : ORIGIN = 0x20000000, LENGTH = 32K
+FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 256K
+RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 32K
 }
 
 /* Define output sections */
@@ -141,11 +141,6 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM
-
-  .CurrentMode 0x20000000 (NOLOAD) :
-  {
-      *(.CurrentMode)
-  } > RAM
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
