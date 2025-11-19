@@ -28,7 +28,12 @@ endif
 # debug build?
 DEBUG = 0
 # optimization
-OPT = -Og
+
+ifeq ($(DEBUG),1)
+  OPT = -Og
+else
+  OPT = -O2
+endif
 
 
 #######################################
