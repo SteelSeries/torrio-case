@@ -23,7 +23,7 @@ TARGET = Torrio_Case_App
 # building variables
 ######################################
 # debug build?
-DEBUG = 1
+DEBUG = 0
 # optimization
 OPT = -Og
 
@@ -166,7 +166,6 @@ C_DEFS =  \
 -DAT32F415RCT7 \
 -DUSE_STDPERIPH_DRIVER \
 -DAT_START_F415_V1 \
--DDEBUG
 
 
 # AS includes
@@ -190,6 +189,7 @@ CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
+CFLAGS += -DDEBUG
 endif
 
 
@@ -265,7 +265,7 @@ pack:
 	mkdir -p Torrio_Case_App_Debug
 	cp build/Torrio_Case_App.bin Torrio_Case_App_Debug/
 	@echo Running Windows batch script...
-	@CMD /C "_CRC32_Generate_Debug.bat"
+	MSYS2_ARG_CONV_EXCL='*' cmd.exe /c "_CRC32_Generate_Debug.bat"
 
 
 #######################################
