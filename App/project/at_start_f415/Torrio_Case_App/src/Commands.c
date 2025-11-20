@@ -19,6 +19,7 @@
 #include "lighting.h"
 #include "uart_command_handler.h"
 #include "lid.h"
+#include "battery.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -330,6 +331,7 @@ static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_
 {
     if ((command[1] >= SY8809_XSENSE_NTC) && (command[1] <= SY8809_XSENSE_VBIN))
     {
+        TaskScheduler_RemoveTask(Battery_UpdateStatusTask);//stop battery update task to avoid conflict
         Sy8809Xsense_XsenseRead_t Pending_temp = {0};
         Pending_temp.is_command_read = true;
         Pending_temp.Pending = (Sy8809Xsense_OutputItem_t)command[1];
@@ -337,6 +339,10 @@ static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_
         if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
         {
             DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
+        }
+        if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)//restart battery update task
+        {
+            DEBUG_PRINT("add battery status update task fail\n");
         }
     }
     return COMMAND_STATUS_SUCCESS;
