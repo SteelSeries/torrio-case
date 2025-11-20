@@ -121,6 +121,9 @@ static const cmd_handler_t handler_table[] =
 
 static const cmd_handler_t factory_handler_table[] =
     {
+        // mcu control
+        {.op = RESET_OP,                .read = HandleNoop,                     .write = RecoveryAndReset},
+
         // debug
         {.op = DEBUG_CUSTOM_OP,         .read = HandleNoop,                     .write = DebugCommand},
         {.op = DEBUG_SY8809_OP,         .read = Sy8809DebugRegReadCommand,      .write = Sy8809DebugRegWriteCommand},
