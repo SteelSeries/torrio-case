@@ -67,6 +67,11 @@ static uint8_t XsenseConfigureClear(void);
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/
+Sy8809Xsense_OutputItem_t Sy8809Xsense_pending(void)
+{
+    return pending_xsense;
+}
+
 void Sy8809Xsense_TrigXsenseConv(void)
 {
 

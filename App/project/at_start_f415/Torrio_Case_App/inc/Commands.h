@@ -40,6 +40,7 @@
 #define FAC_ENTER_KEY       		0xFCAA55 // factory key
 #define FAC_PRESET_CHARGE     		0x41 // factory settings
 #define FAC_LEDRGB_SET              0x79 // factory settings
+#define FAC_XSENSE_FAIL             0xFF // factory settings
 
 // factory settings
 #define FAC_SERIAL_OP 0x13           // factory settings
