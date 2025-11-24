@@ -19,6 +19,7 @@
 #include "lighting.h"
 #include "uart_command_handler.h"
 #include "lid.h"
+#include "battery.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -328,15 +329,33 @@ static Command_Status_t Cps4520DebugRegWriteCommand(const uint8_t command[USB_RE
 
 static Command_Status_t Sy8809DebugXsenserReadCommand(const uint8_t command[USB_RECEIVE_LEN])
 {
+    uint8_t usb_report_buff[2] = {0x00};
     if ((command[1] >= SY8809_XSENSE_NTC) && (command[1] <= SY8809_XSENSE_VBIN))
     {
+        if (TaskScheduler_RemoveTask(Battery_UpdateStatusTask) != TASK_OK)//stop battery update task to avoid conflict
+        {
+            DEBUG_PRINT("remove battery status update task fail\n");
+        }
         Sy8809Xsense_XsenseRead_t Pending_temp = {0};
         Pending_temp.is_command_read = true;
         Pending_temp.Pending = (Sy8809Xsense_OutputItem_t)command[1];
         Sy8809Xsense_SetPendingXsense(Pending_temp);
-        if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+        if((Sy8809Xsense_pending() != SY8809_XSENSE_VBAT) || (Pending_temp.Pending == SY8809_XSENSE_VBAT))//send xSense value when not read VBAT
         {
-            DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
+            if (TaskScheduler_AddTask(Sy8809Xsense_TrigXsenseConv, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)//trigger xSense conversion when not read VBAT
+            {
+                DEBUG_PRINT("add sy8809 trig xsense conv task fail\n");
+            }
+        }
+        else
+        {
+            usb_report_buff[0] = DEBUG_SY8809_XSENSE_OP | COMMAND_READ_FLAG;//send fail when read VBAT
+            usb_report_buff[1] = FAC_XSENSE_FAIL;
+            custom_hid_class_send_report(&otg_core_struct.dev, usb_report_buff, sizeof(usb_report_buff));
+        }
+        if (TaskScheduler_AddTask(Battery_UpdateStatusTask, BATTERY_TASK_UPDATE_INTERVAL_MS, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)//restart battery update task
+        {
+            DEBUG_PRINT("add battery status update task fail\n");
         }
     }
     return COMMAND_STATUS_SUCCESS;
