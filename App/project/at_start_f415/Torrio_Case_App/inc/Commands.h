@@ -20,10 +20,9 @@
 
 // debug
 #define DEBUG_CUSTOM_OP 0x08U // each application implements it as they see fit
-#define DEBUG_SY8809_OP 0x71U
-#define DEBUG_SY8809_XSENSE_OP 0x70U
-#define DEBUG_LEDRGB_OP 0x73U
-#define DEBUG_CPS4520_OP 0x77U
+#define DEBUG_SY8809_OP 0x40U
+#define DEBUG_SY8809_XSENSE_OP 0x7EU
+#define DEBUG_CPS4520_OP 0x42U
 
 // Case
 #define GET_BATTERY_INFO 0x37 // Read Case and buds battery level and charging status.
@@ -34,13 +33,15 @@
 #define INTERNAL_USB_RESUME_OP 0x0DU  // after suspension, resume from device received
 
 // factory
-#define FAC_GET_BATTERY_AND_NTC 	0x72 // factory settings
-#define FAC_SET_CHARGE_STATUS 		0x74 // factory settings
-#define FAC_READ_BUDS_DEBUG 		0x75 // factory settings
+#define FAC_GET_BATTERY_AND_NTC 	0x7D // factory settings
+#define FAC_SET_CHARGE_STATUS 		0x78 // factory settings
+#define FAC_READ_BUDS_DEBUG 		0x70 // factory settings
 #define FAC_ENTER_MODE       		0x7C // factory settings
 #define FAC_ENTER_KEY       		0xFCAA55 // factory key
-#define FAC_PRESET_CHARGE     		0x76 // factory settings
-#define FAC_ENTER_SHIPPING_MODE     0x78 //factory enter shipping mode
+#define FAC_PRESET_CHARGE     		0x41 // factory settings
+#define FAC_LEDRGB_SET              0x79 // factory settings
+#define FAC_XSENSE_FAIL             0xFF // factory settings
+#define FAC_ENTER_SHIPPING_MODE     0x71 //factory enter shipping mode
 
 // factory settings
 #define FAC_SERIAL_OP 0x13           // factory settings

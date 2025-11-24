@@ -34,3 +34,7 @@ packages/
 /Bootloader/project/at_start_f415/Torrio_Case_Bootloader/iar_v8.2/Torrio_Case_Bootloader/.ninja_log
 /Bootloader/project/at_start_f415/Torrio_Case_Bootloader/iar_v8.2/Torrio_Case_Bootloader/.ninja_deps
 **/Obj/
+**/build/
+**/build_debug/
+**/Torrio_Case_App/
+**/Torrio_Case_App_Debug/

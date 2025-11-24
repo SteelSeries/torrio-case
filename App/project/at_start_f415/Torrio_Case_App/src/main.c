@@ -66,8 +66,11 @@ int main(void)
   crm_clocks_freq_get(&crm_clocks_freq_struct);
 
   FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
-
-  DEBUG_PRINT("\n\n\nAPP Start!!!\n");
+#ifdef __ICCARM__
+  DEBUG_PRINT("\n\n\nAPP Start!!! IAR build\n");
+#else
+  DEBUG_PRINT("\n\n\nAPP Start!!! GCC build\n");
+#endif
   print_clock("SCLK", crm_clocks_freq_struct.sclk_freq);
   print_clock("AHB", crm_clocks_freq_struct.ahb_freq);
   print_clock("APB2", crm_clocks_freq_struct.apb2_freq);
