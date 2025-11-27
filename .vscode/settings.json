@@ -5,7 +5,8 @@
         "sy8809_table.h": "c",
         "stdint.h": "c",
         "at32f415_board.h": "c",
-        "uart_command_queue.h": "c"
+        "uart_command_queue.h": "c",
+        "app_fw_update.h": "c"
     },
     "C_Cpp.default.configurationProvider": "iarsystems.iar-build"
 }

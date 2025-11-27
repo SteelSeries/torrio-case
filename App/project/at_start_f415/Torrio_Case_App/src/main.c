@@ -26,6 +26,7 @@
 #include "wdt.h"
 #include "button.h"
 #include "uart_comm_manager.h"
+#include "system_state_manager.h"
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
  *************************************************************************************************/
@@ -134,6 +135,15 @@ int main(void)
   Adc_Init();
 
   UartCommManager_Init();
+
+  if(data->shipping_flag != SHIPPING_MODE_CLEAR)
+  {
+    DEBUG_PRINT("Enter Shipping Mode at main\r\n");
+    if (TaskScheduler_AddTask(SystemStateManager_EnterShippingMode, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    {
+      DEBUG_PRINT("add SystemStateManager_EnterShippingMode fail\n");
+    }
+  }
 
   if (TaskScheduler_AddTask(Sy8809_InitTask, 100, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)
   {

@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\settings\Torrio_Case_Bootloader.Torrio_Case_Bootloader_Debug.general.xcl" --backend -f "C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\settings\Torrio_Case_Bootloader.Torrio_Case_Bootloader_Debug.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\settings\Torrio_Case_Bootloader.Torrio_Case_Bootloader_Debug.general.xcl" --backend -f "C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\settings\Torrio_Case_Bootloader.Torrio_Case_Bootloader_Debug.driver.xcl" 
 }
 else
 {
-& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\settings\Torrio_Case_Bootloader.Torrio_Case_Bootloader_Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\timmy.tien\Documents\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\settings\Torrio_Case_Bootloader.Torrio_Case_Bootloader_Debug.driver.xcl" 
+& "C:\Program Files\IAR Systems\Embedded Workbench 9.0\common\bin\cspybat" -f "C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\settings\Torrio_Case_Bootloader.Torrio_Case_Bootloader_Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\eva.chou\AT32_ChargingCase\git\Torrio_Case_gitIserver\Bootloader\project\at_start_f415\Torrio_Case_Bootloader\iar_v8.2\settings\Torrio_Case_Bootloader.Torrio_Case_Bootloader_Debug.driver.xcl" 
 }

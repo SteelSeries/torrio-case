@@ -21,6 +21,7 @@
 #define BUD_CMD_BATTERY_STATE           0x65U
 #define BUD_CMD_CHARGE_SETING           0x67U
 #define BUD_CMD_SYNC_CASE_LID_STATE     0x3CU
+#define BUD_CMD_SHIPPING                0x70U
 
 // clang-format on
 /*************************************************************************************************

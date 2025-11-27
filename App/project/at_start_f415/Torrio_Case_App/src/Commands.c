@@ -89,7 +89,7 @@ static Command_Status_t FactoryDebugReadBuds(const uint8_t command[USB_RECEIVE_L
 static Command_Status_t HandleFactoryEnterCommand(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t SetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t GetPresetChargeMode(const uint8_t command[USB_RECEIVE_LEN]);
-
+static Command_Status_t EnterShippingMode(const uint8_t command[USB_RECEIVE_LEN]);
 static Command_Status_t RunFacTable(const uint8_t *buffer, uint8_t command, uint8_t op, bool is_read);
 static Command_Status_t RunNormalTable(const uint8_t *buffer, uint8_t command, uint8_t op, bool is_read);
 
@@ -137,6 +137,7 @@ static const cmd_handler_t factory_handler_table[] =
         {.op = FAC_GET_BATTERY_AND_NTC, .read = FactoryReadBatteryAndNtc,       .write = HandleNoop},
         {.op = FAC_SET_CHARGE_STATUS,   .read = HandleNoop,                     .write = FactorySetBatteryChargeStatus},
         {.op = FAC_READ_BUDS_DEBUG,     .read = FactoryDebugReadBuds,           .write = HandleNoop},
+		{.op = FAC_ENTER_SHIPPING_MODE, .read = HandleNoop,                     .write = EnterShippingMode},
         {.op = FAC_PRESET_CHARGE,       .read = GetPresetChargeMode,            .write = SetPresetChargeMode},
         {.op = FAC_LEDRGB_SET,          .read = HandleNoop,                     .write = HandleFactoryLedCommand},
 
@@ -846,4 +847,17 @@ static Command_Status_t RunNormalTable(const uint8_t *buffer, uint8_t command, u
         }
     }
     return status;
+}
+
+static Command_Status_t EnterShippingMode(const uint8_t command[USB_RECEIVE_LEN])
+{
+    //Temporary Process Pending Discussion
+    DEBUG_PRINT("Enter Shipping Mode\r\n");
+    uint8_t payload[] = {BUD_CMD_SHIPPING | COMMAND_READ_FLAG};
+    UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, BUD_CMD_SHIPPING | COMMAND_READ_FLAG, payload, sizeof(payload), 10000);
+    UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, BUD_CMD_SHIPPING | COMMAND_READ_FLAG, payload, sizeof(payload), 10000);
+
+    FileSystem_UpdateShippingModeFlag(SHIPPING_FLAG_ENABLE);
+
+    return COMMAND_STATUS_SUCCESS;
 }

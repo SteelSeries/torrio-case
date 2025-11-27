@@ -41,6 +41,7 @@
 #define FAC_PRESET_CHARGE     		0x41 // factory settings
 #define FAC_LEDRGB_SET              0x79 // factory settings
 #define FAC_XSENSE_FAIL             0xFF // factory settings
+#define FAC_ENTER_SHIPPING_MODE     0x71 //factory enter shipping mode
 
 // factory settings
 #define FAC_SERIAL_OP 0x13           // factory settings
