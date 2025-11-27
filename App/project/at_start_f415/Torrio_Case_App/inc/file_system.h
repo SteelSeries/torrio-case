@@ -76,6 +76,13 @@ typedef struct
     uint8_t presetChargeState;
     uint8_t reserved;
 } FileSystem_UserDataUpdate_t;
+
+typedef enum
+{
+    SHIPPING_FLAG_ENABLE = 0x80,    /* Shipping flag enabled */
+    SHIPPING_MODE_INPROG = 0x40,    /* Shipping mode in progress */
+    SHIPPING_MODE_CLEAR  = 0xFF     /* Shipping mode cleared status*/
+} FileSystem_ShippingStatus_t;
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -89,3 +96,4 @@ void FileSystem_UpdateColorSpinAndModel(const uint8_t model_value, const uint8_t
 void FileSystem_MarkDualImageReadyToMigrate(void);
 void FileSystem_CheckImageCopyFlag(void);
 void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeMode_t state);
+void FileSystem_UpdateShippingModeFlag(const uint8_t shipping_flag);

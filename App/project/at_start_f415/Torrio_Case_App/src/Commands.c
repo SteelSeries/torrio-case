@@ -148,7 +148,6 @@ static const cmd_handler_t factory_handler_table[] =
 // clang-format on
 static Command_GetFactoryLighting_t fac_lighting_mode = COMMAND_FACTORY_NONE;
 static Command_GetFactoryStatus_t fac_mode = COMMAND_FACTORY_NON_ENTER;
-static Command__ShippingState_t CheckShippingState = COMMAND_SHIPPING_UNKNOW;
 
 /*************************************************************************************************
  *                                GLOBAL FUNCTION DEFINITIONS                                    *
@@ -183,11 +182,6 @@ void Commands_HandleUsbCommand(const uint8_t *in, size_t in_len)
 Command_GetFactoryLighting_t Commands_HandleLightingMode(void)
 {
     return fac_lighting_mode;
-}
-
-Command__ShippingState_t Commands_EnterShippingState(void)
-{
-  return CheckShippingState;
 }
 
 /*************************************************************************************************
@@ -858,8 +852,12 @@ static Command_Status_t RunNormalTable(const uint8_t *buffer, uint8_t command, u
 static Command_Status_t EnterShippingMode(const uint8_t command[USB_RECEIVE_LEN])
 {
     //Temporary Process Pending Discussion
-    CheckShippingState = COMMAND_SHIPPING;
-    SystemStateManager_EnterShippingMode();
+    DEBUG_PRINT("Enter Shipping Mode\r\n");
+    uint8_t payload[] = {BUD_CMD_SHIPPING | COMMAND_READ_FLAG};
+    UartInterface_SendBudCommand(UART_INTERFACE_BUD_LEFT, BUD_CMD_SHIPPING | COMMAND_READ_FLAG, payload, sizeof(payload), 10000);
+    UartInterface_SendBudCommand(UART_INTERFACE_BUD_RIGHT, BUD_CMD_SHIPPING | COMMAND_READ_FLAG, payload, sizeof(payload), 10000);
+
+    FileSystem_UpdateShippingModeFlag(SHIPPING_FLAG_ENABLE);
+
     return COMMAND_STATUS_SUCCESS;
 }
-

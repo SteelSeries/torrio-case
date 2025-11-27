@@ -13,6 +13,7 @@
 #include "lid.h"
 #include "task_scheduler.h"
 #include "uart_driver.h"
+#include "file_system.h"
 
 /*************************************************************************************************
  *                                  LOCAL MACRO DEFINITIONS                                      *
@@ -138,21 +139,20 @@ void SystemStateManager_SystemStartWork(void)
 
 void SystemStateManager_EnterShippingMode(void)
 {
-    TaskScheduler_RemoveTask(Sy8809_StartWorkTask);
-    if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+    FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
+
+    DEBUG_PRINT("System enter shipping mode\r\n");
+    if ((Lid_GetState() == LID_CLOSE) && ((Usb_FirstSetupUsbState() == USB_UNPLUG) || (Usb_ReadyStateGet() == USBD_SUSPEND_EVENT)))
     {
-        DEBUG_PRINT("add sy8809 read vbat task fail\n");
+        if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
+        {
+            DEBUG_PRINT("add sy8809 read vbat task fail\n");
+        }
     }
 
-    if (Lid_GetState() == LID_CLOSE)
+    if((data != NULL && data->shipping_flag == SHIPPING_MODE_INPROG) && ((Usb_FirstSetupUsbState() == USB_PLUG) || (Lid_GetState() == LID_OPEN)) && (Cps4520_GetDetectState() == CPS4520_DETECT))
     {
-        if (Usb_FirstSetupUsbState() == USB_UNPLUG)
-        {
-            if (TaskScheduler_AddTask(SystemStateManager_EnterStandbyModeCheck, 0, TASK_RUN_ONCE, TASK_START_IMMEDIATE) != TASK_OK)
-            {
-                DEBUG_PRINT("add enter standby task fail\n");
-            }
-        }
+        FileSystem_UpdateShippingModeFlag(SHIPPING_MODE_CLEAR);
     }
 }
 

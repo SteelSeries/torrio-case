@@ -14,6 +14,7 @@
 #include "battery.h"
 #include "sy8809_xsense.h"
 #include "commands.h"
+#include "file_system.h"
 #include <string.h>
 
 /*************************************************************************************************
@@ -403,17 +404,19 @@ void Sy8809_DebugRegRead(const uint8_t reg, uint8_t *buff)
 
 void Sy8809_StartWorkTask(void)
 {
-    if (is_irq_change == true)
+    FileSystem_UserData_t *data = (FileSystem_UserData_t *)FileSystem_GetUserData();
+    
+    if((data != NULL && data->shipping_flag == SHIPPING_FLAG_ENABLE) && ((Usb_FirstSetupUsbState() == USB_UNPLUG) || (Usb_ReadyStateGet() == USBD_SUSPEND_EVENT)))
+    {
+        DEBUG_PRINT("EnterShippingMode TABLE4\r\n");
+        SettingRegTable4();
+        FileSystem_UpdateShippingModeFlag(SHIPPING_MODE_INPROG);
+    }
+    else if (is_irq_change == true)
     {
         DEBUG_PRINT("is_irq_change detected \n");
         is_irq_change = false;
         UpdateTableByPowerSource();
-    }
-
-    if(Commands_EnterShippingState() == COMMAND_SHIPPING)
-    {
-        DEBUG_PRINT("EnterShippingMode TABLE4\r\n");
-        SettingRegTable4();
     }
 
     if (TaskScheduler_AddTask(Sy8809_StartWorkTask, 10, TASK_RUN_ONCE, TASK_START_DELAYED) != TASK_OK)

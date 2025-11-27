@@ -85,6 +85,14 @@ void FileSystem_MarkPresetChargeActive(FileSystem_PresetChargeMode_t state)
     UpdateUserData(&update);
 }
 
+void FileSystem_UpdateShippingModeFlag(const uint8_t shipping_flag)
+{
+    FileSystem_UserDataUpdate_t update = {0};
+    update.field_mask = UPDATE_FIELD_SHIPPING_FLAG;
+    update.shipping_flag = shipping_flag;
+    UpdateUserData(&update);
+}
+
 /*************************************************************************************************
  *                                STATIC FUNCTION DEFINITIONS                                    *
  *************************************************************************************************/

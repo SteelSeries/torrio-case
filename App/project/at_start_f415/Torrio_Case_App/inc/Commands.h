@@ -97,13 +97,6 @@ typedef enum
     COMMAND_FACTORY_MODE,
 } Command_GetFactoryStatus_t;
 
-typedef enum
-{
-    COMMAND_SHIPPING_NON = 0,
-    COMMAND_SHIPPING,
-    COMMAND_SHIPPING_UNKNOW,
-} Command__ShippingState_t;
-
 /*************************************************************************************************
  *                                  GLOBAL VARIABLE DECLARATIONS                                 *
  *************************************************************************************************/
@@ -114,4 +107,3 @@ typedef enum
  *************************************************************************************************/
 void Commands_HandleUsbCommand(const uint8_t * in, size_t in_len);
 Command_GetFactoryLighting_t Commands_HandleLightingMode(void);
-Command__ShippingState_t Commands_EnterShippingState(void);
